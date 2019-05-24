@@ -1,5 +1,5 @@
 # Lyon
-A Simple Security auditing tool for Containers, Suitable for CI
+A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
 
 
 # checkpoints
@@ -10,7 +10,7 @@ A Simple Security auditing tool for Containers, Suitable for CI
   - [ ] check ENV vars
     - credential information
     - service environment
-      - production, stagek dev
+      - not includes production, stage, dev
   - [ ] check credential files
 - Users, Groups and Authentication
   - [ ] Default user not a root user
@@ -28,7 +28,7 @@ A Simple Security auditing tool for Containers, Suitable for CI
   - [ ] hostname
   - [ ] localhost
 - Packages
-  - [ ] package managers
+  - [ ] Package managers
 - Networking
   - [ ] Check listening ports
 - File Permissions
