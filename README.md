@@ -5,38 +5,38 @@ A Simple Security auditing tool for Containers, Suitable for CI
 # checkpoints
 
 - General
-  -[ ] detect os
+  - [ ] detect os
 - Confidential
-  -[ ] check ENV vars
+  - [ ] check ENV vars
     - credential information
     - service environment
       - production, stagek dev
-  -[ ] check credential files
+  - [ ] check credential files
 - Users, Groups and Authentication
-  -[ ] Default user not a root user
-  -[ ] Administrator accounts
-  -[ ] Unique UIDs
-  -[ ] Unique group IDs
-  -[ ] Unique group names
+  - [ ] Default user not a root user
+  - [ ] Administrator accounts
+  - [ ] Unique UIDs
+  - [ ] Unique group IDs
+  - [ ] Unique group names
 - File systems
-  -[ ] Check /tmp
-  -[ ] Check /var/tmp
-  -[ ] check mount points
-  -[ ] check package cache files
+  - [ ] Check /tmp
+  - [ ] Check /var/tmp
+  - [ ] check mount points
+  - [ ] check package cache files
 - Check /etc/hosts
-  -[ ] duplicates
-  -[ ] hostname
-  -[ ] localhost
+  - [ ] duplicates
+  - [ ] hostname
+  - [ ] localhost
 - Packages
-  -[ ] package managers
+  - [ ] package managers
 - Networking
-  -[ ] Check listening ports
+  - [ ] Check listening ports
 - File Permissions
-  -[ ] Insecure permission
+  - [ ] Insecure permission
 - Processes
-  -[ ] Single process (Only RUN or CMD)
+  - [ ] Single process (Only RUN or CMD)
 - Image Size
-  -[ ] check large size container
+  - [ ] check large size container
 - Container Tag
-  -[ ] check `latest` tag
+  - [ ] check `latest` tag
   
