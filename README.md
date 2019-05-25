@@ -6,7 +6,8 @@ A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
 
 - General
   - [ ] detect os
-- Confidential
+  - [ ] use official container on the base
+- Do not write secrets
   - [ ] check ENV vars
     - credential information
     - service environment
@@ -18,6 +19,7 @@ A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
   - [ ] Unique UIDs
   - [ ] Unique group IDs
   - [ ] Unique group names
+  - [ ] Unnecessary priviledge escalation(setuid, setgid)
 - File systems
   - [ ] Check /tmp
   - [ ] Check /var/tmp
@@ -34,9 +36,11 @@ A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
 - File Permissions
   - [ ] Insecure permission
 - Processes
-  - [ ] Single process (Only RUN or CMD)
+  - [ ] Single CMD
+  - [ ] Single ENTRYPOINT
 - Image Size
   - [ ] check large size container
 - Container Tag
   - [ ] check `latest` tag
+  - [ ] Avoid `latest` in base container
 - Check PHP ini file
