@@ -39,4 +39,4 @@ A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
   - [ ] check large size container
 - Container Tag
   - [ ] check `latest` tag
-  
+- Check PHP ini file
