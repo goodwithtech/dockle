@@ -18,7 +18,7 @@
 |  | 実行環境チェック(Docker Engine) | OSパッケージチェック | App Dependencyチェック | ウイルス | コンテナ内の設定 |
 |-- | -- | -- | -- | -- | --|
 |Docker Bench for Security | ○ |   |   |   |  
-|Dogda | ○ | ○ |   | ○ |  |
+|Dagda | ○ | ○ |   | ○ |  |
 |Lynis | ○ |   |   |   | ○ |
 |Hadolint |   |   |   |   | ○ |
 |Clair |   | ○ |   |   |  |
@@ -33,8 +33,8 @@
 
 |  | 実行環境で動作 | イメージのみ | docker run | Dockerfile |
 |-- | -- | -- | -- | --|
-|Docker Bench for Security | ○ |   |   |  |
-|Dogda | ○ | ○ | ○ |  |
+|Docker Bench for Security | ○ |  ○ | ○ | ○ |
+|Dagda | ○ | ○ | ○ |  |
 |Lynis | ○ |   | ○ | ○ |
 |Hadolint |   |   |   | ○ |
 |Clair |   | ○ | ○ |  |
@@ -93,7 +93,7 @@ RedHatに強い?
 ## [Dockscan](https://github.com/kost/dockscan)
 ruby製。コンテナスキャン
 
-## [Dogda](https://github.com/eliasgranderubio/dagda)
+## [Dagda](https://github.com/eliasgranderubio/dagda)
 python製。イメージ/コンテナスキャンに対し、CVE, ウイルスが検知でき、実行環境の検証もできる。
 ウイルススキャンは内部でClamAVを利用。
 高機能っぽいけど、あまり伸びてない?
