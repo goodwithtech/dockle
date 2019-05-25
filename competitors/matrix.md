@@ -15,34 +15,34 @@
 
 ## 検証できる内容
 
-  | 実行環境チェック(Docker Engine) | OSパッケージチェック | App Dependencyチェック | ウイルス | Dockerfile設定
--- | -- | -- | -- | -- | --
-Docker Bench for Security | ○ |   |   |   |  
-Dogda | ○ | ○ |   | ○ |  
-Lynis |   |   |   |   | ○
-Hadolint |   |   |   |   | ○
-Clair |   | ○ |   |   |  
-Trivy |   | ○ | ○ |   |  
-Anchore |   | ○ |   |   |  
-OpenSCAP |   | ○ |   |   |  
-ClamAV |   |   |   | ○ |  
-Dockscan |   | ○ |   |   |  
+|  | 実行環境チェック(Docker Engine) | OSパッケージチェック | App Dependencyチェック | ウイルス | Dockerfile設定 |
+|-- | -- | -- | -- | -- | --|
+|Docker Bench for Security | ○ |   |   |   |  
+|Dogda | ○ | ○ |   | ○ |  |
+|Lynis | ○ |   |   |   | ○ |
+|Hadolint |   |   |   |   | ○ |
+|Clair |   | ○ |   |   |  |
+|Trivy |   | ○ | ○ |   |  |
+|Anchore |   | ○ |   |   |  |
+|OpenSCAP |   | ○ |   |   |  |
+|ClamAV |   |   |   | ○ |  |
+|Dockscan |   | ○ |   |   |  |
 
 ## 検知に必要なもの
 
 
-  | 実行環境で動作 | イメージのみ | docker run | Dockerfile
--- | -- | -- | -- | --
-Docker Bench for Security | ○ |   |   |  
-Dogda | ○ | ○ | ○ |  
-Lynis | ○ |   |   | ○
-Hadolint |   |   |   | ○
-Clair |   | ○ | ○ |  
-Trivy |   | ○ |   |  
-Anchore |   | ○ | ○ |  
-OpenSCAP | ○ | ○ |   |  
-ClamAV |   | ○ | ○ |  
-Dockscan |   | ○ |   |  
+|  | 実行環境で動作 | イメージのみ | docker run | Dockerfile |
+|-- | -- | -- | -- | --|
+|Docker Bench for Security | ○ |   |   |  |
+|Dogda | ○ | ○ | ○ |  |
+|Lynis | ○ |   |   | ○ |
+|Hadolint |   |   |   | ○ |
+|Clair |   | ○ | ○ |  |
+|Trivy |   | ○ |   |  |
+|Anchore |   | ○ | ○ | | 
+|OpenSCAP | ○ | ○ |   | | 
+|ClamAV |   | ○ | ○ |  |
+|Dockscan |   | ○ |   | | 
 
 
 
