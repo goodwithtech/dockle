@@ -15,7 +15,7 @@
 
 ## 検証できる内容
 
-|  | 実行環境チェック(Docker Engine) | OSパッケージチェック | App Dependencyチェック | ウイルス | Dockerfile設定 |
+|  | 実行環境チェック(Docker Engine) | OSパッケージチェック | App Dependencyチェック | ウイルス | コンテナ内の設定 |
 |-- | -- | -- | -- | -- | --|
 |Docker Bench for Security | ○ |   |   |   |  
 |Dogda | ○ | ○ |   | ○ |  |
@@ -23,7 +23,7 @@
 |Hadolint |   |   |   |   | ○ |
 |Clair |   | ○ |   |   |  |
 |Trivy |   | ○ | ○ |   |  |
-|Anchore |   | ○ |   |   |  |
+|Anchore |   | ○ | ○ | ○ | ○ |
 |OpenSCAP |   | ○ |   |   |  |
 |ClamAV |   |   |   | ○ |  |
 |Dockscan |   | ○ |   |   |  |
@@ -35,18 +35,17 @@
 |-- | -- | -- | -- | --|
 |Docker Bench for Security | ○ |   |   |  |
 |Dogda | ○ | ○ | ○ |  |
-|Lynis | ○ |   |   | ○ |
+|Lynis | ○ |   | ○ | ○ |
 |Hadolint |   |   |   | ○ |
 |Clair |   | ○ | ○ |  |
 |Trivy |   | ○ |   |  |
-|Anchore |   | ○ | ○ | | 
+|Anchore |   | ○ | ○ | ○ | 
 |OpenSCAP | ○ | ○ |   | | 
 |ClamAV |   | ○ | ○ |  |
 |Dockscan |   | ○ |   | | 
 
 
-
-# 実行環境の構成チェック
+# 各ツールの詳細
 
 ## [Docker Bench for Security](https://github.com/docker/docker-bench-security)
 実行環境で動作
@@ -55,9 +54,6 @@ Docker Engine側の脆弱性/設定をチェック
 ## [Dogda](https://github.com/eliasgranderubio/dagda)
 python製。イメージ/コンテナスキャンに対し、CVE, ウイルスが検知でき、実行環境の検証もできる。
 
-
-# コンテナ内の環境チェック
-
 ## Lyon : 作成中
 イメージのみスキャン
 - セキュリティ(rootで実行してないか)
@@ -65,19 +61,19 @@ python製。イメージ/コンテナスキャンに対し、CVE, ウイルス�
 - コンテナのベストプラクティスに乗っているか
 
 ## [Lynis](https://github.com/CISOfy/lynis)
-DockerfileをLint
-docker run内で走らせれば、コンテナ内の環境もチェックできる。
+DockerfileをLint。
+実行環境の設定も確認できる。
+docker run内で走らせれば、一応コンテナ内の環境もチェックできる。
 
 ## [Hadolint](https://github.com/hadolint/hadolint)
-DockerfileをLint
+DockerfileをLint。
 
-
-# パッケージチェック
 ## [Clair]()
-イメージのみスキャン
+パッケージスキャン。コンテナとイメージ対象。
 
-## [Anchore]()
-イメージのみスキャン
+## [Anchore](https://anchore.com/)
+幅広く対応できる。
+どこまでできるかよくわからない。
 
 ## [Aqua]()
 イメージのみスキャン
@@ -87,8 +83,10 @@ DockerfileをLint
 
 ## [OpenSCAP]()
 コンテナ, イメージスキャン。
+RedHatに強い?
 
 ## [Vuls]()
+パッケージの検証。
 コンテナスキャンも可能。
 もうすぐイメージスキャン対応。
 
@@ -97,19 +95,8 @@ ruby製。コンテナスキャン
 
 ## [Dogda](https://github.com/eliasgranderubio/dagda)
 python製。イメージ/コンテナスキャンに対し、CVE, ウイルスが検知でき、実行環境の検証もできる。
-
-
-# ライブラリチェック
-
-## [Trivy]()
-イメージのみスキャン
-
-# ウイルスチェック
+ウイルススキャンは内部でClamAVを利用。
+高機能っぽいけど、あまり伸びてない?
 
 ## [ClamAV](https://www.clamav.net/)
 イメージのtarファイルをもとにスキャン可能。
-
-
-## [Dogda](https://github.com/eliasgranderubio/dagda)
-python製。イメージ/コンテナスキャンに対し、CVE, ウイルスが検知でき、実行環境の検証もできる。
-内側でClamAVを利用。
