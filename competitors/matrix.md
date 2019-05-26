@@ -16,7 +16,7 @@
 ## 検証できる内容
 
 |  | 実行環境チェック(Docker Engine) | OSパッケージチェック | App Dependencyチェック | ウイルス | コンテナ内の設定 |
-|-- | -- | -- | -- | -- | --|
+|--- | --- | --- | --- | --- | ---|
 |Docker Bench for Security | ○ |   |   |   |  
 |Dagda | ○ | ○ |   | ○ |  |
 |Lynis | ○ |   |   |   | ○ |
@@ -32,7 +32,7 @@
 
 
 |  | 実行環境で動作 | イメージのみ | docker run | Dockerfile |
-|-- | -- | -- | -- | --|
+|--- | --- | --- | --- | ---|
 |Docker Bench for Security | ○ |  ○ | ○ | ○ |
 |Dagda | ○ | ○ | ○ |  |
 |Lynis | ○ |   | ○ | ○ |
