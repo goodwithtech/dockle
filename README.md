@@ -4,9 +4,17 @@ A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
 
 # checkpoints
 
+- Dockerfile Parse
+  - [ ] Use absolute WORKDIR.
+  - [ ] Last user should not be root
+  - [ ] Use the --no-cache switch to avoid the need to use --update and remove /var/cache/apk/* when done installing packages.
+  - [ ] Multiple ENTRYPOINT instructions found.
+  - [ ] Multiple CMD instructions found.
+  - [ ] log to STDERR
+  
 - General
   - [ ] detect os
-  - [ ] use official container on the base
+  - [ ] use official container on the base (need db)
 - Do not write secrets
   - [ ] check ENV vars
     - credential information
