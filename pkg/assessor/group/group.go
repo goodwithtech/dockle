@@ -1,4 +1,4 @@
-package passwd
+package group
 
 import (
 	"bufio"
@@ -11,9 +11,9 @@ import (
 	"github.com/knqyf263/fanal/extractor"
 )
 
-type PasswdAssessor struct{}
+type GroupAssessor struct{}
 
-func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+func (a GroupAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
 	assesses := []types.Assessment{}
 	for _, filename := range a.RequiredFiles() {
 		file, ok := fileMap[filename]
@@ -21,23 +21,29 @@ func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, e
 			continue
 		}
 		scanner := bufio.NewScanner(bytes.NewBuffer(file))
+		gidMap := map[string]struct{}{}
+
 		for scanner.Scan() {
 			line := scanner.Text()
-			passData := strings.Split(line, ":")
-			if passData[1] == "" {
+			data := strings.Split(line, ":")
+			gname := data[0]
+			gid := data[2]
+
+			if _, ok := gidMap[gid]; ok {
 				assesses = append(
 					assesses,
 					types.Assessment{
-						Type:     types.SetPassword,
+						Type:     types.AvoidDuplicateGroup,
 						Filename: filename,
-						Desc:     fmt.Sprintf("no passwd setting user %s ", passData[0]),
+						Desc:     fmt.Sprintf("duplicate GroupID %s : username %s", gid, gname),
 					})
 			}
+			gidMap[gid] = struct{}{}
 		}
 	}
 	return assesses, nil
 }
 
-func (a PasswdAssessor) RequiredFiles() []string {
-	return []string{"etc/shadow", "etc/master.passwd"}
+func (a GroupAssessor) RequiredFiles() []string {
+	return []string{"etc/group"}
 }

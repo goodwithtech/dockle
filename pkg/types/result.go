@@ -3,20 +3,25 @@ package types
 type ScanResult map[string]error
 
 const (
-	SetPassword      = "SetPassword"
-	AvoidRootDefault = "AvoidRootDefault"
-	AvoidRootRun     = "AvoidRootRun"
-	LargeImage       = "LargeImage"
-	DeleteTmpFiles   = "DeleteTmpFiles"
-	DeleteCacheFiles = "DeleteCacheFiles"
-	PHPini           = "PHPini"
-	EnvKeySuspition  = "EnvKeySuspition"
-	EnvVarSuspition  = "EnvVarSuspition"
-	AvoidCredential  = "AvoidCredential"
-	InvalidHost      = "InvalidEtcHost"
-	FilePermission   = "FilePermission"
-	RunSingleProcess = "RunSingleProcess"
-	AvoidLatestTag   = "AvoidLatestTag"
+	SetPassword = iota
+	AvoidDuplicateUser
+	AvoidDuplicateGroup
+	AvoidRootDefault
+	AvoidRootRun
+	AvoidLargeImage
+	UseHealthcheck
+	AvoidUpdate
+	AvoidEnvKeySecret
+	UseContentTrust
+
+	DeleteTmpFiles
+	DeleteCacheFiles
+	PHPini
+	AvoidCredential
+	InvalidHost
+	FilePermission
+	RunSingleProcess
+	AvoidLatestTag
 )
 
 const (
@@ -27,8 +32,21 @@ const (
 	_maxLevel = FatalLevel
 )
 
+var AlertLevels = map[int]int{
+	SetPassword:         FatalLevel,
+	AvoidRootDefault:    WarnLevel,
+	AvoidDuplicateUser:  WarnLevel,
+	AvoidDuplicateGroup: WarnLevel,
+	AvoidRootRun:        WarnLevel,
+	AvoidLargeImage:     InfoLevel,
+	UseHealthcheck:      InfoLevel,
+	AvoidUpdate:         InfoLevel,
+	AvoidEnvKeySecret:   WarnLevel,
+	UseContentTrust:     WarnLevel,
+}
+
 type Assessment struct {
-	Level    int
+	Type     int
 	Filename string
 	Desc     string
 }

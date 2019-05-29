@@ -1,8 +1,16 @@
 package assessor
 
 import (
-	"github.com/knqyf263/fanal/extractor"
+	"fmt"
+
+	"github.com/tomoyamachi/lyon/pkg/assessor/contentTrust"
+
+	"github.com/tomoyamachi/lyon/pkg/assessor/group"
+	"github.com/tomoyamachi/lyon/pkg/assessor/manifest"
 	"github.com/tomoyamachi/lyon/pkg/assessor/passwd"
+	"github.com/tomoyamachi/lyon/pkg/assessor/user"
+
+	"github.com/knqyf263/fanal/extractor"
 	"github.com/tomoyamachi/lyon/pkg/log"
 	"github.com/tomoyamachi/lyon/pkg/types"
 )
@@ -10,25 +18,28 @@ import (
 var assessors []Assessor
 
 type Assessor interface {
-	GetType() string
 	Assess(extractor.FileMap) ([]types.Assessment, error)
 	RequiredFiles() []string
 }
 
-func GetAssessments(files extractor.FileMap) map[string][]types.Assessment {
-	assessments := map[string][]types.Assessment{}
+func init() {
+	RegisterAssessor(passwd.PasswdAssessor{})
+	RegisterAssessor(user.UserAssessor{})
+	RegisterAssessor(group.GroupAssessor{})
+	RegisterAssessor(manifest.ManifestAssessor{})
+	RegisterAssessor(contentTrust.ContentTrustAssessor{})
+}
+
+func GetAssessments(files extractor.FileMap) (assessments []types.Assessment) {
 	for _, assessor := range assessors {
 		results, err := assessor.Assess(files)
 		if err != nil {
 			log.Logger.Error(err)
 		}
-		assessments[assessor.GetType()] = results
+		assessments = append(assessments, results...)
 	}
+	fmt.Println(assessments)
 	return assessments
-}
-
-func InitAssessors() {
-	RegisterAssessor(passwd.PasswdAssessor{})
 }
 
 func RegisterAssessor(a Assessor) {

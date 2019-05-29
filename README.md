@@ -4,35 +4,43 @@ A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
 
 # checkpoints
 
-- Dockerfile Parse
+- manifest parse
   - [ ] Use absolute WORKDIR.
-  - [ ] Last user should not be root
-  - [ ] Use the --no-cache switch to avoid the need to use --update and remove /var/cache/apk/* when done installing packages.
-  - [ ] Multiple ENTRYPOINT instructions found.
-  - [ ] Multiple CMD instructions found.
+  - [x] Last user should not be root
+  - [ ] Use the --no-cache switch to avoid the need to use --update and remove /var/cache/apk/* when done installing packages
   - [ ] log to STDERR
   
 - General
   - [ ] detect os
-  - [ ] use official container on the base (need db)
+  - [ ] use official container on the base (need db) : Future
+  - [x] use Docker Content Trust
 - Do not write secrets
-  - [ ] check ENV vars
+  - [x] check ENV vars
     - credential information
     - service environment
       - not includes production, stage, dev
   - [ ] check credential files
 - Users, Groups and Authentication
-  - [ ] Default user not a root user
-  - [ ] Administrator accounts
-  - [ ] Unique UIDs
-  - [ ] Unique group IDs
-  - [ ] Unique group names
-  - [ ] Unnecessary priviledge escalation(setuid, setgid)
+  - [x] Default user not a root user
+  - [x] Set password
+  - [x] Unique UIDs
+  - [x] Unique group names
+  - [ ] Unnecessary priviledge escalation(setuid, setgid) : Future support
+    ```
+		fi := hdr.FileInfo()
+		fm := fi.Mode()
+		if fm&os.ModeSetuid != 0 {
+		    // suid
+		}
+		if fm&os.ModeSetgid != 0 {
+			// gid
+		}
+    ```
 - File systems
-  - [ ] Check /tmp
-  - [ ] Check /var/tmp
-  - [ ] check mount points
-  - [ ] check package cache files
+  - [ ] Check /tmp : Future
+  - [ ] Check /var/tmp : Future
+  - [ ] check mount points : Never
+  - [ ] check package cache files : 
 - Check /etc/hosts
   - [ ] duplicates
   - [ ] hostname
@@ -41,11 +49,9 @@ A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
   - [ ] Package managers
 - Networking
   - [ ] Check listening ports
+    - /etc/services : all port
 - File Permissions
   - [ ] Insecure permission
-- Processes
-  - [ ] Single CMD
-  - [ ] Single ENTRYPOINT
 - Image Size
   - [ ] check large size container
 - Container Tag
