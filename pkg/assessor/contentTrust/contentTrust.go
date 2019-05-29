@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/knqyf263/fanal/extractor"
-	"github.com/tomoyamachi/lyon/pkg/types"
+	"github.com/tomoyamachi/docker-guard/pkg/types"
 )
 
 type ContentTrustAssessor struct{}

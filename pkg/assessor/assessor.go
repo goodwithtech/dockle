@@ -3,16 +3,16 @@ package assessor
 import (
 	"fmt"
 
-	"github.com/tomoyamachi/lyon/pkg/assessor/contentTrust"
+	"github.com/tomoyamachi/docker-guard/pkg/assessor/contentTrust"
 
-	"github.com/tomoyamachi/lyon/pkg/assessor/group"
-	"github.com/tomoyamachi/lyon/pkg/assessor/manifest"
-	"github.com/tomoyamachi/lyon/pkg/assessor/passwd"
-	"github.com/tomoyamachi/lyon/pkg/assessor/user"
+	"github.com/tomoyamachi/docker-guard/pkg/assessor/group"
+	"github.com/tomoyamachi/docker-guard/pkg/assessor/manifest"
+	"github.com/tomoyamachi/docker-guard/pkg/assessor/passwd"
+	"github.com/tomoyamachi/docker-guard/pkg/assessor/user"
 
 	"github.com/knqyf263/fanal/extractor"
-	"github.com/tomoyamachi/lyon/pkg/log"
-	"github.com/tomoyamachi/lyon/pkg/types"
+	"github.com/tomoyamachi/docker-guard/pkg/log"
+	"github.com/tomoyamachi/docker-guard/pkg/types"
 )
 
 var assessors []Assessor

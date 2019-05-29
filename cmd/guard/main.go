@@ -4,8 +4,8 @@ import (
 	l "log"
 	"os"
 
-	"github.com/tomoyamachi/lyon/pkg"
-	"github.com/tomoyamachi/lyon/pkg/log"
+	"github.com/tomoyamachi/docker-guard/pkg"
+	"github.com/tomoyamachi/docker-guard/pkg/log"
 	"github.com/urfave/cli"
 )
 
@@ -30,7 +30,7 @@ OPTIONS:
   {{end}}{{$option}}{{end}}{{end}}
 `
 	app := cli.NewApp()
-	app.Name = "lyon"
+	app.Name = "docker-guard"
 	app.Version = version
 	app.ArgsUsage = "image_name"
 

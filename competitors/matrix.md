@@ -54,7 +54,7 @@ Docker Engine側の脆弱性/設定をチェック
 ## [Dogda](https://github.com/eliasgranderubio/dagda)
 python製。イメージ/コンテナスキャンに対し、CVE, ウイルスが検知でき、実行環境の検証もできる。
 
-## Lyon : 作成中
+## docker-guard : 作成中
 イメージのみスキャン
 - セキュリティ(rootで実行してないか)
 - CMD, ENTRYPOINTが複数ないか

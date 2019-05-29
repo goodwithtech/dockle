@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/tomoyamachi/lyon/pkg/types"
+	"github.com/tomoyamachi/docker-guard/pkg/types"
 
 	"github.com/knqyf263/fanal/extractor"
 )

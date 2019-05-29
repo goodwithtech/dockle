@@ -8,16 +8,16 @@ import (
 
 	"github.com/genuinetools/reg/registry"
 	"github.com/knqyf263/fanal/cache"
-	"github.com/tomoyamachi/lyon/pkg/scanner"
+	"github.com/tomoyamachi/docker-guard/pkg/scanner"
 	"golang.org/x/xerrors"
 
-	"github.com/tomoyamachi/lyon/pkg/log"
-	"github.com/tomoyamachi/lyon/pkg/types"
+	"github.com/tomoyamachi/docker-guard/pkg/log"
+	"github.com/tomoyamachi/docker-guard/pkg/types"
 	"github.com/urfave/cli"
 )
 
 const (
-	lyonIgnore = ".lyonignore"
+	guardIgnore = ".guardignore"
 )
 
 func Run(c *cli.Context) (err error) {
@@ -38,7 +38,7 @@ func Run(c *cli.Context) (err error) {
 	args := c.Args()
 	filePath := c.String("input")
 	if filePath == "" && len(args) == 0 {
-		log.Logger.Info(`"lyon" requires at least 1 argument or --input option.`)
+		log.Logger.Info(`"docker-guard" requires at least 1 argument or --input option.`)
 		cli.ShowAppHelpAndExit(c, 1)
 		return
 	}
@@ -86,9 +86,9 @@ func handleResult(r types.ScanResult) (exitCode int) {
 }
 
 func getIgnoredOptMap() map[string]struct{} {
-	f, err := os.Open(lyonIgnore)
+	f, err := os.Open(guardIgnore)
 	if err != nil {
-		// lyon must work even if there isn't ignore file
+		// docker-guard must work even if there isn't ignore file
 		return nil
 	}
 

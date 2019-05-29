@@ -1,4 +1,4 @@
-module github.com/tomoyamachi/lyon
+module github.com/tomoyamachi/docker-guard
 
 go 1.12
 

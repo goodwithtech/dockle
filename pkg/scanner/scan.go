@@ -5,9 +5,9 @@ import (
 	"flag"
 	"os"
 
-	"github.com/tomoyamachi/lyon/pkg/types"
+	"github.com/tomoyamachi/docker-guard/pkg/types"
 
-	"github.com/tomoyamachi/lyon/pkg/assessor"
+	"github.com/tomoyamachi/docker-guard/pkg/assessor"
 
 	"github.com/knqyf263/fanal/analyzer"
 	"github.com/knqyf263/fanal/extractor"

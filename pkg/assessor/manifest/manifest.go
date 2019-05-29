@@ -7,7 +7,7 @@ import (
 
 	"github.com/docker/docker/image"
 	"github.com/knqyf263/fanal/extractor"
-	"github.com/tomoyamachi/lyon/pkg/types"
+	"github.com/tomoyamachi/docker-guard/pkg/types"
 	"golang.org/x/xerrors"
 )
 
