@@ -4,8 +4,10 @@ go 1.12
 
 require (
 	github.com/docker/docker v0.0.0-20180924202107-a9c061deec0f
+	github.com/fatih/color v1.7.0
 	github.com/genuinetools/reg v0.16.0
 	github.com/knqyf263/fanal v0.0.0-20190528042547-07e27879b658
+	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-shellwords v1.0.5 // indirect
 	github.com/moby/moby v1.13.1
 	github.com/opencontainers/runtime-spec v1.0.1 // indirect

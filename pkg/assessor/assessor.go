@@ -1,8 +1,6 @@
 package assessor
 
 import (
-	"fmt"
-
 	"github.com/tomoyamachi/docker-guard/pkg/assessor/contentTrust"
 
 	"github.com/tomoyamachi/docker-guard/pkg/assessor/group"
@@ -38,7 +36,6 @@ func GetAssessments(files extractor.FileMap) (assessments []types.Assessment) {
 		}
 		assessments = append(assessments, results...)
 	}
-	fmt.Println(assessments)
 	return assessments
 }
 

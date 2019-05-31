@@ -6,6 +6,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/tomoyamachi/docker-guard/pkg/writer"
+
 	"github.com/genuinetools/reg/registry"
 	"github.com/knqyf263/fanal/cache"
 	"github.com/tomoyamachi/docker-guard/pkg/scanner"
@@ -59,7 +61,17 @@ func Run(c *cli.Context) (err error) {
 		}
 	}
 
-	scanner.ScanImage(imageName, filePath)
+	assessments, err := scanner.ScanImage(imageName, filePath)
+	if err != nil {
+		return err
+	}
+
+	targetType := types.MinTypeNumber
+	for targetType < types.MaxTypeNumber {
+		filtered := filteredAssessments(targetType, assessments)
+		writer.ShowTitleLine(targetType, len(filtered) == 0)
+		targetType++
+	}
 
 	exitCode := c.Int("exit-code")
 	if exitCode != 0 {
@@ -67,6 +79,15 @@ func Run(c *cli.Context) (err error) {
 	}
 
 	return nil
+}
+
+func filteredAssessments(target int, assessments []types.Assessment) (filtered []types.Assessment) {
+	for _, assessment := range assessments {
+		if assessment.Type == target {
+			filtered = append(filtered, assessment)
+		}
+	}
+	return filtered
 }
 
 func handleResult(r types.ScanResult) (exitCode int) {

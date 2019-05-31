@@ -13,7 +13,6 @@ const (
 	AvoidUpdate
 	AvoidEnvKeySecret
 	UseContentTrust
-
 	DeleteTmpFiles
 	DeleteCacheFiles
 	PHPini
@@ -22,27 +21,61 @@ const (
 	FilePermission
 	RunSingleProcess
 	AvoidLatestTag
+	MinTypeNumber = SetPassword
+	MaxTypeNumber = UseContentTrust
 )
 
 const (
 	InfoLevel = iota
 	WarnLevel
 	FatalLevel
-	_minLevel = InfoLevel
-	_maxLevel = FatalLevel
+	Pass
+	_minLevel_ = InfoLevel
+	_maxLevel_ = FatalLevel
 )
 
-var AlertLevels = map[int]int{
-	SetPassword:         FatalLevel,
-	AvoidRootDefault:    WarnLevel,
-	AvoidDuplicateUser:  WarnLevel,
-	AvoidDuplicateGroup: WarnLevel,
-	AvoidRootRun:        WarnLevel,
-	AvoidLargeImage:     InfoLevel,
-	UseHealthcheck:      InfoLevel,
-	AvoidUpdate:         InfoLevel,
-	AvoidEnvKeySecret:   WarnLevel,
-	UseContentTrust:     WarnLevel,
+type AlertDetail struct {
+	DefaultLevel int
+	Title        string
+}
+
+var AlertDetails = map[int]AlertDetail{
+	SetPassword: {
+		DefaultLevel: FatalLevel,
+		Title:        "Check password",
+	},
+	AvoidRootDefault: {
+		DefaultLevel: WarnLevel,
+		Title:        "Running as root",
+	},
+	AvoidDuplicateUser: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check users",
+	},
+	AvoidDuplicateGroup: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check groups",
+	},
+	AvoidLargeImage: {
+		DefaultLevel: InfoLevel,
+		Title:        "Check image size",
+	},
+	UseHealthcheck: {
+		DefaultLevel: InfoLevel,
+		Title:        "Check healthcheck setting",
+	},
+	AvoidUpdate: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check commands",
+	},
+	AvoidEnvKeySecret: {
+		DefaultLevel: FatalLevel,
+		Title:        "Check environment vars",
+	},
+	UseContentTrust: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check DOCKER CONTENT TRUST setting",
+	},
 }
 
 type Assessment struct {
