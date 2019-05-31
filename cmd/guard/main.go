@@ -4,8 +4,8 @@ import (
 	l "log"
 	"os"
 
-	"github.com/tomoyamachi/docker-guard/pkg"
-	"github.com/tomoyamachi/docker-guard/pkg/log"
+	"github.com/goodwithtech/docker-guard/pkg"
+	"github.com/goodwithtech/docker-guard/pkg/log"
 	"github.com/urfave/cli"
 )
 

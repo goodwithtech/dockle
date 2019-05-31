@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/docker/docker/image"
+	"github.com/goodwithtech/docker-guard/pkg/types"
 	"github.com/knqyf263/fanal/extractor"
-	"github.com/tomoyamachi/docker-guard/pkg/types"
 	"golang.org/x/xerrors"
 )
 

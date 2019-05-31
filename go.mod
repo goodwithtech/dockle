@@ -1,4 +1,4 @@
-module github.com/tomoyamachi/docker-guard
+module github.com/goodwithtech/docker-guard
 
 go 1.12
 

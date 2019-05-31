@@ -3,8 +3,8 @@ package contentTrust
 import (
 	"os"
 
+	"github.com/goodwithtech/docker-guard/pkg/types"
 	"github.com/knqyf263/fanal/extractor"
-	"github.com/tomoyamachi/docker-guard/pkg/types"
 )
 
 type ContentTrustAssessor struct{}

@@ -1,16 +1,16 @@
 package assessor
 
 import (
-	"github.com/tomoyamachi/docker-guard/pkg/assessor/contentTrust"
+	"github.com/goodwithtech/docker-guard/pkg/assessor/contentTrust"
 
-	"github.com/tomoyamachi/docker-guard/pkg/assessor/group"
-	"github.com/tomoyamachi/docker-guard/pkg/assessor/manifest"
-	"github.com/tomoyamachi/docker-guard/pkg/assessor/passwd"
-	"github.com/tomoyamachi/docker-guard/pkg/assessor/user"
+	"github.com/goodwithtech/docker-guard/pkg/assessor/group"
+	"github.com/goodwithtech/docker-guard/pkg/assessor/manifest"
+	"github.com/goodwithtech/docker-guard/pkg/assessor/passwd"
+	"github.com/goodwithtech/docker-guard/pkg/assessor/user"
 
+	"github.com/goodwithtech/docker-guard/pkg/log"
+	"github.com/goodwithtech/docker-guard/pkg/types"
 	"github.com/knqyf263/fanal/extractor"
-	"github.com/tomoyamachi/docker-guard/pkg/log"
-	"github.com/tomoyamachi/docker-guard/pkg/types"
 )
 
 var assessors []Assessor

@@ -6,15 +6,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/tomoyamachi/docker-guard/pkg/writer"
+	"github.com/goodwithtech/docker-guard/pkg/writer"
 
 	"github.com/genuinetools/reg/registry"
+	"github.com/goodwithtech/docker-guard/pkg/scanner"
 	"github.com/knqyf263/fanal/cache"
-	"github.com/tomoyamachi/docker-guard/pkg/scanner"
 	"golang.org/x/xerrors"
 
-	"github.com/tomoyamachi/docker-guard/pkg/log"
-	"github.com/tomoyamachi/docker-guard/pkg/types"
+	"github.com/goodwithtech/docker-guard/pkg/log"
+	"github.com/goodwithtech/docker-guard/pkg/types"
 	"github.com/urfave/cli"
 )
 

@@ -5,9 +5,9 @@ import (
 	"flag"
 	"os"
 
-	"github.com/tomoyamachi/docker-guard/pkg/types"
+	"github.com/goodwithtech/docker-guard/pkg/types"
 
-	"github.com/tomoyamachi/docker-guard/pkg/assessor"
+	"github.com/goodwithtech/docker-guard/pkg/assessor"
 
 	"github.com/knqyf263/fanal/analyzer"
 	"github.com/knqyf263/fanal/extractor"
