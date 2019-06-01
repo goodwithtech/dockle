@@ -5,10 +5,11 @@ A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
 # checkpoints
 
 - manifest parse
-  - [ ] Use absolute WORKDIR.
   - [x] Last user should not be root
-  - [ ] Use the --no-cache switch to avoid the need to use --update and remove /var/cache/apk/* when done installing packages
+  - [ ] apk : Use the --no-cache
+  - [ ] dpkg : Use the --no-install-recommends
   - [ ] log to STDERR
+  - [x] avoid mount sensitive dir 
   
 - General
   - [ ] detect os
@@ -39,17 +40,12 @@ A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
 - File systems
   - [ ] Check /tmp : Future
   - [ ] Check /var/tmp : Future
-  - [ ] check mount points : Never
-  - [ ] check package cache files : 
 - Check /etc/hosts
   - [ ] duplicates
   - [ ] hostname
   - [ ] localhost
 - Packages
   - [ ] Package managers
-- Networking
-  - [ ] Check listening ports
-    - /etc/services : all port
 - File Permissions
   - [ ] Insecure permission
 - Image Size
@@ -58,3 +54,13 @@ A Simple Security and Filesystem auditing tool for Containers, Suitable for CI
   - [ ] check `latest` tag
   - [ ] Avoid `latest` in base container
 - Check PHP ini file
+  
+  
+## if docker running
+- Networking
+  - [ ] `docker port container` if docker running
+  - [ ] by file
+    - /proc/1/net/tcp : openning port (if running)
+- Volume mount
+  - mount dangerous 
+    - /boot, /dev, /etc, /lib

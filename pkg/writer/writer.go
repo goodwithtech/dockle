@@ -9,9 +9,10 @@ import (
 )
 
 const (
-	SPACE   = " "
-	TAB     = "	"
-	NEWLINE = "\n"
+	LISTMARK = "-"
+	SPACE    = " "
+	TAB      = "	"
+	NEWLINE  = "\n"
 )
 
 var AlertLabels = []string{
@@ -37,7 +38,10 @@ func ShowTitleLine(assessmentType int, passed bool) {
 	fmt.Print(ColorizeAlert(level), TAB, detail.Title, NEWLINE)
 }
 
+func ShowDescription(assessment types.Assessment) {
+	fmt.Print(TAB, LISTMARK, SPACE, assessment.Desc, NEWLINE)
+}
+
 func ColorizeAlert(alertLevel int) string {
 	return AlertLevelColors[alertLevel](AlertLabels[alertLevel])
-	// return color.New(color.FgCyan).SprintFunc()(alertLevel)
 }

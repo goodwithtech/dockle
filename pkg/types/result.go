@@ -7,16 +7,20 @@ const (
 	AvoidDuplicateUser
 	AvoidDuplicateGroup
 	AvoidRootDefault
-	AvoidRootRun
-	AvoidLargeImage
 	UseHealthcheck
 	AvoidUpdate
+	AvoidUpgrade
+	AvoidSudo
 	AvoidEnvKeySecret
+	AvoidMountSensitiveDir
+	AvoidCredential
 	UseContentTrust
+
+	AvoidLargeImage
+	AvoidRootRun
 	DeleteTmpFiles
 	DeleteCacheFiles
 	PHPini
-	AvoidCredential
 	InvalidHost
 	FilePermission
 	RunSingleProcess
@@ -46,15 +50,15 @@ var AlertDetails = map[int]AlertDetail{
 	},
 	AvoidRootDefault: {
 		DefaultLevel: WarnLevel,
-		Title:        "Running as root",
+		Title:        "Check running user isn't root",
 	},
 	AvoidDuplicateUser: {
 		DefaultLevel: WarnLevel,
-		Title:        "Check users",
+		Title:        "Check user names",
 	},
 	AvoidDuplicateGroup: {
 		DefaultLevel: WarnLevel,
-		Title:        "Check groups",
+		Title:        "Check group names",
 	},
 	AvoidLargeImage: {
 		DefaultLevel: InfoLevel,
@@ -66,12 +70,29 @@ var AlertDetails = map[int]AlertDetail{
 	},
 	AvoidUpdate: {
 		DefaultLevel: WarnLevel,
-		Title:        "Check commands",
+		Title:        "Check update commands",
+	},
+	AvoidUpgrade: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check upgrade commands",
+	},
+	AvoidSudo: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check sudo commands",
 	},
 	AvoidEnvKeySecret: {
 		DefaultLevel: FatalLevel,
 		Title:        "Check environment vars",
 	},
+	AvoidMountSensitiveDir: {
+		DefaultLevel: FatalLevel,
+		Title:        "Check volumes",
+	},
+	AvoidCredential: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check credential files",
+	},
+
 	UseContentTrust: {
 		DefaultLevel: WarnLevel,
 		Title:        "Check DOCKER CONTENT TRUST setting",

@@ -67,9 +67,14 @@ func Run(c *cli.Context) (err error) {
 	}
 
 	targetType := types.MinTypeNumber
-	for targetType < types.MaxTypeNumber {
+	for targetType <= types.MaxTypeNumber {
 		filtered := filteredAssessments(targetType, assessments)
 		writer.ShowTitleLine(targetType, len(filtered) == 0)
+		if len(filtered) > 0 {
+			for _, assessment := range filtered {
+				writer.ShowDescription(assessment)
+			}
+		}
 		targetType++
 	}
 

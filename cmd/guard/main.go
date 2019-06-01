@@ -38,18 +38,9 @@ OPTIONS:
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:  "format, f",
-			Value: "normal",
-			Usage: "format (normal, json)",
-		},
-		cli.StringFlag{
 			Name:  "input, i",
 			Value: "",
 			Usage: "input file path instead of image name",
-		},
-		cli.StringFlag{
-			Name:  "output, o",
-			Usage: "output file name",
 		},
 		cli.IntFlag{
 			Name:  "exit-code",
