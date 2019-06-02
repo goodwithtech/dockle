@@ -1,19 +1,18 @@
 defaults: &defaults
-  docker:
-  - image: circleci/golang:1.11
-    environment:
-      GO111MODULE: "ON"
   working_directory: /go/src/github.com/goodwithtech/docker-guard
+  docker:
+    - image: circleci/golang:1.11
+      environment:
+        GO111MODULE: "ON"
   steps:
-  - checkout
-  - restore_cache:
-    name: Restore go modules cache
-    keys:
-    - go-mod-v1-{{ checksum "go.sum" }}
-  - save_cache:
-    key: go-mod-v1-{{ checksum "go.sum" }}
-    paths:
-    - "/go/pkg/mod"
+    - restore_cache:
+      name: Restore go modules cache
+      keys:
+        - go-mod-v1-{{ checksum "go.sum" }}
+    - save_cache:
+      key: go-mod-v1-{{ checksum "go.sum" }}
+      paths:
+        - "/go/pkg/mod"
 
 version: 2
 jobs:
