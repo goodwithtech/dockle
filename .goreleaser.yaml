@@ -1,0 +1,81 @@
+project_name: guard
+builds:
+- main: cmd/guard/main.go
+  binary: guard
+  ldflags:
+  - -s -w
+  - "-extldflags '-static'"
+  - -X main.version={{.Version}}
+  env:
+  - CGO_ENABLED=0
+  goos:
+  - darwin
+  - linux
+  - windows
+  - freebsd
+  - openbsd
+  goarch:
+  - amd64
+  - 386
+  - arm
+  - arm64
+  goarm:
+  - 7
+
+nfpm:
+  formats:
+  - deb
+  - rpm
+  dependencies:
+  - rpm
+  vendor: "goodwithtech"
+  homepage: "https://github.com/goodwithtech"
+  maintainer: "Tomoya Amachi <tomoya.amachi@gmail.com>"
+  description: "A Security and Dockerfile checker for Containers"
+  license: AGPL
+  name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
+  replacements:
+    amd64: 64bit
+    386: 32bit
+    arm: ARM
+    arm64: ARM64
+    darwin: macOS
+    linux: Linux
+    windows: Windows
+    openbsd: OpenBSD
+    netbsd: NetBSD
+    freebsd: FreeBSD
+    dragonfly: DragonFlyBSD
+
+archive:
+  format: tar.gz
+  format_overrides:
+  - goos: windows
+    format: zip
+  name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
+  replacements:
+    amd64: 64bit
+    386: 32bit
+    arm: ARM
+    arm64: ARM64
+    darwin: macOS
+    linux: Linux
+    windows: Windows
+    openbsd: OpenBSD
+    netbsd: NetBSD
+    freebsd: FreeBSD
+    dragonfly: DragonFlyBSD
+  files:
+  - README.md
+  - LICENSE
+
+brew:
+  github:
+    owner:
+    name: homebrew-guard
+  dependencies:
+  - rpm
+  homepage: "https://github.com/goodwithtech/docker-guard"
+  description: ""
+  test: |
+    system "#{bin}/program --version"
