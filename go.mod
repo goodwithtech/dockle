@@ -12,8 +12,8 @@ require (
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-shellwords v1.0.5 // indirect
 	github.com/morikuni/aec v0.0.0-20170113033406-39771216ff4c // indirect
-	github.com/opencontainers/runtime-spec v1.0.1 // indirect
-	github.com/opencontainers/selinux v1.2.2 // indirect
+	github.com/opencontainers/runtime-spec v0.1.2-0.20190507144316-5b71a03e2700 // indirect
+	github.com/opencontainers/selinux v1.2.2-0.20190423191439-bed85457b204 // indirect
 	github.com/stretchr/testify v1.3.0 // indirect
 	github.com/urfave/cli v1.20.0
 	github.com/vbatts/tar-split v0.11.1 // indirect
@@ -27,5 +27,3 @@ require (
 replace github.com/genuinetools/reg => github.com/tomoyamachi/reg v0.16.2-0.20190418055600-c6010b917a55
 
 replace github.com/Sirupsen/logrus => github.com/sirupsen/logrus v1.4.2
-
-replace github.com/sirupsen/logrus => github.com/sirupsen/logrus v1.4.2
