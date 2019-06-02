@@ -4,6 +4,16 @@ defaults: &defaults
     environment:
       GO111MODULE: "ON"
   working_directory: /go/src/github.com/goodwithtech/docker-guard
+  steps:
+  - checkout
+  - restore_cache:
+    name: Restore go modules cache
+    keys:
+    - go-mod-v1-{{ checksum "go.sum" }}
+  - save_cache:
+    key: go-mod-v1-{{ checksum "go.sum" }}
+    paths:
+    - "/go/pkg/mod"
 
 version: 2
 jobs:
@@ -17,6 +27,7 @@ jobs:
     steps:
     - checkout
     - run: curl -sL https://git.io/goreleaser | bash
+
 
 workflows:
   version: 2
