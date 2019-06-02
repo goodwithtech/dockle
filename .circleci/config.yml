@@ -1,0 +1,38 @@
+defaults: &defaults
+  docker:
+  - image: circleci/golang:1.11
+    environment:
+      GO111MODULE: "ON"
+  working_directory: /go/src/github.com/goodwithtech/docker-guard
+
+version: 2
+jobs:
+  test:
+    <<: *defaults
+    steps:
+    - checkout
+    - run: go test ./...
+  release:
+    <<: *defaults
+    steps:
+    - checkout
+    - run: curl -sL https://git.io/goreleaser | bash
+
+workflows:
+  version: 2
+  test_and_release:
+    jobs:
+    - test:
+        filters:
+          branches:
+            only: /.*/
+          tags:
+            only: /v[0-9]+(\.[0-9]+)*(-.*)*/
+    - release:
+        filters:
+          branches:
+            ignore: /.*/
+          tags:
+            only: /v[0-9]+(\.[0-9]+)*(-.*)*/
+        requires:
+        - test
