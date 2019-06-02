@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/docker/docker/image"
 	"github.com/goodwithtech/docker-guard/pkg/types"
 	"github.com/knqyf263/fanal/extractor"
+	"github.com/moby/moby/image"
 	"golang.org/x/xerrors"
 )
 
