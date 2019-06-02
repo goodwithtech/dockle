@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/docker/docker/image"
+	"github.com/moby/moby/image"
 
 	"github.com/goodwithtech/docker-guard/pkg/types"
 )
