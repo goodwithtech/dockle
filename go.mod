@@ -3,6 +3,7 @@ module github.com/goodwithtech/docker-guard
 go 1.12
 
 require (
+	github.com/Sirupsen/logrus v0.0.0-00010101000000-000000000000 // indirect
 	github.com/fatih/color v1.7.0
 	github.com/genuinetools/reg v0.16.0
 	github.com/knqyf263/fanal v0.0.0-20190528042547-07e27879b658
@@ -13,7 +14,7 @@ require (
 	github.com/opencontainers/runtime-spec v1.0.1 // indirect
 	github.com/opencontainers/selinux v1.2.2 // indirect
 	github.com/sirupsen/logrus v1.4.2 // indirect
-	github.com/stretchr/objx v0.2.0 // indirect
+	github.com/stretchr/testify v1.3.0 // indirect
 	github.com/urfave/cli v1.20.0
 	github.com/vbatts/tar-split v0.11.1 // indirect
 	go.uber.org/atomic v1.4.0 // indirect
@@ -25,3 +26,5 @@ require (
 )
 
 replace github.com/genuinetools/reg => github.com/tomoyamachi/reg v0.16.2-0.20190418055600-c6010b917a55
+
+replace github.com/Sirupsen/logrus => github.com/sirupsen/logrus v1.4.2
