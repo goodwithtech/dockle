@@ -28,6 +28,4 @@ replace github.com/genuinetools/reg => github.com/tomoyamachi/reg v0.16.2-0.2019
 
 replace github.com/Sirupsen/logrus => github.com/sirupsen/logrus v1.4.2
 
-exclude github.com/Sirupsen/logrus v1.0.6
-
-exclude github.com/Sirupsen/logrus v1.2.0
+replace github.com/sirupsen/logrus => github.com/sirupsen/logrus v1.4.2
