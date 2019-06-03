@@ -28,7 +28,6 @@ func TestAssess(t *testing.T) {
 	}
 
 	for testname, v := range tests {
-
 		read, err := os.Open(v.path)
 		if err != nil {
 			t.Errorf("%s : can't open file %s", testname, v.path)
@@ -38,7 +37,10 @@ func TestAssess(t *testing.T) {
 			t.Errorf("%s : can't open file %s", testname, v.path)
 		}
 		var d types.Image
-		json.Unmarshal(filebytes, &d)
+		err = json.Unmarshal(filebytes, &d)
+		if err != nil {
+			t.Errorf("%s : failed to unmarshal : %s", testname, v.path)
+		}
 
 		actual, err := checkAssessments(d)
 		if err != nil {

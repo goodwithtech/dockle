@@ -1,5 +1,8 @@
 package types
 
+// TODO: better to use docker/docker/image.Image.
+// if use docker/docker/image.Image, it's occur dependency errors.
+
 import (
 	"time"
 
@@ -7,13 +10,11 @@ import (
 )
 
 // Image stores the image configuration
-// if use docker/docker/image.Image, it's occur dependency errors.
 type Image struct {
 	V1Image
 	History    []History `json:"history,omitempty"`
 	OSVersion  string    `json:"os.version,omitempty"`
 	OSFeatures []string  `json:"os.features,omitempty"`
-	rawJSON    []byte
 }
 
 // V1Image stores the V1 image configuration.

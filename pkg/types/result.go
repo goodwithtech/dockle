@@ -34,8 +34,6 @@ const (
 	WarnLevel
 	FatalLevel
 	Pass
-	_minLevel_ = InfoLevel
-	_maxLevel_ = FatalLevel
 )
 
 type AlertDetail struct {

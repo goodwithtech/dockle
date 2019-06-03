@@ -22,7 +22,12 @@ func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []types.As
 	}
 
 	var d types.Image
-	json.Unmarshal(file, &d)
+
+	err = json.Unmarshal(file, &d)
+	if err != nil {
+		return nil, xerrors.New("Fail to parse docker config file.")
+	}
+
 	return checkAssessments(d)
 }
 
@@ -73,12 +78,12 @@ func checkAssessments(img types.Image) (assesses []types.Assessment, err error) 
 		}
 	}
 
-	for volume, _ := range img.Config.Volumes {
+	for volume := range img.Config.Volumes {
 		if _, ok := sensitiveDirs[volume]; ok {
 			assesses = append(assesses, types.Assessment{
 				Type:     types.AvoidMountSensitiveDir,
 				Filename: "docker config",
-				Desc:     fmt.Sprintf("Avoid mounting danger point : %s", volume),
+				Desc:     fmt.Sprintf("Avoid mounting sensitive dirs : %s", volume),
 			})
 		}
 
