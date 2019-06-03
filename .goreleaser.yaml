@@ -71,10 +71,8 @@ archive:
 
 brew:
   github:
-    owner:
+    owner: goodwithtech
     name: homebrew-guard
-  dependencies:
-  - rpm
   homepage: "https://github.com/goodwithtech/docker-guard"
   description: ""
   test: |
