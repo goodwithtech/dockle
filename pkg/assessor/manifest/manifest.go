@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/docker/docker/image"
 	"github.com/goodwithtech/docker-guard/pkg/types"
 	"github.com/knqyf263/fanal/extractor"
 	"golang.org/x/xerrors"
@@ -22,12 +21,12 @@ func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []types.As
 		return nil, xerrors.New("config json file doesn't exist")
 	}
 
-	var d image.Image
+	var d types.Image
 	json.Unmarshal(file, &d)
 	return checkAssessments(d)
 }
 
-func checkAssessments(img image.Image) (assesses []types.Assessment, err error) {
+func checkAssessments(img types.Image) (assesses []types.Assessment, err error) {
 	if img.Config.User == "" || img.Config.User == "root" {
 		assesses = append(assesses, types.Assessment{
 			Type:     types.AvoidRootDefault,
