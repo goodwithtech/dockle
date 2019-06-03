@@ -7,8 +7,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/moby/moby/image"
-
 	"github.com/goodwithtech/docker-guard/pkg/types"
 )
 
@@ -39,7 +37,7 @@ func TestAssess(t *testing.T) {
 		if err != nil {
 			t.Errorf("%s : can't open file %s", testname, v.path)
 		}
-		var d image.Image
+		var d types.Image
 		json.Unmarshal(filebytes, &d)
 
 		actual, err := checkAssessments(d)
