@@ -1,104 +1,116 @@
 package types
 
-type ScanResult map[string]error
-
 const (
+	// Security Checkpoints
 	SetPassword = iota
+	AvoidRootDefault
+	AvoidSensitiveDirectoryMounting
+	UseContentTrust
+	AvoidEnvKeySecret
+	AvoidCredentialFile
 	AvoidDuplicateUser
 	AvoidDuplicateGroup
-	AvoidRootDefault
-	UseHealthcheck
-	AvoidUpdate
+
+	// Dockerfile Checkpoints
 	AvoidUpgrade
 	AvoidSudo
-	AvoidEnvKeySecret
-	AvoidMountSensitiveDir
-	AvoidCredential
-	UseContentTrust
-
-	AvoidLargeImage
-	AvoidRootRun
-	DeleteTmpFiles
-	DeleteCacheFiles
-	PHPini
-	InvalidHost
-	FilePermission
-	RunSingleProcess
+	UseNoCacheAPK
+	MinimizeAptGet
 	AvoidLatestTag
+
 	MinTypeNumber = SetPassword
-	MaxTypeNumber = UseContentTrust
+	MaxTypeNumber = AvoidLatestTag
 )
 
 const (
 	InfoLevel = iota
 	WarnLevel
 	FatalLevel
-	Pass
+	PassLevel
+	SkipLevel
 )
 
 type AlertDetail struct {
 	DefaultLevel int
 	Title        string
+	Code         string
 }
 
 var AlertDetails = map[int]AlertDetail{
 	SetPassword: {
 		DefaultLevel: FatalLevel,
 		Title:        "Check password",
+		Code:         "SC0001",
 	},
 	AvoidRootDefault: {
 		DefaultLevel: WarnLevel,
 		Title:        "Check running user isn't root",
+		Code:         "SC0002",
 	},
-	AvoidDuplicateUser: {
+	AvoidSensitiveDirectoryMounting: {
+		DefaultLevel: FatalLevel,
+		Title:        "Check volumes",
+		Code:         "SC0003",
+	},
+	UseContentTrust: {
 		DefaultLevel: WarnLevel,
-		Title:        "Check user names",
-	},
-	AvoidDuplicateGroup: {
-		DefaultLevel: WarnLevel,
-		Title:        "Check group names",
-	},
-	AvoidLargeImage: {
-		DefaultLevel: InfoLevel,
-		Title:        "Check image size",
-	},
-	UseHealthcheck: {
-		DefaultLevel: InfoLevel,
-		Title:        "Check healthcheck setting",
-	},
-	AvoidUpdate: {
-		DefaultLevel: WarnLevel,
-		Title:        "Check update commands",
-	},
-	AvoidUpgrade: {
-		DefaultLevel: WarnLevel,
-		Title:        "Check upgrade commands",
-	},
-	AvoidSudo: {
-		DefaultLevel: WarnLevel,
-		Title:        "Check sudo commands",
+		Title:        "Check DOCKER CONTENT TRUST setting",
+		Code:         "SC0004",
 	},
 	AvoidEnvKeySecret: {
 		DefaultLevel: FatalLevel,
 		Title:        "Check environment vars",
+		Code:         "SC0005",
 	},
-	AvoidMountSensitiveDir: {
-		DefaultLevel: FatalLevel,
-		Title:        "Check volumes",
-	},
-	AvoidCredential: {
+	AvoidCredentialFile: {
 		DefaultLevel: WarnLevel,
 		Title:        "Check credential files",
+		Code:         "SC0005",
+	},
+	AvoidDuplicateUser: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check user names",
+		Code:         "SC0006",
+	},
+	AvoidDuplicateGroup: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check group names",
+		Code:         "SC0006",
 	},
 
-	UseContentTrust: {
+	AvoidUpgrade: {
 		DefaultLevel: WarnLevel,
-		Title:        "Check DOCKER CONTENT TRUST setting",
+		Title:        "Check upgrade commands",
+		Code:         "DC0001",
+	},
+	AvoidSudo: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check sudo commands",
+		Code:         "DC0002",
+	},
+
+	UseNoCacheAPK: {
+		DefaultLevel: InfoLevel,
+		Title:        "Check apk add command",
+		Code:         "DC0003",
+	},
+
+	MinimizeAptGet: {
+		DefaultLevel: InfoLevel,
+		Title:        "Check apt-get install command",
+		Code:         "DC0004",
+	},
+
+	AvoidLatestTag: {
+		DefaultLevel: WarnLevel,
+		Title:        "Check image tag",
+		Code:         "DC0005",
 	},
 }
 
 type Assessment struct {
 	Type     int
+	Level    int
 	Filename string
 	Desc     string
 }

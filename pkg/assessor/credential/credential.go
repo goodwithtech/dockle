@@ -2,6 +2,7 @@ package credential
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/goodwithtech/docker-guard/pkg/types"
 
@@ -12,19 +13,22 @@ type CredentialAssessor struct{}
 
 func (a CredentialAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
 	assesses := []types.Assessment{}
-	for _, filename := range a.RequiredFiles() {
-		_, ok := fileMap[filename]
-		if !ok {
-			continue
+	reqFiles := a.RequiredFiles()
+	for filename := range fileMap {
+		basename := filepath.Base(filename)
+		// check exist target files
+		for _, reqFilename := range reqFiles {
+			if reqFilename == basename {
+				assesses = append(
+					assesses,
+					types.Assessment{
+						Type:     types.AvoidCredentialFile,
+						Filename: filename,
+						Desc:     fmt.Sprintf("Suspicious file found : %s ", filename),
+					})
+				break
+			}
 		}
-		assesses = append(
-			assesses,
-			types.Assessment{
-				Type:     types.AvoidCredential,
-				Filename: filename,
-				Desc:     fmt.Sprintf("Suspicious file found : %s ", filename),
-			})
-
 	}
 	return assesses, nil
 }

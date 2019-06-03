@@ -24,7 +24,6 @@ const (
 
 func Run(c *cli.Context) (err error) {
 	// cliVersion := c.App.Version
-	result := types.ScanResult{}
 	debug := c.Bool("debug")
 	if err = log.InitLogger(debug); err != nil {
 		l.Fatal(err)
@@ -61,26 +60,23 @@ func Run(c *cli.Context) (err error) {
 		}
 	}
 
+	log.Logger.Debug("Start assessments...")
 	assessments, err := scanner.ScanImage(imageName, filePath)
 	if err != nil {
 		return err
 	}
+	log.Logger.Debug("End assessments...")
 
 	targetType := types.MinTypeNumber
 	for targetType <= types.MaxTypeNumber {
 		filtered := filteredAssessments(targetType, assessments)
-		writer.ShowTitleLine(targetType, len(filtered) == 0)
-		if len(filtered) > 0 {
-			for _, assessment := range filtered {
-				writer.ShowDescription(assessment)
-			}
-		}
+		writer.ShowTargetResult(targetType, filtered)
 		targetType++
 	}
 
 	exitCode := c.Int("exit-code")
 	if exitCode != 0 {
-		os.Exit(handleResult(result))
+		os.Exit(handleResult(assessments))
 	}
 
 	return nil
@@ -95,17 +91,22 @@ func filteredAssessments(target int, assessments []types.Assessment) (filtered [
 	return filtered
 }
 
-func handleResult(r types.ScanResult) (exitCode int) {
+func handleResult(assessments []types.Assessment) (exitCode int) {
 	optMap := getIgnoredOptMap()
-	for key, targetErr := range r {
+	for _, assessment := range assessments {
 		// skip if ignore opt
-		if _, ok := optMap[key]; ok {
+		if assessment.Level == types.SkipLevel {
 			continue
 		}
 
-		if targetErr != nil {
-			exitCode = 1
+		detail := types.AlertDetails[assessment.Type]
+
+		if _, ok := optMap[detail.Code]; ok {
+			continue
 		}
+
+		writer.ShowWhyABEND(detail.Code, assessment)
+		exitCode = 1
 	}
 
 	return exitCode

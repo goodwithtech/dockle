@@ -2,6 +2,8 @@ package assessor
 
 import (
 	"github.com/goodwithtech/docker-guard/pkg/assessor/contentTrust"
+	"github.com/goodwithtech/docker-guard/pkg/assessor/credential"
+	"github.com/goodwithtech/docker-guard/pkg/assessor/hosts"
 
 	"github.com/goodwithtech/docker-guard/pkg/assessor/group"
 	"github.com/goodwithtech/docker-guard/pkg/assessor/manifest"
@@ -24,6 +26,8 @@ func init() {
 	RegisterAssessor(passwd.PasswdAssessor{})
 	RegisterAssessor(user.UserAssessor{})
 	RegisterAssessor(group.GroupAssessor{})
+	RegisterAssessor(hosts.HostsAssessor{})
+	RegisterAssessor(credential.CredentialAssessor{})
 	RegisterAssessor(manifest.ManifestAssessor{})
 	RegisterAssessor(contentTrust.ContentTrustAssessor{})
 }

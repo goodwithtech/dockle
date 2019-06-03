@@ -14,12 +14,14 @@ import (
 type UserAssessor struct{}
 
 func (a UserAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+	var existFile bool
 	assesses := []types.Assessment{}
 	for _, filename := range a.RequiredFiles() {
 		file, ok := fileMap[filename]
 		if !ok {
 			continue
 		}
+		existFile = true
 		scanner := bufio.NewScanner(bytes.NewBuffer(file))
 		uidMap := map[string]struct{}{}
 		for scanner.Scan() {
@@ -41,6 +43,10 @@ func (a UserAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, err
 			uidMap[uid] = struct{}{}
 		}
 	}
+	if !existFile {
+		assesses = []types.Assessment{{Type: types.AvoidDuplicateUser, Level: types.SkipLevel}}
+	}
+
 	return assesses, nil
 }
 

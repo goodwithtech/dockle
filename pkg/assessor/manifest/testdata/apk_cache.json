@@ -1,0 +1,83 @@
+{
+  "architecture": "amd64",
+  "config": {
+    "Hostname": "",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "AttachStderr": false,
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    ],
+    "Cmd": [
+      "/bin/sh"
+    ],
+    "ArgsEscaped": true,
+    "Image": "sha256:d4a30ffdd84e73f03d4fa4277310814aae4892ad21c36d70c3eac80999c4a643",
+    "Volumes": null,
+    "WorkingDir": "",
+    "Entrypoint": null,
+    "OnBuild": null,
+    "Labels": null
+  },
+  "container_config": {
+    "Hostname": "",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "AttachStderr": false,
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    ],
+    "Cmd": [
+      "/bin/sh",
+      "-c",
+      "#(nop) ADD file:cf1415d8f82ed259f8e9cd1d44120662a8e5fea652935195313426c3f5712a5c in /app/credential.json "
+    ],
+    "ArgsEscaped": true,
+    "Image": "sha256:d4a30ffdd84e73f03d4fa4277310814aae4892ad21c36d70c3eac80999c4a643",
+    "Volumes": null,
+    "WorkingDir": "",
+    "Entrypoint": null,
+    "OnBuild": null,
+    "Labels": null
+  },
+  "created": "2019-06-03T18:21:23.2554118Z",
+  "docker_version": "18.09.2",
+  "history": [
+    {
+      "created": "2019-04-09T23:20:18.226548168Z",
+      "created_by": "/bin/sh -c #(nop) ADD file:2e3a37883f56a4a278bec2931fc9f91fb9ebdaa9047540fe8fde419b84a1701b in / "
+    },
+    {
+      "created": "2019-04-09T23:20:18.391201481Z",
+      "created_by": "/bin/sh -c #(nop)  CMD [\"/bin/sh\"]",
+      "empty_layer": true
+    },
+    {
+      "created": "2019-06-03T18:21:08.6996176Z",
+      "created_by": "/bin/sh -c apk add wget curl"
+    },
+    {
+      "created": "2019-06-03T18:21:23.2554118Z",
+      "created_by": "/bin/sh -c #(nop) ADD file:cf1415d8f82ed259f8e9cd1d44120662a8e5fea652935195313426c3f5712a5c in /app/credential.json "
+    }
+  ],
+  "os": "linux",
+  "rootfs": {
+    "type": "layers",
+    "diff_ids": [
+      "sha256:a464c54f93a9e88fc1d33df1e0e39cca427d60145a360962e8f19a1dbf900da9",
+      "sha256:52db8dfadb3ce319c37fe669372c25b69228c0561133469d3696cda77536ce20",
+      "sha256:d09f913df06f43f42a341b0c5263fe2b1e95d6f253784d8aea71c775df1e7e39"
+    ]
+  }
+}

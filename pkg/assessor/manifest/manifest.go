@@ -55,21 +55,32 @@ func checkAssessments(img types.Image) (assesses []types.Assessment, err error) 
 	}
 
 	for _, cmd := range img.History {
-		if strings.Contains("update", cmd.CreatedBy) {
+		if strings.Contains(cmd.CreatedBy, "apk add") {
+			if !strings.Contains(cmd.CreatedBy, "--no-cache") {
+				assesses = append(assesses, types.Assessment{
+					Type:     types.UseNoCacheAPK,
+					Filename: "docker config",
+					Desc:     fmt.Sprintf("Use --no-cache option if use apk add : %s", cmd.CreatedBy),
+				})
+			}
+		}
+
+		if minimizableAptGet(cmd.CreatedBy) {
 			assesses = append(assesses, types.Assessment{
-				Type:     types.AvoidUpdate,
+				Type:     types.MinimizeAptGet,
 				Filename: "docker config",
-				Desc:     fmt.Sprintf("Avoid update in container : %s", cmd.CreatedBy),
+				Desc:     fmt.Sprintf("Use 'apt-get clean' and 'rm -rf /var/lib/apt/lists/*' : %s", cmd.CreatedBy),
 			})
 		}
-		if strings.Contains("upgrade", cmd.CreatedBy) {
+
+		if strings.Contains(cmd.CreatedBy, "upgrade") {
 			assesses = append(assesses, types.Assessment{
 				Type:     types.AvoidUpgrade,
 				Filename: "docker config",
 				Desc:     fmt.Sprintf("Avoid upgrade in container : %s", cmd.CreatedBy),
 			})
 		}
-		if strings.Contains("sudo", cmd.CreatedBy) {
+		if strings.Contains(cmd.CreatedBy, "sudo") {
 			assesses = append(assesses, types.Assessment{
 				Type:     types.AvoidSudo,
 				Filename: "docker config",
@@ -81,14 +92,23 @@ func checkAssessments(img types.Image) (assesses []types.Assessment, err error) 
 	for volume := range img.Config.Volumes {
 		if _, ok := sensitiveDirs[volume]; ok {
 			assesses = append(assesses, types.Assessment{
-				Type:     types.AvoidMountSensitiveDir,
+				Type:     types.AvoidSensitiveDirectoryMounting,
 				Filename: "docker config",
 				Desc:     fmt.Sprintf("Avoid mounting sensitive dirs : %s", volume),
 			})
 		}
-
 	}
 	return assesses, nil
+}
+
+func minimizableAptGet(cmd string) bool {
+	if strings.Contains(cmd, "apt-get install") {
+		if strings.Contains(cmd, "apt-get clean") && strings.Contains(cmd, "rm -rf /var/lib/apt/lists") {
+			return false
+		}
+		return true
+	}
+	return false
 }
 
 // manifest contains /config

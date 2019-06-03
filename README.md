@@ -159,7 +159,6 @@ https://vsupalov.com/docker-latest-tag/
 
 > Docker images tagged with :latest have caused many people a lot of trouble.
   
-  
 # Examples
 
 ## Scan an image

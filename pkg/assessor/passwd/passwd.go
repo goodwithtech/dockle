@@ -14,16 +14,19 @@ import (
 type PasswdAssessor struct{}
 
 func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+	var existFile bool
 	assesses := []types.Assessment{}
 	for _, filename := range a.RequiredFiles() {
 		file, ok := fileMap[filename]
 		if !ok {
 			continue
 		}
+		existFile = true
 		scanner := bufio.NewScanner(bytes.NewBuffer(file))
 		for scanner.Scan() {
 			line := scanner.Text()
 			passData := strings.Split(line, ":")
+			// password must given
 			if passData[1] == "" {
 				assesses = append(
 					assesses,
@@ -34,6 +37,9 @@ func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, e
 					})
 			}
 		}
+	}
+	if !existFile {
+		assesses = []types.Assessment{{Type: types.SetPassword, Level: types.SkipLevel}}
 	}
 	return assesses, nil
 }

@@ -14,12 +14,14 @@ import (
 type GroupAssessor struct{}
 
 func (a GroupAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+	var existFile bool
 	assesses := []types.Assessment{}
 	for _, filename := range a.RequiredFiles() {
 		file, ok := fileMap[filename]
 		if !ok {
 			continue
 		}
+		existFile = true
 		scanner := bufio.NewScanner(bytes.NewBuffer(file))
 		gidMap := map[string]struct{}{}
 
@@ -41,6 +43,10 @@ func (a GroupAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, er
 			gidMap[gid] = struct{}{}
 		}
 	}
+	if !existFile {
+		assesses = []types.Assessment{{Type: types.AvoidDuplicateGroup, Level: types.SkipLevel}}
+	}
+
 	return assesses, nil
 }
 

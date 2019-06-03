@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
-	"reflect"
 	"testing"
 
+	"github.com/d4l3k/messagediff"
 	"github.com/goodwithtech/docker-guard/pkg/types"
 )
 
@@ -15,13 +15,25 @@ func TestAssess(t *testing.T) {
 		path     string
 		assesses []types.Assessment
 	}{
-		"Valid": {
+		"RootDefault": {
 			path: "./testdata/root_default.json",
 			assesses: []types.Assessment{
 				{
 					Type:     types.AvoidRootDefault,
 					Filename: "docker config",
-					Desc:     "Avoid default user set root",
+				},
+			},
+		},
+		"ApkCached": {
+			path: "./testdata/apk_cache.json",
+			assesses: []types.Assessment{
+				{
+					Type:     types.AvoidRootDefault,
+					Filename: "docker config",
+				},
+				{
+					Type:     types.UseNoCacheAPK,
+					Filename: "docker config",
 				},
 			},
 		},
@@ -46,8 +58,14 @@ func TestAssess(t *testing.T) {
 		if err != nil {
 			t.Errorf("%s : catch the error : %v", testname, err)
 		}
-		if !reflect.DeepEqual(v.assesses, actual) {
-			t.Errorf("[%s]\nexpected : %v\nactual : %v", testname, v.assesses, actual)
+
+		diff, equal := messagediff.PrettyDiff(
+			v.assesses,
+			actual,
+			messagediff.IgnoreStructField("Desc"),
+		)
+		if !equal {
+			t.Errorf("%s diff : %v", testname, diff)
 		}
 	}
 }

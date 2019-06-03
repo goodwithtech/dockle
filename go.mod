@@ -3,6 +3,7 @@ module github.com/goodwithtech/docker-guard
 go 1.12
 
 require (
+	github.com/d4l3k/messagediff v1.2.2-0.20180726183240-b9e99b2f9263
 	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.7.0
 	github.com/genuinetools/reg v0.16.0
