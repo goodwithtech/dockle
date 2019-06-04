@@ -103,9 +103,9 @@ A volume mount makes weakpoints.
 This depends on mounting volumes.
 Currently, docker-guard check following directories.
 
-`/boot`,`/dev`,`/etc`,`/lib','/proc`,`/sys`, `/usr`
+`/boot`,`/dev`,`/etc`,`/lib`,`/proc`,`/sys`, `/usr`
 
-docker-guard only checks `VOLUME`. We can't check `docker run -v /lib:/lib ...`.
+`guard` only checks `VOLUME` statements. We can't check `docker run -v /lib:/lib ...`.
 
 ### SC0004 : use DOCKER CONTENT TRUST
 
