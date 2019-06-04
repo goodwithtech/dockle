@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/goodwithtech/docker-guard/pkg/types"
+	"github.com/goodwithtech/docker-guard/pkg/log"
 
+	"github.com/goodwithtech/docker-guard/pkg/types"
 	"github.com/knqyf263/fanal/extractor"
 )
 
 type CredentialAssessor struct{}
 
 func (a CredentialAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+	log.Logger.Debug("Start scan : credential files")
 	assesses := []types.Assessment{}
 	reqFiles := a.RequiredFiles()
 	for filename := range fileMap {

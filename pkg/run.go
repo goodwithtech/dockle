@@ -6,6 +6,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/goodwithtech/docker-guard/pkg/utils"
+
 	"github.com/goodwithtech/docker-guard/pkg/writer"
 
 	"github.com/genuinetools/reg/registry"
@@ -23,10 +25,17 @@ const (
 )
 
 func Run(c *cli.Context) (err error) {
-	// cliVersion := c.App.Version
 	debug := c.Bool("debug")
 	if err = log.InitLogger(debug); err != nil {
 		l.Fatal(err)
+	}
+
+	cliVersion := c.App.Version
+	latestVersion, err := utils.FetchLatestVersion()
+
+	// check latest version
+	if err == nil && cliVersion != latestVersion {
+		log.Logger.Warnf("A new version %s is now available! You have %s.", latestVersion, cliVersion)
 	}
 
 	clearCache := c.Bool("clear-cache")
@@ -49,6 +58,7 @@ func Run(c *cli.Context) (err error) {
 		imageName = args[0]
 	}
 
+	var useLatestTag bool
 	// Check whether 'latest' tag is used
 	if imageName != "" {
 		image, err := registry.ParseImage(imageName)
@@ -56,6 +66,7 @@ func Run(c *cli.Context) (err error) {
 			return xerrors.Errorf("invalid image: %w", err)
 		}
 		if image.Tag == "latest" && !clearCache {
+			useLatestTag = true
 			log.Logger.Warn("You should avoid using the :latest tag as it is cached. You need to specify '--clear-cache' option when :latest image is changed")
 		}
 	}
@@ -65,6 +76,14 @@ func Run(c *cli.Context) (err error) {
 	if err != nil {
 		return err
 	}
+	if useLatestTag {
+		assessments = append(assessments, types.Assessment{
+			Type:     types.AvoidLatestTag,
+			Filename: "image tag",
+			Desc:     "Avoid 'latest' tag",
+		})
+	}
+
 	log.Logger.Debug("End assessments...")
 
 	targetType := types.MinTypeNumber
@@ -115,6 +134,7 @@ func handleResult(assessments []types.Assessment) (exitCode int) {
 func getIgnoredOptMap() map[string]struct{} {
 	f, err := os.Open(guardIgnore)
 	if err != nil {
+		log.Logger.Debug("There is no .guardignore file")
 		// docker-guard must work even if there isn't ignore file
 		return nil
 	}
@@ -127,6 +147,7 @@ func getIgnoredOptMap() map[string]struct{} {
 		if strings.HasPrefix(line, "#") || line == "" {
 			continue
 		}
+		log.Logger.Debugf("Add new ignore code: %s", line)
 		ignoredMap[line] = struct{}{}
 	}
 	return ignoredMap

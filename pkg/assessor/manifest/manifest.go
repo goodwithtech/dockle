@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/goodwithtech/docker-guard/pkg/log"
+
 	"github.com/goodwithtech/docker-guard/pkg/types"
 	"github.com/knqyf263/fanal/extractor"
 	"golang.org/x/xerrors"
@@ -16,6 +18,7 @@ var sensitiveDirs = map[string]struct{}{"/boot": {}, "/dev": {}, "/etc": {}, "/l
 var suspitiousEnvKey = []string{"PASSWD", "PASSWORD", "SECRET", "ENV", "ACCESS"}
 
 func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []types.Assessment, err error) {
+	log.Logger.Debug("Scan start : config file")
 	file, ok := fileMap["/config"]
 	if !ok {
 		return nil, xerrors.New("config json file doesn't exist")

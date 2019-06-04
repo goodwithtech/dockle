@@ -9,6 +9,8 @@ require (
 	github.com/genuinetools/reg v0.16.0
 	github.com/knqyf263/fanal v0.0.0-20190528042547-07e27879b658
 	github.com/mattn/go-colorable v0.1.2 // indirect
+	github.com/moul/http2curl v1.0.0 // indirect
+	github.com/parnurzeal/gorequest v0.2.15
 	github.com/urfave/cli v1.20.0
 	go.uber.org/atomic v1.4.0 // indirect
 	go.uber.org/multierr v1.1.0 // indirect

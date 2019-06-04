@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/goodwithtech/docker-guard/pkg/log"
+
 	"github.com/goodwithtech/docker-guard/pkg/types"
 
 	"github.com/knqyf263/fanal/extractor"
@@ -14,6 +16,8 @@ import (
 type GroupAssessor struct{}
 
 func (a GroupAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+	log.Logger.Debug("Start scan : /etc/group")
+
 	var existFile bool
 	assesses := []types.Assessment{}
 	for _, filename := range a.RequiredFiles() {
