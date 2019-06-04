@@ -26,8 +26,6 @@ nfpm:
   formats:
   - deb
   - rpm
-  dependencies:
-  - rpm
   vendor: "goodwithtech"
   homepage: "https://github.com/goodwithtech"
   maintainer: "Tomoya Amachi <tomoya.amachi@gmail.com>"
