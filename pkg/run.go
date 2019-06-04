@@ -30,7 +30,7 @@ func Run(c *cli.Context) (err error) {
 		l.Fatal(err)
 	}
 
-	cliVersion := c.App.Version
+	cliVersion := "v" + c.App.Version
 	latestVersion, err := utils.FetchLatestVersion()
 
 	// check latest version

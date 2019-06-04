@@ -1,6 +1,18 @@
 # docker-guard
 A Simple Security Checker for Container Image, Suitable for CI
 
+# TOC
+
+- [Abstract](#abstract)
+- [How to use](#how-to-use)
+- [Installation](#installation)
+- [Checkpoints](#checkpoints)
+  - [Security Checkpoints](#security-checkpoints)
+  - [Dockerfile Checkpoints](#dockerfile-checkpoints)
+- [Examples](#examples)
+- [Continuous Integration](#continuous-integration-ci)
+- [Roadmap](#roadmap)
+
 # Abstract
 
 `docker-guard` is 
@@ -41,13 +53,13 @@ $ go get -u github.com/goodwithtech/docker-guard
 Replace [YOUR_CACHE_DIR] with the cache directory on your machine.
 
 ```
-$ docker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ goodwithtech/docker-guard [YOUR_IMAGE_NAME]
+$ docker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ goodwithtech/guard [YOUR_IMAGE_NAME]
 ```
 
 Example for macOS:
 
 ```
-$ docker run --rm -v $HOME/Library/Caches:/root/.cache/ goodwithtech/docker-guard [YOUR_IMAGE_NAME]
+$ docker run --rm -v $HOME/Library/Caches:/root/.cache/ goodwithtech/guard [YOUR_IMAGE_NAME]
 ```
 
 If you would like to scan the image on your host machine, you need to mount `docker.sock`.
@@ -56,7 +68,7 @@ If you would like to scan the image on your host machine, you need to mount `doc
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ...
 ```
 
-Please re-pull latest `goodwithtech/docker-guard` if an error occured.
+Please re-pull latest `goodwithtech/guard` if an error occured.
 
 # Checkpoints
 
@@ -164,7 +176,41 @@ https://vsupalov.com/docker-latest-tag/
 
 ## Scan an image
 
+Simply specify an image name (and a tag).
+
+```bash
+$ guard goodwithtech/test-image:v1
+```
+<details>
+<summary>Result</summary>
+
+```
+FATAL   Check password
+        - No password user found! username : nopasswd
+WARN    Check running user isn't root
+        - Last user should not be root
+FATAL   Check volumes
+        - Avoid mounting sensitive dirs : /usr
+PASS    Check DOCKER CONTENT TRUST setting
+PASS    Check environment vars
+PASS    Check credential files
+PASS    Check user names
+PASS    Check group names
+PASS    Check upgrade commands
+PASS    Check sudo commands
+PASS    Check apk add command
+INFO    Check apt-get install command
+        - Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
+PASS    Check image tag
+```
+</details>
+
 ## Scan an image file
+
+```bash
+$ docker save alpine:latest -o alpine.tar
+$ guard --input alpine.tar
+```
 
 ## Specify exit code
 By default, `docker-guard` exits with code 0 even if there is some problems.
@@ -174,7 +220,7 @@ Use the --exit-code option if you want to exit with a non-zero exit code.
 $ guard  -exist-code 1 [IMAGE_NAME]
 ```
 
-## Ignore the specified rules
+## Ignore the specified checkpoints (only work with --exit-code)
 
 Use `.guardignore`.
 
