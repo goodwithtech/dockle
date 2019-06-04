@@ -34,7 +34,7 @@ OPTIONS:
 	app.Version = version
 	app.ArgsUsage = "image_name"
 
-	app.Usage = "A Simple Container auditing tool, Suitable for CI"
+	app.Usage = "A Simple Security Checker for Container Image, Suitable for CI"
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{

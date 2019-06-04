@@ -1,11 +1,11 @@
 # docker-guard
-A Simple scanner security and tool for Containers, Suitable for CI
+A Simple Security Checker for Container Image, Suitable for CI
 
 # Abstract
 
 `docker-guard` is 
 1) simple security auditing tool that helps you build secure Docker images
-2) check a docker configuration tool that helps you build `best practice` Docker images 
+2) check a docker configuration tool that helps you build [best practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images 
 
 # How to use
 
@@ -20,7 +20,8 @@ guard [YOUR_IMAGE_NAME]
 You can use homebrew on Mac OS.
 
 ```
-$ brew install goodwithtech/docker-guard
+$ brew tap goodwithtech/guard 
+$ brew install goodwithtech/guard/guard
 ```
 
 ## Binary (Including Windows)
