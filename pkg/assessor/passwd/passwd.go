@@ -37,7 +37,7 @@ func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, e
 					types.Assessment{
 						Type:     types.SetPassword,
 						Filename: filename,
-						Desc:     fmt.Sprintf("no passwd setting user %s ", passData[0]),
+						Desc:     fmt.Sprintf("No password user found! username : %s", passData[0]),
 					})
 			}
 		}

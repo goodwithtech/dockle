@@ -201,8 +201,67 @@ The test will fail if a vulnerability is found.
 When you don't want to fail the test, specify `--exit-code 0`.
 
 
+## Travis CI
 
+```yaml
+services:
+  - docker
 
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+
+before_install:
+  - docker build -t guard-ci-test:${COMMIT} .
+  - export VERSION=$(curl --silent "https://api.github.com/repos/goodwithtech/docker-guard/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+  - wget https://github.com/goodwithtech/docker-guard/releases/download/v${VERSION}/guard_${VERSION}_Linux-64bit.tar.gz
+  - tar zxvf guard_${VERSION}_Linux-64bit.tar.gz
+script:
+  - ./guard guard-ci-test:${COMMIT}
+  - ./guard --exit-code 1 guard-ci-test:${COMMIT}
+```
+
+Example: https://travis-ci.org/goodwithtech/guard-ci-test
+Repository: https://github.com/goodwithtech/guard-ci-test
+
+## Circle CI
+
+```yaml
+jobs:
+  build:
+    docker:
+      - image: docker:18.09-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build image
+          command: docker build -t guard-ci-test:${CIRCLE_SHA1} .
+      - run:
+          name: Install guard
+          command: |
+            apk add --update curl
+            VERSION=$(
+                curl --silent "https://api.github.com/repos/goodwithtech/docker-guard/releases/latest" | \
+                grep '"tag_name":' | \
+                sed -E 's/.*"v([^"]+)".*/\1/'
+            )
+
+            wget https://github.com/goodwithtech/docker-guard/releases/download/v${VERSION}/guard_${VERSION}_Linux-64bit.tar.gz
+            tar zxvf guard_${VERSION}_Linux-64bit.tar.gz
+            mv guard /usr/local/bin
+      - run:
+          name: Scan the local image with guard
+          command: guard --exit-code 1 guard-ci-test:${CIRCLE_SHA1}
+workflows:
+  version: 2
+  release:
+    jobs:
+      - build
+```
+
+Example : https://circleci.com/gh/goodwithtech/guard-ci-test/1
+Repository: https://github.com/goodwithtech/guard-ci-test
 
 # Roadmap
 

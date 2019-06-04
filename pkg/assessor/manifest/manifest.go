@@ -39,7 +39,7 @@ func checkAssessments(img types.Image) (assesses []types.Assessment, err error) 
 		assesses = append(assesses, types.Assessment{
 			Type:     types.AvoidRootDefault,
 			Filename: "docker config",
-			Desc:     "Avoid default user set root",
+			Desc:     "Last user should not be root",
 		})
 	}
 
@@ -51,7 +51,7 @@ func checkAssessments(img types.Image) (assesses []types.Assessment, err error) 
 				assesses = append(assesses, types.Assessment{
 					Type:     types.AvoidEnvKeySecret,
 					Filename: "docker config",
-					Desc:     fmt.Sprintf("Suspitious keyname found : %s", envKey),
+					Desc:     fmt.Sprintf("Suspitious ENV var found : %s", envKey),
 				})
 			}
 		}
@@ -63,7 +63,7 @@ func checkAssessments(img types.Image) (assesses []types.Assessment, err error) 
 				assesses = append(assesses, types.Assessment{
 					Type:     types.UseNoCacheAPK,
 					Filename: "docker config",
-					Desc:     fmt.Sprintf("Use --no-cache option if use apk add : %s", cmd.CreatedBy),
+					Desc:     fmt.Sprintf("Use --no-cache option if use 'apk add': %s", cmd.CreatedBy),
 				})
 			}
 		}
@@ -72,7 +72,7 @@ func checkAssessments(img types.Image) (assesses []types.Assessment, err error) 
 			assesses = append(assesses, types.Assessment{
 				Type:     types.MinimizeAptGet,
 				Filename: "docker config",
-				Desc:     fmt.Sprintf("Use 'apt-get clean' and 'rm -rf /var/lib/apt/lists/*' : %s", cmd.CreatedBy),
+				Desc:     fmt.Sprintf("Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : %s", cmd.CreatedBy),
 			})
 		}
 
