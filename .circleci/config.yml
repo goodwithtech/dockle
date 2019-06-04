@@ -25,7 +25,7 @@ jobs:
     <<: *defaults
     steps:
     - checkout
-    - run: curl -sL https://git.io/goreleaser | bash
+    - run: sudo apt-get install -y rpm && curl -sL https://git.io/goreleaser | bash
 
 
 workflows:
