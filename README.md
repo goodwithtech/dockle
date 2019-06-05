@@ -72,32 +72,117 @@ Please re-pull latest `goodwithtech/guard` if an error occured.
 
 # Checkpoints
 
-## Security Checkpoints
+## Check Levels
 
-### SC0001 : All user/group should set password
+docker-guard have 3 levels
 
-https://blog.aquasec.com/cve-2019-5021-alpine-docker-image-vulnerability
+FATAL : Be practical and prudent
+WARN : May negatively inhibit the utility or performance, but better to security
+INFO : For Your Information
 
-> CVE-2019-5021: Alpine Docker Image ‘null root password’ Vulnerability
-> 
+## Docker Image Checkpoints
 
-### SC0002 : Last user should not be root
+These checkpoints refered to [CIS Docker 1.13.0 Benchmark v1.0.0](https://downloads.cisecurity.org/).
 
-[hadolint:DL3002](https://github.com/hadolint/hadolint/wiki/DL3002)
+### CIS-DI-0001: Create a user for the container : FATAL
 
-<details>
-<summary>Correct code:</summary>
+> Create a non-root user for the container in the Dockerfile for the container image. 
 
 ```
-FROM busybox
-USER root
-RUN ...
-USER guest
+# Dockerfile
+RUN useradd -d /home/username -m -s /bin/bash username
+USER username
 ```
 
-</details>
 
-### SC0003 : Avoid sensitive directory mounting
+### CIS-DI-0002: Use trusted base images for containers : FATAL
+
+Not supported.
+Please check with [Trivy](https://github.com/knqyf263/trivy).
+
+### CIS-DI-0003: Do not install unnecessary packages in the container : FATAL
+
+Not supported yet.
+
+### CIS-DI-0004: Scan and rebuild the images to include security patches : FATAL
+
+Not supported.
+Please check with [Trivy](https://github.com/knqyf263/trivy).
+
+### CIS-DI-0005: Enable Content trust for Docker : FATAL
+
+> Content trust is disabled by default. You should enable it.
+
+```bash
+$ export DOCKER_CONTENT_TRUST=1 
+```
+
+https://docs.docker.com/engine/security/trust/content_trust/#about-docker-content-trust-dct
+
+> Docker Content Trust (DCT) provides the ability to use digital signatures for data sent to and received from remote Docker registries.
+> Engine Signature Verification prevents the following:
+> - `$ docker container run` of an unsigned image.
+> - `$ docker pull` of an unsigned image.
+> - `$ docker build` where the FROM image is not signed or is not scratch.
+
+
+### CIS-DI-0006: Add HEALTHCHECK instruction to the container image : FATAL
+
+> Add `HEALTHCHECK` instruction in your docker container images to perform the health check on running containers.
+
+```
+# Dockerfile
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD curl -f http://localhost/ || exit 1
+```
+
+### CIS-DI-0007: Do not use update instructions alone in the Dockerfile : FATAL
+
+> Do not use update instructions such as apt-get update alone or in a single line in the Dockerfile.
+
+```bash
+RUN apt-get update --no-cache
+```
+
+### CIS-DI-0008: Remove setuid and setgid permissions in the images : WARN
+
+Not supported yet.
+I will support it soon!
+
+> Removing setuid and setgid permissions in the images would prevent privilege escalation attacks in the containers.
+
+### CIS-DI-0009: Use COPY instead of ADD in Dockerfile : FATAL
+
+> Use COPY instruction instead of ADD instruction in the Dockerfile.
+
+```
+# Dockerfile
+ADD test.json /app/test.json
+↓
+COPY test.json /app/test.json
+```
+
+### CIS-DI-0010: Do not store secrets in Dockerfiles : FATAL
+
+> Do not store any secrets in Dockerfiles.
+
+`docker-guard` checks ENVIRONMENT variables and credential files.
+
+### CIS-DI-0011: Install verified packages only : WARN
+
+Not supported.
+It's better to use [Trivy](https://github.com/knqyf263/trivy).
+
+## Docker Guard Checkpoints for Docker
+
+These checkpoints refered to [Docker Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) and so on.
+
+### DG-DI-0001 : Avoid `sudo` command : FATAL
+
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
+> Avoid installing or using sudo as it has unpredictable TTY and signal-forwarding behavior that can cause problems.
+
+### DG-DI-0002 : Avoid sensitive directory mounting : FATAL
 
 A volume mount makes weakpoints. 
 This depends on mounting volumes.
@@ -107,58 +192,21 @@ Currently, docker-guard check following directories.
 
 `guard` only checks `VOLUME` statements. We can't check `docker run -v /lib:/lib ...`.
 
-### SC0004 : use DOCKER CONTENT TRUST
 
-> Docker Content Trust (DCT) provides the ability to use digital signatures for data sent to and received from remote Docker registries.
-> Engine Signature Verification prevents the following:
-> - `$ docker container run` of an unsigned image.
-> - `$ docker pull` of an unsigned image.
-> - `$ docker build` where the FROM image is not signed or is not scratch.
->> https://docs.docker.com/engine/security/trust/content_trust/#about-docker-content-trust-dct
-
-<details>
-<summary>How to set :</summary>
-
-```
-EXPORT DOCKER_CONTENT_TRUST=1 
-```
-</details>
-
-### SC0005 : Don’t store credentials in the image
-
-Images should be cupsule. Image shouldn't have state.
-All variables run via `docker run -env XXXXX`.
-
-
-### SC0006 : Unique UID/GROUPs
-
-http://www.linfo.org/uid.html
-
-> Contrary to popular belief, it is not necessary that each entry in the UID field be unique. However, non-unique UIDs can cause security problems, and thus UIDs should be kept unique across the entire organization.
-
-## Dockerfile Checkpoints
-
-### DC0001 : Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade`
+### DG-DI-0003 : Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade` : FATAL
 
 https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
  
 > Avoid RUN apt-get upgrade and dist-upgrade, as many of the “essential” packages from the parent images cannot upgrade inside an unprivileged container.
 
-
-### DC0002 : Avoid `sudo` command
-
-https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
-> Avoid installing or using sudo as it has unpredictable TTY and signal-forwarding behavior that can cause problems.
-
-
-### DC0003 : Use apk add with `--no-cache`
+### DG-DI-0004 : Use apk add with `--no-cache` : FATAL
 
 https://github.com/gliderlabs/docker-alpine/blob/master/docs/usage.md#disabling-cache
 
 > As of Alpine Linux 3.3 there exists a new --no-cache option for apk. It allows users to install packages with an index that is updated and used on-the-fly and not cached locally:
 > This avoids the need to use --update and remove /var/cache/apk/* when done installing packages.
 
-### DC0004 : Use apt-get minimize
+### DG-DI-0005 : Clear apt-get caches : FATAL
 
 Use “apt-get clearn && rm -rf /var/lib/apt/lists/*` if use apt-get install
 
@@ -166,12 +214,31 @@ https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-ge
 > In addition, when you clean up the apt cache by removing /var/lib/apt/lists it reduces the image size, since the apt cache is not stored in a layer. Since the RUN statement starts with apt-get update, the package cache is always refreshed prior to apt-get install.
 
 
-### DC0005 : Avoid `latest` tag
+### DG-DI-0006 : Avoid `latest` tag : WARN
 
 https://vsupalov.com/docker-latest-tag/
 
 > Docker images tagged with :latest have caused many people a lot of trouble.
-  
+
+## Docker Guard Checkpoints for Linux
+
+These checkpoints refered to [Linux Best Practices](https://www.cyberciti.biz/tips/linux-security.html) and so on.
+
+### DG-LI-0001 : Avoid empty password : FATAL
+
+https://blog.aquasec.com/cve-2019-5021-alpine-docker-image-vulnerability
+
+> CVE-2019-5021: Alpine Docker Image ‘null root password’ Vulnerability
+
+### DG-LI-0002 : Be unique UID/GROUPs : FATAL
+
+http://www.linfo.org/uid.html
+
+> Contrary to popular belief, it is not necessary that each entry in the UID field be unique. However, non-unique UIDs can cause security problems, and thus UIDs should be kept unique across the entire organization.
+
+
+
+
 # Examples
 
 ## Scan an image

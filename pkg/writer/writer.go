@@ -27,11 +27,11 @@ var AlertLevelColors = []func(a ...interface{}) string{
 	color.New(color.FgMagenta).SprintFunc(),
 	color.New(color.FgYellow).SprintFunc(),
 	color.New(color.FgRed).SprintFunc(),
-	color.New(color.FgCyan).SprintFunc(),
 	color.New(color.FgGreen).SprintFunc(),
+	color.New(color.FgCyan).SprintFunc(),
 }
 
-func ShowTargetResult(assessmentType int, assessments []types.Assessment) {
+func ShowTargetResult(assessmentType int, assessments []*types.Assessment) {
 	if len(assessments) == 0 {
 		showTitleLine(assessmentType, types.PassLevel)
 		return
@@ -54,11 +54,15 @@ func showTitleLine(assessmentType int, level int) {
 	fmt.Print(colorizeAlert(level), TAB, detail.Title, NEWLINE)
 }
 
-func showDescription(assessment types.Assessment) {
+func showDescription(assessment *types.Assessment) {
 	fmt.Print(TAB, LISTMARK, SPACE, assessment.Desc, NEWLINE)
 }
 
-func ShowWhyABEND(code string, assessment types.Assessment) {
+func ShowABENDTitle() {
+	fmt.Print("#### ERROR OCCURED ####", NEWLINE)
+}
+
+func ShowWhyABEND(code string, assessment *types.Assessment) {
 	fmt.Print(color.New(color.FgRed).Sprint("ERROR"), TAB, code, SPACE, ":", SPACE, assessment.Desc, NEWLINE)
 }
 

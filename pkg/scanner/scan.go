@@ -15,7 +15,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-func ScanImage(imageName, filePath string) (assessments []types.Assessment, err error) {
+func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err error) {
 	ctx := context.Background()
 	var target string
 	var files extractor.FileMap

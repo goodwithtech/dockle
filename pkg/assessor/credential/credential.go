@@ -12,9 +12,9 @@ import (
 
 type CredentialAssessor struct{}
 
-func (a CredentialAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+func (a CredentialAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : credential files")
-	assesses := []types.Assessment{}
+	assesses := []*types.Assessment{}
 	reqFiles := a.RequiredFiles()
 	for filename := range fileMap {
 		basename := filepath.Base(filename)
@@ -23,7 +23,7 @@ func (a CredentialAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessmen
 			if reqFilename == basename {
 				assesses = append(
 					assesses,
-					types.Assessment{
+					&types.Assessment{
 						Type:     types.AvoidCredentialFile,
 						Filename: filename,
 						Desc:     fmt.Sprintf("Suspicious file found : %s ", filename),

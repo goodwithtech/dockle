@@ -13,11 +13,11 @@ import (
 
 type UserAssessor struct{}
 
-func (a UserAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+func (a UserAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : /etc/passwd")
 
 	var existFile bool
-	assesses := []types.Assessment{}
+	assesses := []*types.Assessment{}
 	for _, filename := range a.RequiredFiles() {
 		file, ok := fileMap[filename]
 		if !ok {
@@ -36,7 +36,7 @@ func (a UserAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, err
 			if _, ok := uidMap[uid]; ok {
 				assesses = append(
 					assesses,
-					types.Assessment{
+					&types.Assessment{
 						Type:     types.AvoidDuplicateUser,
 						Filename: filename,
 						Desc:     fmt.Sprintf("duplicate UID %s : username %s", uid, uname),
@@ -46,7 +46,7 @@ func (a UserAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, err
 		}
 	}
 	if !existFile {
-		assesses = []types.Assessment{{Type: types.AvoidDuplicateUser, Level: types.SkipLevel}}
+		assesses = []*types.Assessment{{Type: types.AvoidDuplicateUser, Level: types.SkipLevel}}
 	}
 
 	return assesses, nil

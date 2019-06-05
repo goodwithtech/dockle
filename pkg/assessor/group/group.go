@@ -15,11 +15,11 @@ import (
 
 type GroupAssessor struct{}
 
-func (a GroupAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+func (a GroupAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : /etc/group")
 
 	var existFile bool
-	assesses := []types.Assessment{}
+	assesses := []*types.Assessment{}
 	for _, filename := range a.RequiredFiles() {
 		file, ok := fileMap[filename]
 		if !ok {
@@ -38,7 +38,7 @@ func (a GroupAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, er
 			if _, ok := gidMap[gid]; ok {
 				assesses = append(
 					assesses,
-					types.Assessment{
+					&types.Assessment{
 						Type:     types.AvoidDuplicateGroup,
 						Filename: filename,
 						Desc:     fmt.Sprintf("duplicate GroupID %s : username %s", gid, gname),
@@ -48,7 +48,7 @@ func (a GroupAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, er
 		}
 	}
 	if !existFile {
-		assesses = []types.Assessment{{Type: types.AvoidDuplicateGroup, Level: types.SkipLevel}}
+		assesses = []*types.Assessment{{Type: types.AvoidDuplicateGroup, Level: types.SkipLevel}}
 	}
 
 	return assesses, nil

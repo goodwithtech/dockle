@@ -13,26 +13,38 @@ import (
 func TestAssess(t *testing.T) {
 	var tests = map[string]struct {
 		path     string
-		assesses []types.Assessment
+		assesses []*types.Assessment
 	}{
 		"RootDefault": {
 			path: "./testdata/root_default.json",
-			assesses: []types.Assessment{
+			assesses: []*types.Assessment{
 				{
 					Type:     types.AvoidRootDefault,
+					Filename: "docker config",
+				},
+				{
+					Type:     types.AddHealthcheck,
 					Filename: "docker config",
 				},
 			},
 		},
 		"ApkCached": {
 			path: "./testdata/apk_cache.json",
-			assesses: []types.Assessment{
+			assesses: []*types.Assessment{
 				{
 					Type:     types.AvoidRootDefault,
 					Filename: "docker config",
 				},
 				{
-					Type:     types.UseNoCacheAPK,
+					Type:     types.AddHealthcheck,
+					Filename: "docker config",
+				},
+				{
+					Type:     types.UseApkAddNoCache,
+					Filename: "docker config",
+				},
+				{
+					Type:     types.UseCOPY,
 					Filename: "docker config",
 				},
 			},

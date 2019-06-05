@@ -15,11 +15,11 @@ import (
 
 type PasswdAssessor struct{}
 
-func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : password files")
 
 	var existFile bool
-	assesses := []types.Assessment{}
+	assesses := []*types.Assessment{}
 	for _, filename := range a.RequiredFiles() {
 		file, ok := fileMap[filename]
 		if !ok {
@@ -34,8 +34,8 @@ func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, e
 			if passData[1] == "" {
 				assesses = append(
 					assesses,
-					types.Assessment{
-						Type:     types.SetPassword,
+					&types.Assessment{
+						Type:     types.AvoidEmptyPassword,
 						Filename: filename,
 						Desc:     fmt.Sprintf("No password user found! username : %s", passData[0]),
 					})
@@ -43,7 +43,7 @@ func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, e
 		}
 	}
 	if !existFile {
-		assesses = []types.Assessment{{Type: types.SetPassword, Level: types.SkipLevel}}
+		assesses = []*types.Assessment{{Type: types.AvoidEmptyPassword, Level: types.SkipLevel}}
 	}
 	return assesses, nil
 }

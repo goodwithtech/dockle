@@ -18,7 +18,7 @@ import (
 var assessors []Assessor
 
 type Assessor interface {
-	Assess(extractor.FileMap) ([]types.Assessment, error)
+	Assess(extractor.FileMap) ([]*types.Assessment, error)
 	RequiredFiles() []string
 }
 
@@ -32,7 +32,7 @@ func init() {
 	RegisterAssessor(contentTrust.ContentTrustAssessor{})
 }
 
-func GetAssessments(files extractor.FileMap) (assessments []types.Assessment) {
+func GetAssessments(files extractor.FileMap) (assessments []*types.Assessment) {
 	for _, assessor := range assessors {
 		results, err := assessor.Assess(files)
 		if err != nil {

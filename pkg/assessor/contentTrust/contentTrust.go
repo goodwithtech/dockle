@@ -10,11 +10,11 @@ import (
 
 type ContentTrustAssessor struct{}
 
-func (a ContentTrustAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+func (a ContentTrustAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Scan start : DOCKER_CONTENT_TRUST")
 
 	if os.Getenv("DOCKER_CONTENT_TRUST") != "1" {
-		return []types.Assessment{
+		return []*types.Assessment{
 			{
 				Type:     types.UseContentTrust,
 				Filename: "ENVIRONMENT variable",

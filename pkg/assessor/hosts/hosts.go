@@ -8,10 +8,10 @@ import (
 
 type HostsAssessor struct{}
 
-func (a HostsAssessor) Assess(fileMap extractor.FileMap) ([]types.Assessment, error) {
+func (a HostsAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : /etc/hosts")
 
-	assesses := []types.Assessment{}
+	assesses := []*types.Assessment{}
 	// TODO : check hosts setting
 	return assesses, nil
 }

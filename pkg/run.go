@@ -20,6 +20,10 @@ import (
 	"github.com/urfave/cli"
 )
 
+var (
+	ignoreCheckpointMap map[string]struct{}
+)
+
 const (
 	guardIgnore = ".guardignore"
 )
@@ -77,7 +81,7 @@ func Run(c *cli.Context) (err error) {
 		return err
 	}
 	if useLatestTag {
-		assessments = append(assessments, types.Assessment{
+		assessments = append(assessments, &types.Assessment{
 			Type:     types.AvoidLatestTag,
 			Filename: "image tag",
 			Desc:     "Avoid 'latest' tag",
@@ -86,22 +90,41 @@ func Run(c *cli.Context) (err error) {
 
 	log.Logger.Debug("End assessments...")
 
+	exitCode := c.Int("exit-code")
+
+	// Store ignore checkpoint code
+	if exitCode != 0 {
+		getIgnoreCheckpointMap()
+	}
+
+	var abendAssessments []*types.Assessment
+
 	targetType := types.MinTypeNumber
 	for targetType <= types.MaxTypeNumber {
 		filtered := filteredAssessments(targetType, assessments)
 		writer.ShowTargetResult(targetType, filtered)
+
+		if exitCode != 0 {
+			for _, assessment := range filtered {
+				abendAssessments = filterAbendAssessments(abendAssessments, assessment)
+			}
+		}
 		targetType++
 	}
 
-	exitCode := c.Int("exit-code")
-	if exitCode != 0 {
-		os.Exit(handleResult(assessments))
+	if len(abendAssessments) > 0 {
+		writer.ShowABENDTitle()
+		for _, assessment := range abendAssessments {
+			detail := types.AlertDetails[assessment.Type]
+			writer.ShowWhyABEND(detail.Code, assessment)
+		}
+		os.Exit(1)
 	}
 
 	return nil
 }
 
-func filteredAssessments(target int, assessments []types.Assessment) (filtered []types.Assessment) {
+func filteredAssessments(target int, assessments []*types.Assessment) (filtered []*types.Assessment) {
 	for _, assessment := range assessments {
 		if assessment.Type == target {
 			filtered = append(filtered, assessment)
@@ -110,36 +133,26 @@ func filteredAssessments(target int, assessments []types.Assessment) (filtered [
 	return filtered
 }
 
-func handleResult(assessments []types.Assessment) (exitCode int) {
-	optMap := getIgnoredOptMap()
-	for _, assessment := range assessments {
-		// skip if ignore opt
-		if assessment.Level == types.SkipLevel {
-			continue
-		}
-
-		detail := types.AlertDetails[assessment.Type]
-
-		if _, ok := optMap[detail.Code]; ok {
-			continue
-		}
-
-		writer.ShowWhyABEND(detail.Code, assessment)
-		exitCode = 1
+func filterAbendAssessments(abendAssessments []*types.Assessment, assessment *types.Assessment) []*types.Assessment {
+	if assessment.Level == types.SkipLevel {
+		return abendAssessments
 	}
 
-	return exitCode
+	detail := types.AlertDetails[assessment.Type]
+	if _, ok := ignoreCheckpointMap[detail.Code]; ok {
+		return abendAssessments
+	}
+	return append(abendAssessments, assessment)
 }
 
-func getIgnoredOptMap() map[string]struct{} {
+func getIgnoreCheckpointMap() {
 	f, err := os.Open(guardIgnore)
 	if err != nil {
 		log.Logger.Debug("There is no .guardignore file")
 		// docker-guard must work even if there isn't ignore file
-		return nil
+		return
 	}
 
-	ignoredMap := map[string]struct{}{}
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -148,7 +161,6 @@ func getIgnoredOptMap() map[string]struct{} {
 			continue
 		}
 		log.Logger.Debugf("Add new ignore code: %s", line)
-		ignoredMap[line] = struct{}{}
+		ignoreCheckpointMap[line] = struct{}{}
 	}
-	return ignoredMap
 }
