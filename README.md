@@ -1,4 +1,4 @@
-<img src="imgs/logo.png" width="300">
+<img src="imgs/logo.png" width="450">
 
 [![GitHub release](https://img.shields.io/github/release/goodwithtech/docker-guard.svg)](https://github.com/goodwithtech/docker-guard/releases/latest)
 [![CircleCI](https://circleci.com/gh/goodwithtech/docker-guard.svg?style=svg)](https://circleci.com/gh/goodwithtech/docker-guard)
@@ -6,6 +6,11 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 A Simple Security Checker for Container Image, Suitable for CI
+
+<img src="imgs/guard-screen.png" width="800">
+
+
+<img src="imgs/guard-screen-exit-1.png" width="800">
 
 # TOC
 
