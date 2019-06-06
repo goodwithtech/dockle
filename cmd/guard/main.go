@@ -30,7 +30,7 @@ OPTIONS:
   {{end}}{{$option}}{{end}}{{end}}
 `
 	app := cli.NewApp()
-	app.Name = "docker-guard"
+	app.Name = "DockerGuard"
 	app.Version = version
 	app.ArgsUsage = "image_name"
 
