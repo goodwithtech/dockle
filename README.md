@@ -28,7 +28,7 @@ guard [YOUR_IMAGE_NAME]
 # Comparison (use CIS Benchmark checkpoints)
 
 |  | [DockerGuard](https://github.com/goodwithtech/docker-guard) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) | [hadolint](https://github.com/hadolint/hadolint) | 
-|--- |: --- :|: --- :|: --- :|
+|---|:---:|:---:|:---:|
 | 1.  Create a user for the container | ✓ | ✓ | ✓ |
 | 2.  Use trusted base images for containers | - | – | - |
 | 3.  Do not install unnecessary packages in the container | - | - | - |
@@ -41,7 +41,9 @@ guard [YOUR_IMAGE_NAME]
 | 10. Do not store secrets in Dockerfiles | ✓ | - | - |
 | 11. Install verified packages only | -  |  - | - |
 | |6|5|3|
+
 other checkpoints [here](#summary)!
+
 # Installation
 
 ## Mac OS X / Homebrew
@@ -100,25 +102,28 @@ INFO : For Your Information
 ## Summary
 
 | CODE | DESCRIPTION | LEVEL |
-| --- | --- |: --- :|
-| [CIS-DI-0001](#cis-di-0001--create-a-user-for-the-container) | Create a user for the container | FATAL |
-| [CIS-DI-0002](#cis-di-0002--use-trusted-base-images-for-containers) | Use trusted base images for containers | FATAL
-| [CIS-DI-0003](#cis-di-0003--do-not-install-unnecessary-packages-in-the-container) | Do not install unnecessary packages in the container | FATAL
-| [CIS-DI-0004](#cis-di-0004--scan-and-rebuild-the-images-to-include-security-patches) | Scan and rebuild the images to include security patches | FATAL
-| [CIS-DI-0006](#cis-di-0006--add-healthcheck-instruction-to-the-container-image) | Add HEALTHCHECK instruction to the container image | FATAL
-| [CIS-DI-0007](#cis-di-0007--do-not-use-update-instructions-alone-in-the-dockerfile) | Do not use update instructions alone in the Dockerfile | FATAL
-| [CIS-DI-0008](#cis-di-0008--remove-setuid-and-setgid-permissions-in-the-images) | Remove setuid and setgid permissions in the images | WARN
-| [CIS-DI-0009](#cis-di-0009--use-copy-instead-of-add-in-dockerfile) | Use COPY instead of ADD in Dockerfile | FATAL
-| [CIS-DI-0010](#cis-di-0010--do-not-store-secrets-in-dockerfiles) | Do not store secrets in Dockerfiles | FATAL
-| [CIS-DI-0011](#cis-di-0011--install-verified-packages-only) | Install verified packages only | WARN
-| [DGC-DI-0001](#dgc-di-0001--avoid-sudo-command) | Avoid `sudo` command | FATAL
-| [DGC-DI-0002](#dgc-di-0002--avoid-sensitive-directory-mounting) | Avoid sensitive directory mounting | FATAL
-| [DGC-DI-0003](#dgc-di-0003--avoid-apt-get-upgrade-apk-upgrade-dist-upgrade) | Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade` | FATAL
-| [DGC-DI-0004](#dgc-di-0004--use-apk-add-with---no-cache) | Use apk add with `--no-cache` | FATAL
-| [DGC-DI-0005](#dgc-di-0005--clear-apt-get-caches) | Clear apt-get caches | FATAL
-| [DGC-DI-0006](#dgc-di-0006--avoid-latest-tag) | Avoid `latest` tag | WARN
-| [DGC-LI-0001](#dgc-li-0001--avoid-empty-password) | Avoid empty password | FATAL
-| [DGC-LI-0002](#dgc-li-0002--be-unique-uidgroups) | Be unique UID/GROUPs | FATAL
+|---|---|:---:|
+| | [CIS's Docker Image Checkpoints](#docker-image-checkpoints) | |
+| [CIS-DI-0001](#cis-di-0001-create-a-user-for-the-container) | Create a user for the container | FATAL |
+| [CIS-DI-0002](#cis-di-0002-use-trusted-base-images-for-containers) | Use trusted base images for containers | FATAL
+| [CIS-DI-0003](#cis-di-0003-do-not-install-unnecessary-packages-in-the-container) | Do not install unnecessary packages in the container | FATAL
+| [CIS-DI-0004](#cis-di-0004-scan-and-rebuild-the-images-to-include-security-patches) | Scan and rebuild the images to include security patches | FATAL
+| [CIS-DI-0006](#cis-di-0006-add-healthcheck-instruction-to-the-container-image) | Add HEALTHCHECK instruction to the container image | FATAL
+| [CIS-DI-0007](#cis-di-0007-do-not-use-update-instructions-alone-in-the-dockerfile) | Do not use update instructions alone in the Dockerfile | FATAL
+| [CIS-DI-0008](#cis-di-0008-remove-setuid-and-setgid-permissions-in-the-images) | Remove setuid and setgid permissions in the images | WARN
+| [CIS-DI-0009](#cis-di-0009-use-copy-instead-of-add-in-dockerfile) | Use COPY instead of ADD in Dockerfile | FATAL
+| [CIS-DI-0010](#cis-di-0010-do-not-store-secrets-in-dockerfiles) | Do not store secrets in Dockerfiles | FATAL
+| [CIS-DI-0011](#cis-di-0011install-verified-packages-only) | Install verified packages only | WARN
+|| [DockerGuard Checkpoints for Docker](#docker-guard-checkpoints-for-docker) |
+| [DGC-DI-0001](#dgc-di-0001-avoid-sudo-command) | Avoid `sudo` command | FATAL
+| [DGC-DI-0002](#dgc-di-0002-avoid-sensitive-directory-mounting) | Avoid sensitive directory mounting | FATAL
+| [DGC-DI-0003](#dgc-di-0003-avoid-apt-get-upgrade-apk-upgrade-dist-upgrade) | Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade` | FATAL
+| [DGC-DI-0004](#dgc-di-0004-use-apk-add-with---no-cache) | Use apk add with `--no-cache` | FATAL
+| [DGC-DI-0005](#dgc-di-0005-clear-apt-get-caches) | Clear apt-get caches | FATAL
+| [DGC-DI-0006](#dgc-di-0006-avoid-latest-tag) | Avoid `latest` tag | WARN
+|| [DockerGuard Checkpoints for Linux](#docker-guard-checkpoints-for-linux) |
+| [DGC-LI-0001](#dgc-li-0001-avoid-empty-password) | Avoid empty password | FATAL
+| [DGC-LI-0002](#dgc-li-0002-be-unique-uidgroups) | Be unique UID/GROUPs | FATAL
 
 ## Docker Image Checkpoints
 
@@ -217,12 +222,12 @@ It's better to use [Trivy](https://github.com/knqyf263/trivy).
 
 These checkpoints refered to [Docker Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) and so on.
 
-### DG-DI-0001 : Avoid `sudo` command
+### DGC-DI-0001 : Avoid `sudo` command
 
 https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
 > Avoid installing or using sudo as it has unpredictable TTY and signal-forwarding behavior that can cause problems.
 
-### DG-DI-0002 : Avoid sensitive directory mounting
+### DGC-DI-0002 : Avoid sensitive directory mounting
 
 A volume mount makes weakpoints. 
 This depends on mounting volumes.
@@ -233,20 +238,20 @@ Currently, docker-guard check following directories.
 `guard` only checks `VOLUME` statements. We can't check `docker run -v /lib:/lib ...`.
 
 
-### DG-DI-0003 : Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade`
+### DGC-DI-0003 : Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade`
 
 https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
  
 > Avoid RUN apt-get upgrade and dist-upgrade, as many of the “essential” packages from the parent images cannot upgrade inside an unprivileged container.
 
-### DG-DI-0004 : Use apk add with `--no-cache`
+### DGC-DI-0004 : Use apk add with `--no-cache`
 
 https://github.com/gliderlabs/docker-alpine/blob/master/docs/usage.md#disabling-cache
 
 > As of Alpine Linux 3.3 there exists a new --no-cache option for apk. It allows users to install packages with an index that is updated and used on-the-fly and not cached locally:
 > This avoids the need to use --update and remove /var/cache/apk/* when done installing packages.
 
-### DG-DI-0005 : Clear apt-get caches
+### DGC-DI-0005 : Clear apt-get caches
 
 Use “apt-get clearn && rm -rf /var/lib/apt/lists/*` if use apt-get install
 
@@ -254,7 +259,7 @@ https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-ge
 > In addition, when you clean up the apt cache by removing /var/lib/apt/lists it reduces the image size, since the apt cache is not stored in a layer. Since the RUN statement starts with apt-get update, the package cache is always refreshed prior to apt-get install.
 
 
-### DG-DI-0006 : Avoid `latest` tag
+### DGC-DI-0006 : Avoid `latest` tag
 
 https://vsupalov.com/docker-latest-tag/
 
@@ -264,13 +269,13 @@ https://vsupalov.com/docker-latest-tag/
 
 These checkpoints refered to [Linux Best Practices](https://www.cyberciti.biz/tips/linux-security.html) and so on.
 
-### DG-LI-0001 : Avoid empty password 
+### DGC-LI-0001 : Avoid empty password 
 
 https://blog.aquasec.com/cve-2019-5021-alpine-docker-image-vulnerability
 
 > CVE-2019-5021: Alpine Docker Image ‘null root password’ Vulnerability
 
-### DG-LI-0002 : Be unique UID/GROUPs
+### DGC-LI-0002 : Be unique UID/GROUPs
 
 http://www.linfo.org/uid.html
 
