@@ -5,17 +5,20 @@ A Simple Security Checker for Container Image, Suitable for CI
 
 - [Abstract](#abstract)
 - [How to use](#how-to-use)
+- [Comparison](#comparison-use-cis-benchmark-checkpoints)
 - [Installation](#installation)
-- [Checkpoints](#checkpoints)
-  - [Security Checkpoints](#security-checkpoints)
-  - [Dockerfile Checkpoints](#dockerfile-checkpoints)
+- [Checkpoint Summary](#checkpoint-summary)
 - [Examples](#examples)
 - [Continuous Integration](#continuous-integration-ci)
+- [Checkpoint Detail](#checkpoint-detail)
+  - [CIS's Docker Image Checkpoints](#docker-image-checkpoints)
+  - [DockerGuard Checkpoints for Docker](#dockerguard-checkpoints-for-docker)
+  - [DockerGuard Checkpoints for Linux](#dockerguard-checkpoints-for-linux)
 - [Roadmap](#roadmap)
 
 # Abstract
 
-`docker-guard` is 
+`DockerGuard` is 
 1) simple security auditing tool that helps you build secure Docker images
 2) check a docker configuration tool that helps you build [best practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images 
 
@@ -42,7 +45,7 @@ guard [YOUR_IMAGE_NAME]
 | 11. Install verified packages only | -  |  - | - |
 | |6|5|3|
 
-other checkpoints [here](#summary)!
+All checkpoints [here](#checkpoint-summary)!
 
 # Installation
 
@@ -89,19 +92,9 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ...
 
 Please re-pull latest `goodwithtech/guard` if an error occured.
 
-# Checkpoints
+# Checkpoints Summary
 
-## Check Levels
-
-docker-guard have 3 levels
-
-FATAL : Be practical and prudent
-WARN : May negatively inhibit the utility or performance, but better to security
-INFO : For Your Information
-
-## Summary
-
-| CODE | DESCRIPTION | LEVEL |
+| CODE | DESCRIPTION | LEVEL[※](#level) |
 |---|---|:---:|
 | | [CIS's Docker Image Checkpoints](#docker-image-checkpoints) | |
 | [CIS-DI-0001](#cis-di-0001-create-a-user-for-the-container) | Create a user for the container | FATAL |
@@ -114,175 +107,26 @@ INFO : For Your Information
 | [CIS-DI-0009](#cis-di-0009-use-copy-instead-of-add-in-dockerfile) | Use COPY instead of ADD in Dockerfile | FATAL
 | [CIS-DI-0010](#cis-di-0010-do-not-store-secrets-in-dockerfiles) | Do not store secrets in Dockerfiles | FATAL
 | [CIS-DI-0011](#cis-di-0011install-verified-packages-only) | Install verified packages only | WARN
-|| [DockerGuard Checkpoints for Docker](#docker-guard-checkpoints-for-docker) |
+|| [DockerGuard Checkpoints for Docker](#dockerguard-checkpoints-for-docker) |
 | [DGC-DI-0001](#dgc-di-0001-avoid-sudo-command) | Avoid `sudo` command | FATAL
 | [DGC-DI-0002](#dgc-di-0002-avoid-sensitive-directory-mounting) | Avoid sensitive directory mounting | FATAL
 | [DGC-DI-0003](#dgc-di-0003-avoid-apt-get-upgrade-apk-upgrade-dist-upgrade) | Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade` | FATAL
 | [DGC-DI-0004](#dgc-di-0004-use-apk-add-with---no-cache) | Use apk add with `--no-cache` | FATAL
 | [DGC-DI-0005](#dgc-di-0005-clear-apt-get-caches) | Clear apt-get caches | FATAL
 | [DGC-DI-0006](#dgc-di-0006-avoid-latest-tag) | Avoid `latest` tag | WARN
-|| [DockerGuard Checkpoints for Linux](#docker-guard-checkpoints-for-linux) |
+|| [DockerGuard Checkpoints for Linux](#dockerguard-checkpoints-for-linux) |
 | [DGC-LI-0001](#dgc-li-0001-avoid-empty-password) | Avoid empty password | FATAL
 | [DGC-LI-0002](#dgc-li-0002-be-unique-uidgroups) | Be unique UID/GROUPs | FATAL
 
-## Docker Image Checkpoints
-
-These checkpoints refered to [CIS Docker 1.13.0 Benchmark v1.0.0](https://downloads.cisecurity.org/).
-
-### CIS-DI-0001: Create a user for the container
-
-> Create a non-root user for the container in the Dockerfile for the container image. 
-
-```
-# Dockerfile
-RUN useradd -d /home/username -m -s /bin/bash username
-USER username
-```
-
-
-### CIS-DI-0002: Use trusted base images for containers
-
-Not supported.
-Please check with [Trivy](https://github.com/knqyf263/trivy).
-
-### CIS-DI-0003: Do not install unnecessary packages in the container
-
-Not supported yet.
-
-### CIS-DI-0004: Scan and rebuild the images to include security patches
-
-Not supported.
-Please check with [Trivy](https://github.com/knqyf263/trivy).
-
-### CIS-DI-0005: Enable Content trust for Docker
-
-> Content trust is disabled by default. You should enable it.
-
-```bash
-$ export DOCKER_CONTENT_TRUST=1 
-```
-
-https://docs.docker.com/engine/security/trust/content_trust/#about-docker-content-trust-dct
-
-> Docker Content Trust (DCT) provides the ability to use digital signatures for data sent to and received from remote Docker registries.
-> Engine Signature Verification prevents the following:
-> - `$ docker container run` of an unsigned image.
-> - `$ docker pull` of an unsigned image.
-> - `$ docker build` where the FROM image is not signed or is not scratch.
-
-
-### CIS-DI-0006: Add HEALTHCHECK instruction to the container image
-
-> Add `HEALTHCHECK` instruction in your docker container images to perform the health check on running containers.
-
-```
-# Dockerfile
-HEALTHCHECK --interval=5m --timeout=3s \
-  CMD curl -f http://localhost/ || exit 1
-```
-
-### CIS-DI-0007: Do not use update instructions alone in the Dockerfile
-
-> Do not use update instructions such as apt-get update alone or in a single line in the Dockerfile.
-
-```bash
-RUN apt-get update --no-cache
-```
-
-### CIS-DI-0008: Remove setuid and setgid permissions in the images
-
-Not supported yet.
-I will support it soon!
-
-> Removing setuid and setgid permissions in the images would prevent privilege escalation attacks in the containers.
-
-### CIS-DI-0009: Use COPY instead of ADD in Dockerfile
-
-> Use COPY instruction instead of ADD instruction in the Dockerfile.
-
-```
-# Dockerfile
-ADD test.json /app/test.json
-↓
-COPY test.json /app/test.json
-```
-
-### CIS-DI-0010: Do not store secrets in Dockerfiles
-
-> Do not store any secrets in Dockerfiles.
-
-`docker-guard` checks ENVIRONMENT variables and credential files.
-
-### CIS-DI-0011: Install verified packages only
-
-Not supported.
-It's better to use [Trivy](https://github.com/knqyf263/trivy).
-
-## Docker Guard Checkpoints for Docker
-
-These checkpoints refered to [Docker Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) and so on.
-
-### DGC-DI-0001 : Avoid `sudo` command
-
-https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
-> Avoid installing or using sudo as it has unpredictable TTY and signal-forwarding behavior that can cause problems.
-
-### DGC-DI-0002 : Avoid sensitive directory mounting
-
-A volume mount makes weakpoints. 
-This depends on mounting volumes.
-Currently, docker-guard check following directories.
-
-`/boot`,`/dev`,`/etc`,`/lib`,`/proc`,`/sys`, `/usr`
-
-`guard` only checks `VOLUME` statements. We can't check `docker run -v /lib:/lib ...`.
-
-
-### DGC-DI-0003 : Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade`
-
-https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
- 
-> Avoid RUN apt-get upgrade and dist-upgrade, as many of the “essential” packages from the parent images cannot upgrade inside an unprivileged container.
-
-### DGC-DI-0004 : Use apk add with `--no-cache`
-
-https://github.com/gliderlabs/docker-alpine/blob/master/docs/usage.md#disabling-cache
-
-> As of Alpine Linux 3.3 there exists a new --no-cache option for apk. It allows users to install packages with an index that is updated and used on-the-fly and not cached locally:
-> This avoids the need to use --update and remove /var/cache/apk/* when done installing packages.
-
-### DGC-DI-0005 : Clear apt-get caches
-
-Use “apt-get clearn && rm -rf /var/lib/apt/lists/*` if use apt-get install
-
-https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
-> In addition, when you clean up the apt cache by removing /var/lib/apt/lists it reduces the image size, since the apt cache is not stored in a layer. Since the RUN statement starts with apt-get update, the package cache is always refreshed prior to apt-get install.
-
-
-### DGC-DI-0006 : Avoid `latest` tag
-
-https://vsupalov.com/docker-latest-tag/
-
-> Docker images tagged with :latest have caused many people a lot of trouble.
-
-## Docker Guard Checkpoints for Linux
-
-These checkpoints refered to [Linux Best Practices](https://www.cyberciti.biz/tips/linux-security.html) and so on.
-
-### DGC-LI-0001 : Avoid empty password 
-
-https://blog.aquasec.com/cve-2019-5021-alpine-docker-image-vulnerability
-
-> CVE-2019-5021: Alpine Docker Image ‘null root password’ Vulnerability
-
-### DGC-LI-0002 : Be unique UID/GROUPs
-
-http://www.linfo.org/uid.html
-
-> Contrary to popular belief, it is not necessary that each entry in the UID field be unique. However, non-unique UIDs can cause security problems, and thus UIDs should be kept unique across the entire organization.
-
-
-
+#### Level
+
+`DockerGuard` has 3 check levels
+
+| LEVEL | DESCRIPTION |
+|:---:|---|
+| FATAL | Be practical and prudent |
+| WARN | May negatively inhibit the utility or performance, but better to security |
+| INFO | For Your Information |
 
 # Examples
 
@@ -420,6 +264,164 @@ workflows:
 
 Example : https://circleci.com/gh/goodwithtech/guard-ci-test/1
 Repository: https://github.com/goodwithtech/guard-ci-test
+
+# Checkpoint Detail
+
+## Docker Image Checkpoints
+
+These checkpoints refered to [CIS Docker 1.13.0 Benchmark v1.0.0](https://downloads.cisecurity.org/).
+
+### CIS-DI-0001: Create a user for the container
+
+> Create a non-root user for the container in the Dockerfile for the container image. 
+
+```
+# Dockerfile
+RUN useradd -d /home/username -m -s /bin/bash username
+USER username
+```
+
+
+### CIS-DI-0002: Use trusted base images for containers
+
+Not supported.
+Please check with [Trivy](https://github.com/knqyf263/trivy).
+
+### CIS-DI-0003: Do not install unnecessary packages in the container
+
+Not supported yet.
+
+### CIS-DI-0004: Scan and rebuild the images to include security patches
+
+Not supported.
+Please check with [Trivy](https://github.com/knqyf263/trivy).
+
+### CIS-DI-0005: Enable Content trust for Docker
+
+> Content trust is disabled by default. You should enable it.
+
+```bash
+$ export DOCKER_CONTENT_TRUST=1 
+```
+
+https://docs.docker.com/engine/security/trust/content_trust/#about-docker-content-trust-dct
+
+> Docker Content Trust (DCT) provides the ability to use digital signatures for data sent to and received from remote Docker registries.
+> Engine Signature Verification prevents the following:
+> - `$ docker container run` of an unsigned image.
+> - `$ docker pull` of an unsigned image.
+> - `$ docker build` where the FROM image is not signed or is not scratch.
+
+
+### CIS-DI-0006: Add HEALTHCHECK instruction to the container image
+
+> Add `HEALTHCHECK` instruction in your docker container images to perform the health check on running containers.
+
+```
+# Dockerfile
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD curl -f http://localhost/ || exit 1
+```
+
+### CIS-DI-0007: Do not use update instructions alone in the Dockerfile
+
+> Do not use update instructions such as apt-get update alone or in a single line in the Dockerfile.
+
+```bash
+RUN apt-get update --no-cache
+```
+
+### CIS-DI-0008: Remove setuid and setgid permissions in the images
+
+Not supported yet.
+I will support it soon!
+
+> Removing setuid and setgid permissions in the images would prevent privilege escalation attacks in the containers.
+
+### CIS-DI-0009: Use COPY instead of ADD in Dockerfile
+
+> Use COPY instruction instead of ADD instruction in the Dockerfile.
+
+```
+# Dockerfile
+ADD test.json /app/test.json
+↓
+COPY test.json /app/test.json
+```
+
+### CIS-DI-0010: Do not store secrets in Dockerfiles
+
+> Do not store any secrets in Dockerfiles.
+
+`docker-guard` checks ENVIRONMENT variables and credential files.
+
+### CIS-DI-0011: Install verified packages only
+
+Not supported.
+It's better to use [Trivy](https://github.com/knqyf263/trivy).
+
+## DockerGuard Checkpoints for Docker
+
+These checkpoints refered to [Docker Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) and so on.
+
+### DGC-DI-0001: Avoid `sudo` command
+
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
+> Avoid installing or using sudo as it has unpredictable TTY and signal-forwarding behavior that can cause problems.
+
+### DGC-DI-0002: Avoid sensitive directory mounting
+
+A volume mount makes weakpoints. 
+This depends on mounting volumes.
+Currently, docker-guard check following directories.
+
+`/boot`,`/dev`,`/etc`,`/lib`,`/proc`,`/sys`, `/usr`
+
+`guard` only checks `VOLUME` statements. We can't check `docker run -v /lib:/lib ...`.
+
+
+### DGC-DI-0003: Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade`
+
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
+ 
+> Avoid RUN apt-get upgrade and dist-upgrade, as many of the “essential” packages from the parent images cannot upgrade inside an unprivileged container.
+
+### DGC-DI-0004: Use apk add with `--no-cache`
+
+https://github.com/gliderlabs/docker-alpine/blob/master/docs/usage.md#disabling-cache
+
+> As of Alpine Linux 3.3 there exists a new --no-cache option for apk. It allows users to install packages with an index that is updated and used on-the-fly and not cached locally:
+> This avoids the need to use --update and remove /var/cache/apk/* when done installing packages.
+
+### DGC-DI-0005: Clear apt-get caches
+
+Use “apt-get clearn && rm -rf /var/lib/apt/lists/*` if use apt-get install
+
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
+> In addition, when you clean up the apt cache by removing /var/lib/apt/lists it reduces the image size, since the apt cache is not stored in a layer. Since the RUN statement starts with apt-get update, the package cache is always refreshed prior to apt-get install.
+
+
+### DGC-DI-0006: Avoid `latest` tag
+
+https://vsupalov.com/docker-latest-tag/
+
+> Docker images tagged with :latest have caused many people a lot of trouble.
+
+## DockerGuard Checkpoints for Linux
+
+These checkpoints refered to [Linux Best Practices](https://www.cyberciti.biz/tips/linux-security.html) and so on.
+
+### DGC-LI-0001: Avoid empty password 
+
+https://blog.aquasec.com/cve-2019-5021-alpine-docker-image-vulnerability
+
+> CVE-2019-5021: Alpine Docker Image ‘null root password’ Vulnerability
+
+### DGC-LI-0002: Be unique UID/GROUPs
+
+http://www.linfo.org/uid.html
+
+> Contrary to popular belief, it is not necessary that each entry in the UID field be unique. However, non-unique UIDs can cause security problems, and thus UIDs should be kept unique across the entire organization.
 
 # Roadmap
 
