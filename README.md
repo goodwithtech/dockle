@@ -1,4 +1,10 @@
-# DockerGuard
+<img src="imgs/logo.png" width="300">
+
+[![GitHub release](https://img.shields.io/github/release/goodwithtech/docker-guard.svg)](https://github.com/goodwithtech/docker-guard/releases/latest)
+[![CircleCI](https://circleci.com/gh/goodwithtech/docker-guard.svg?style=svg)](https://circleci.com/gh/goodwithtech/docker-guard)
+[![Go Report Card](https://goreportcard.com/badge/github.com/goodwithtech/docker-guard)](https://goreportcard.com/report/github.com/goodwithtech/docker-guard)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 A Simple Security Checker for Container Image, Suitable for CI
 
 # TOC
@@ -92,7 +98,7 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ...
 
 Please re-pull latest `goodwithtech/guard` if an error occured.
 
-# Checkpoints Summary
+# Checkpoint Summary
 
 | CODE | DESCRIPTION | LEVEL[※](#level) |
 |---|---|:---:|
@@ -106,7 +112,7 @@ Please re-pull latest `goodwithtech/guard` if an error occured.
 | [CIS-DI-0008](#cis-di-0008-remove-setuid-and-setgid-permissions-in-the-images) | Remove setuid and setgid permissions in the images | WARN
 | [CIS-DI-0009](#cis-di-0009-use-copy-instead-of-add-in-dockerfile) | Use COPY instead of ADD in Dockerfile | FATAL
 | [CIS-DI-0010](#cis-di-0010-do-not-store-secrets-in-dockerfiles) | Do not store secrets in Dockerfiles | FATAL
-| [CIS-DI-0011](#cis-di-0011install-verified-packages-only) | Install verified packages only | WARN
+| [CIS-DI-0011](#cis-di-0011-install-verified-packages-only) | Install verified packages only | WARN
 || [DockerGuard Checkpoints for Docker](#dockerguard-checkpoints-for-docker) |
 | [DGC-DI-0001](#dgc-di-0001-avoid-sudo-command) | Avoid `sudo` command | FATAL
 | [DGC-DI-0002](#dgc-di-0002-avoid-sensitive-directory-mounting) | Avoid sensitive directory mounting | FATAL
