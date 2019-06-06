@@ -153,6 +153,7 @@ func getIgnoreCheckpointMap() {
 		return
 	}
 
+	ignoreCheckpointMap = map[string]struct{}{}
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := scanner.Text()

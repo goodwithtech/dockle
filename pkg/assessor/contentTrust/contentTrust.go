@@ -18,7 +18,7 @@ func (a ContentTrustAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assess
 			{
 				Type:     types.UseContentTrust,
 				Filename: "ENVIRONMENT variable",
-				Desc:     "export DOCKER_CONTENT_TRUST=1 before docker build",
+				Desc:     "export DOCKER_CONTENT_TRUST=1 before docker pull/build",
 			},
 		}, nil
 	}

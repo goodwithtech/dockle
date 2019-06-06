@@ -169,7 +169,7 @@ $ guard --input alpine.tar
 ```
 
 ## Specify exit code
-By default, `docker-guard` exits with code 0 even if there is some problems.
+By default, `DockerGuard` exits with code 0 even if there is some problems.
 Use the --exit-code option if you want to exit with a non-zero exit code.
 
 ```bash
@@ -183,9 +183,9 @@ Use `.guardignore`.
 ```bash
 $ cat .guardignore
 # set root to default user because we want to run nginx
-SC0001
+CIS-DI-0001
 # Use latest tag because only check for image inside
-DC0005
+DGC-DI-0006
 ```
 
 ### Clear image caches
@@ -199,7 +199,9 @@ $ guard --clear-cache python:3.7
 # Continuous Integration (CI)
 
 Scan your image built in Travis CI/CircleCI. 
-The test will fail if a vulnerability is found. 
+The test will fail with if a error is found.
+You can skip target checkpoint if you use `.guardignore`.
+ 
 When you don't want to fail the test, specify `--exit-code 0`.
 
 
@@ -224,6 +226,7 @@ script:
 ```
 
 Example: https://travis-ci.org/goodwithtech/guard-ci-test
+
 Repository: https://github.com/goodwithtech/guard-ci-test
 
 ## Circle CI
@@ -262,7 +265,8 @@ workflows:
       - build
 ```
 
-Example : https://circleci.com/gh/goodwithtech/guard-ci-test/1
+Example : https://circleci.com/gh/goodwithtech/guard-ci-test
+
 Repository: https://github.com/goodwithtech/guard-ci-test
 
 # Checkpoint Detail
@@ -353,7 +357,7 @@ COPY test.json /app/test.json
 
 > Do not store any secrets in Dockerfiles.
 
-`docker-guard` checks ENVIRONMENT variables and credential files.
+`DockerGuard` checks ENVIRONMENT variables and credential files.
 
 ### CIS-DI-0011: Install verified packages only
 
@@ -373,7 +377,7 @@ https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
 
 A volume mount makes weakpoints. 
 This depends on mounting volumes.
-Currently, docker-guard check following directories.
+Currently, `DockerGuard` checks following directories.
 
 `/boot`,`/dev`,`/etc`,`/lib`,`/proc`,`/sys`, `/usr`
 

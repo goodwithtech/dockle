@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	LISTMARK = "-"
+	LISTMARK = "*"
 	SPACE    = " "
 	TAB      = "	"
 	NEWLINE  = "\n"
@@ -51,7 +51,7 @@ func ShowTargetResult(assessmentType int, assessments []*types.Assessment) {
 
 func showTitleLine(assessmentType int, level int) {
 	detail := types.AlertDetails[assessmentType]
-	fmt.Print(colorizeAlert(level), TAB, detail.Title, NEWLINE)
+	fmt.Print(colorizeAlert(level), TAB, "-", SPACE, detail.Title, NEWLINE)
 }
 
 func showDescription(assessment *types.Assessment) {
@@ -59,7 +59,7 @@ func showDescription(assessment *types.Assessment) {
 }
 
 func ShowABENDTitle() {
-	fmt.Print("#### ERROR OCCURED ####", NEWLINE)
+	fmt.Print(NEWLINE, "--- ERROR OCCURED ON... ----", NEWLINE)
 }
 
 func ShowWhyABEND(code string, assessment *types.Assessment) {

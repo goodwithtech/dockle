@@ -26,7 +26,7 @@ func (a CredentialAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessme
 					&types.Assessment{
 						Type:     types.AvoidCredentialFile,
 						Filename: filename,
-						Desc:     fmt.Sprintf("Suspicious file found : %s ", filename),
+						Desc:     fmt.Sprintf("Suspicious filename found : %s ", filename),
 					})
 				break
 			}

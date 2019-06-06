@@ -15,7 +15,7 @@ import (
 type ManifestAssessor struct{}
 
 var sensitiveDirs = map[string]struct{}{"/boot": {}, "/dev": {}, "/etc": {}, "/lib": {}, "/proc": {}, "/sys": {}, "/usr": {}}
-var suspitiousEnvKey = []string{"PASSWD", "PASSWORD", "SECRET", "ENV", "ACCESS"}
+var suspiciousEnvKey = []string{"PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS"}
 
 func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []*types.Assessment, err error) {
 	log.Logger.Debug("Scan start : config file")
@@ -46,12 +46,12 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 	for _, envVar := range img.Config.Env {
 		e := strings.Split(envVar, "=")
 		envKey := e[0]
-		for _, suspitiousKey := range suspitiousEnvKey {
-			if strings.Contains(envKey, suspitiousKey) {
+		for _, suspiciousKey := range suspiciousEnvKey {
+			if strings.Contains(envKey, suspiciousKey) {
 				assesses = append(assesses, &types.Assessment{
 					Type:     types.AvoidEnvKeySecret,
 					Filename: "docker config",
-					Desc:     fmt.Sprintf("Suspitious ENV var found : %s", envKey),
+					Desc:     fmt.Sprintf("Suspicious ENV key found : %s", envKey),
 				})
 			}
 		}
@@ -61,7 +61,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.AddHealthcheck,
 			Filename: "docker config",
-			Desc:     "use HEALTHCHECK statement",
+			Desc:     "not found HEALTHCHECK statement",
 		})
 	}
 
@@ -110,7 +110,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 			assesses = append(assesses, &types.Assessment{
 				Type:     types.UseCOPY,
 				Filename: "docker config",
-				Desc:     fmt.Sprintf("use COPY instead of ADD : %s", cmd.CreatedBy),
+				Desc:     fmt.Sprintf("Use COPY : %s", cmd.CreatedBy),
 			})
 		}
 	}
