@@ -24,7 +24,11 @@ func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err
 	analyzer.AddRequiredFilenames(assessor.LoadRequiredFiles())
 	if imageName != "" {
 		target = imageName
-		files, err = analyzer.Analyze(ctx, imageName)
+		dockerOption, err := types.GetDockerOption()
+		if err != nil {
+			return nil, xerrors.Errorf("failed to get docker option: %w", err)
+		}
+		files, err = analyzer.Analyze(ctx, imageName, dockerOption)
 		if err != nil {
 			return nil, xerrors.Errorf("failed to analyze image: %w", err)
 		}

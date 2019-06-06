@@ -5,7 +5,15 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/goodwithtech/docker-guard)](https://goreportcard.com/report/github.com/goodwithtech/docker-guard)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-A Simple Security Checker for Container Image, Suitable for CI
+`DockerGuard` is 
+1) Security auditing tool that helps you build secure Docker images
+    - Checkpoints includes [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
+2) Helps you build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images
+
+You can check a docker image only run... 
+```bash
+guard [YOUR_IMAGE_NAME]
+``` 
 
 <img src="imgs/guard-screen.png" width="800">
 
@@ -14,8 +22,6 @@ A Simple Security Checker for Container Image, Suitable for CI
 
 # TOC
 
-- [Abstract](#abstract)
-- [How to use](#how-to-use)
 - [Comparison](#comparison-use-cis-benchmark-checkpoints)
 - [Installation](#installation)
   - [RHEL/CentOS](#rhelcentos)
@@ -24,6 +30,9 @@ A Simple Security Checker for Container Image, Suitable for CI
   - [Binary (Including Windows)](#binary-including-windows)
   - [From source](#from-source)
 - [Checkpoint Summary](#checkpoint-summary)
+- [Quick Start](#quick-start)
+  - [Basic](#basic)
+  - [Docker](#docker)
 - [Examples](#examples)
   - [Scan an image](#scan-an-image)
   - [Scan an image file](#scan-an-image-file)
@@ -33,23 +42,13 @@ A Simple Security Checker for Container Image, Suitable for CI
 - [Continuous Integration](#continuous-integration-ci)
   - [Travis CI](#travis-ci)
   - [Circle CI](#circle-ci)
+  - [Authorization for Private Docker Registry](#authorization-for-private-docker-registry)
 - [Checkpoint Detail](#checkpoint-detail)
   - [CIS's Docker Image Checkpoints](#docker-image-checkpoints)
   - [DockerGuard Checkpoints for Docker](#dockerguard-checkpoints-for-docker)
   - [DockerGuard Checkpoints for Linux](#dockerguard-checkpoints-for-linux)
 - [Roadmap](#roadmap)
 
-# Abstract
-
-`DockerGuard` is 
-1) Security auditing tool that helps you build secure Docker images
-2) Helps you build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images 
-
-# How to use
-
-```bash
-guard [YOUR_IMAGE_NAME]
-```
 
 # Comparison (use CIS Benchmark checkpoints)
 
@@ -105,6 +104,49 @@ Get the latest version from [this page](https://github.com/goodwithtech/docker-g
 $ go get -u github.com/goodwithtech/docker-guard
 ```
 
+# Quick Start
+
+## Basic
+
+Simply specify an image name (and a tag).
+
+```bash
+$ guard [YOUR_IMAGE_NAME]
+```
+
+<details>
+<summary>Result</summary>
+
+```
+FATAL   - Create a user for the container
+        * Last user should not be root
+WARN    - Enable Content trust for Docker
+        * export DOCKER_CONTENT_TRUST=1 before docker pull/build
+FATAL   - Add HEALTHCHECK instruction to the container image
+        * not found HEALTHCHECK statement
+FATAL   - Do not use update instructions alone in the Dockerfile
+        * Use 'apt-get update --no-cache' : /bin/sh -c apt-get update && apt-get install -y git
+PASS    - Remove setuid and setgid permissions in the images
+FATAL   - Use COPY instead of ADD in Dockerfile
+        * Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
+FATAL   - Do not store secrets in ENVIRONMENT variables
+        * Suspicious ENV key found : MYSQL_PASSWD
+FATAL   - Do not store secret files
+        * Suspicious filename found : app/credentials.json
+PASS    - Avoid sudo command
+FATAL   - Avoid sensitive directory mounting
+        * Avoid mounting sensitive dirs : /usr
+PASS    - Avoid apt-get/apk/dist-upgrade
+PASS    - Use apk add with --no-cache
+FATAL   - Clear apt-get caches
+        * Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
+PASS    - Avoid latest tag
+FATAL   - Avoid empty password
+        * No password user found! username : nopasswd
+PASS    - Be unique UID
+PASS    - Be unique GROUP
+```
+</details>
 
 ## Docker
 
@@ -358,9 +400,54 @@ workflows:
       - build
 ```
 
-Example : https://circleci.com/gh/goodwithtech/guard-ci-test
-
+Example : https://circleci.com/gh/goodwithtech/guard-ci-test<br/>
 Repository: https://github.com/goodwithtech/guard-ci-test
+
+## Authorization for Private Docker Registry
+
+`DockerGuard` can download images from private registry, without installing `Docker` and any 3rd party tools.
+That's because it's easy to run in a CI process.
+
+All you have to do is install `DockerGuard` and set ENVIRONMENT variables.
+But, I can't recommend using ENV vars in your local machine to you.
+
+### Docker Hub
+
+Docker Hub needs `DOCKER_GUARD_AUTH_URL`, `DOCKER_GUARD_USERNAME` and `DOCKER_GUARD_PASSWORD`.
+You don't need to set ENV vars when download from public repository.
+
+```bash
+export DOCKER_GUARD_AUTH_URL=https://registry.hub.docker.com
+export DOCKER_GUARD_USERNAME={DOCKERHUB_USERNAME}
+export DOCKER_GUARD_PASSWORD={DOCKERHUB_PASSWORD}
+```
+
+### Amazon ECR (Elastic Container Registry)
+
+`DockerGuard` uses AWS SDK. You don't need to install `aws` CLI tool.
+You can use [AWS CLI's ENV Vars](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html).
+
+### GCR (Google Container Registry)
+
+`DockerGuard` uses Google Cloud SDK. You don't need to install `gcloud` command.
+
+If you want to use target project's repository, you can settle via `GOOGLE_APPLICATION_CREDENTIAL`. 
+```bash
+# must set DOCKER_GUARD_USERNAME empty char
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credential.json
+```
+
+### Self Hosted Registry (BasicAuth)
+
+BasicAuth server needs `DOCKER_GUARD_USERNAME` and `DOCKER_GUARD_PASSWORD`.
+
+```bash
+export DOCKER_GUARD_USERNAME={USERNAME}
+export DOCKER_GUARD_PASSWORD={PASSWORD}
+
+# if you want to use 80 port, use NonSSL
+export DOCKER_GUARD_NON_SSL=true
+```
 
 # Checkpoint Detail
 
@@ -534,6 +621,7 @@ http://www.linfo.org/uid.html
 			// gid
 		}
     ```
+- support Private repository    
 - General
   - [ ] detect os
   - [ ] use official container on the base
