@@ -18,9 +18,21 @@ A Simple Security Checker for Container Image, Suitable for CI
 - [How to use](#how-to-use)
 - [Comparison](#comparison-use-cis-benchmark-checkpoints)
 - [Installation](#installation)
+  - [RHEL/CentOS](#rhelcentos)
+  - [Debian/Ubuntu](#debianubuntu)
+  - [Mac OS X / Homebrew](#mac-os-x--homebrew)
+  - [Binary (Including Windows)](#binary-including-windows)
+  - [From source](#from-source)
 - [Checkpoint Summary](#checkpoint-summary)
 - [Examples](#examples)
+  - [Scan an image](#scan-an-image)
+  - [Scan an image file](#scan-an-image-file)
+  - [Specify exit code](#specify-exit-code)
+  - [Ignore the specified checkpoints](#ignore-the-specified-checkpoints-only-work-with---exit-code)
+  - [Clear image caches](#clear-image-caches)
 - [Continuous Integration](#continuous-integration-ci)
+  - [Travis CI](#travis-ci)
+  - [Circle CI](#circle-ci)
 - [Checkpoint Detail](#checkpoint-detail)
   - [CIS's Docker Image Checkpoints](#docker-image-checkpoints)
   - [DockerGuard Checkpoints for Docker](#dockerguard-checkpoints-for-docker)
@@ -30,8 +42,8 @@ A Simple Security Checker for Container Image, Suitable for CI
 # Abstract
 
 `DockerGuard` is 
-1) simple security auditing tool that helps you build secure Docker images
-2) check a docker configuration tool that helps you build [best practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images 
+1) Security auditing tool that helps you build secure Docker images
+2) Helps you build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images 
 
 # How to use
 
@@ -59,6 +71,19 @@ guard [YOUR_IMAGE_NAME]
 All checkpoints [here](#checkpoint-summary)!
 
 # Installation
+
+## RHEL/CentOS
+
+```
+$ rpm -ivh https://github.com/goodwithtech/docker-guard/releases/download/v0.0.14/guard_0.0.14_Linux-64bit.rpm
+```
+
+## Debian/Ubuntu
+
+```bash
+$ wget https://github.com/goodwithtech/docker-guard/releases/download/v0.0.14/guard_0.0.14_Linux-64bit.deb
+$ sudo dpkg -i guard_0.0.14_Linux-64bit.deb
+```
 
 ## Mac OS X / Homebrew
 
@@ -152,23 +177,33 @@ $ guard goodwithtech/test-image:v1
 <summary>Result</summary>
 
 ```
-FATAL   Check password
-        - No password user found! username : nopasswd
-WARN    Check running user isn't root
-        - Last user should not be root
-FATAL   Check volumes
-        - Avoid mounting sensitive dirs : /usr
-PASS    Check DOCKER CONTENT TRUST setting
-PASS    Check environment vars
-PASS    Check credential files
-PASS    Check user names
-PASS    Check group names
-PASS    Check upgrade commands
-PASS    Check sudo commands
-PASS    Check apk add command
-INFO    Check apt-get install command
-        - Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
-PASS    Check image tag
+FATAL   - Create a user for the container
+        * Last user should not be root
+WARN    - Enable Content trust for Docker
+        * export DOCKER_CONTENT_TRUST=1 before docker pull/build
+FATAL   - Add HEALTHCHECK instruction to the container image
+        * not found HEALTHCHECK statement
+FATAL   - Do not use update instructions alone in the Dockerfile
+        * Use 'apt-get update --no-cache' : /bin/sh -c apt-get update && apt-get install -y git
+PASS    - Remove setuid and setgid permissions in the images
+FATAL   - Use COPY instead of ADD in Dockerfile
+        * Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
+FATAL   - Do not store secrets in ENVIRONMENT variables
+        * Suspicious ENV key found : MYSQL_PASSWD
+FATAL   - Do not store secret files
+        * Suspicious filename found : app/credentials.json
+PASS    - Avoid sudo command
+FATAL   - Avoid sensitive directory mounting
+        * Avoid mounting sensitive dirs : /usr
+PASS    - Avoid apt-get/apk/dist-upgrade
+PASS    - Use apk add with --no-cache
+FATAL   - Clear apt-get caches
+        * Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
+PASS    - Avoid latest tag
+FATAL   - Avoid empty password
+        * No password user found! username : nopasswd
+PASS    - Be unique UID
+PASS    - Be unique GROUP
 ```
 </details>
 
@@ -186,6 +221,53 @@ Use the --exit-code option if you want to exit with a non-zero exit code.
 ```bash
 $ guard  -exist-code 1 [IMAGE_NAME]
 ```
+
+<details>
+<summary>Result</summary>
+
+```
+FATAL   - Create a user for the container
+        * Last user should not be root
+WARN    - Enable Content trust for Docker
+        * export DOCKER_CONTENT_TRUST=1 before docker pull/build
+FATAL   - Add HEALTHCHECK instruction to the container image
+        * not found HEALTHCHECK statement
+FATAL   - Do not use update instructions alone in the Dockerfile
+        * Use 'apt-get update --no-cache' : /bin/sh -c apt-get update && apt-get install -y git
+PASS    - Remove setuid and setgid permissions in the images
+FATAL   - Use COPY instead of ADD in Dockerfile
+        * Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
+FATAL   - Do not store secrets in ENVIRONMENT variables
+        * Suspicious ENV key found : MYSQL_PASSWD
+FATAL   - Do not store secret files
+        * Suspicious filename found : app/credentials.json
+PASS    - Avoid sudo command
+FATAL   - Avoid sensitive directory mounting
+        * Avoid mounting sensitive dirs : /usr
+PASS    - Avoid apt-get/apk/dist-upgrade
+PASS    - Use apk add with --no-cache
+FATAL   - Clear apt-get caches
+        * Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
+PASS    - Avoid latest tag
+FATAL   - Avoid empty password
+        * No password user found! username : nopasswd
+PASS    - Be unique UID
+PASS    - Be unique GROUP
+
+--- ERROR OCCURED ON... ----
+ERROR   CIS-DI-0005 : export DOCKER_CONTENT_TRUST=1 before docker pull/build
+ERROR   CIS-DI-0006 : not found HEALTHCHECK statement
+ERROR   CIS-DI-0007 : Use 'apt-get update --no-cache' : /bin/sh -c apt-get update && apt-get install -y git
+ERROR   CIS-DI-0009 : Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
+ERROR   CIS-DI-0010 : Suspicious ENV key found : MYSQL_PASSWD
+ERROR   CIS-DI-0010 : Suspicious filename found : app/credentials.json
+ERROR   DGC-DI-0002 : Avoid mounting sensitive dirs : /usr
+ERROR   DGC-DI-0005 : Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
+ERROR   DGC-LI-0001 : No password user found! username : nopasswd
+
+```
+</details>
+
 
 ## Ignore the specified checkpoints (only work with --exit-code)
 
