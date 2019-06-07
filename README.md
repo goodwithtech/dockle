@@ -12,13 +12,11 @@
 
 You can check a docker image only run... 
 ```bash
-dockle [YOUR_IMAGE_NAME]
+$ dockle [YOUR_IMAGE_NAME]
 ``` 
 
-<img src="imgs/dockle-screen.png" width="800">
+<img src="imgs/usage.png" width="800">
 
-
-<img src="imgs/dockle-screen-exit-1.png" width="800">
 
 # TOC
 
@@ -75,14 +73,14 @@ All checkpoints [here](#checkpoint-summary)!
 ## RHEL/CentOS
 
 ```
-$ rpm -ivh https://github.com/goodwithtech/dockle/releases/download/v0.0.14/dockle_0.0.14_Linux-64bit.rpm
+$ rpm -ivh https://github.com/goodwithtech/dockle/releases/download/v0.0.17/dockle_0.0.17_Linux-64bit.rpm
 ```
 
 ## Debian/Ubuntu
 
 ```bash
-$ wget https://github.com/goodwithtech/dockle/releases/download/v0.0.14/dockle_0.0.14_Linux-64bit.deb
-$ sudo dpkg -i dockle_0.0.14_Linux-64bit.deb
+$ wget https://github.com/goodwithtech/dockle/releases/download/v0.0.17/dockle_0.0.17_Linux-64bit.deb
+$ sudo dpkg -i dockle_0.0.17_Linux-64bit.deb
 ```
 
 ## Mac OS X / Homebrew
