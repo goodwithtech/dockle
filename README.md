@@ -5,10 +5,10 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/goodwithtech/docker-guard)](https://goreportcard.com/report/github.com/goodwithtech/docker-guard)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-`DockerGuard` is 
-1) Security auditing tool that helps you build secure Docker images
+`DockerGuard` is Security auditing tool that helps you
+1) Build secure Docker images
     - Checkpoints includes [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
-2) Helps you build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images
+2) Build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images
 
 You can check a docker image only run... 
 ```bash
@@ -41,7 +41,7 @@ guard [YOUR_IMAGE_NAME]
   - [Clear image caches](#clear-image-caches)
 - [Continuous Integration](#continuous-integration-ci)
   - [Travis CI](#travis-ci)
-  - [Circle CI](#circle-ci)
+  - [CircleCI](#circleci)
   - [Authorization for Private Docker Registry](#authorization-for-private-docker-registry)
 - [Checkpoint Detail](#checkpoint-detail)
   - [CIS's Docker Image Checkpoints](#docker-image-checkpoints)
@@ -257,7 +257,7 @@ $ guard --input alpine.tar
 ```
 
 ## Specify exit code
-By default, `DockerGuard` exits with code 0 even if there is some problems.
+By default, `DockerGuard` exits with code 0 even if there are some problems.
 Use the --exit-code option if you want to exit with a non-zero exit code.
 
 ```bash
@@ -360,11 +360,10 @@ script:
   - ./guard --exit-code 1 guard-ci-test:${COMMIT}
 ```
 
-Example: https://travis-ci.org/goodwithtech/guard-ci-test
-
+Example: https://travis-ci.org/goodwithtech/guard-ci-test<br/>
 Repository: https://github.com/goodwithtech/guard-ci-test
 
-## Circle CI
+## CircleCI
 
 ```yaml
 jobs:
@@ -453,7 +452,7 @@ export DOCKER_GUARD_NON_SSL=true
 
 ## Docker Image Checkpoints
 
-These checkpoints refered to [CIS Docker 1.13.0 Benchmark v1.0.0](https://downloads.cisecurity.org/).
+These checkpoints refered to [CIS Docker 1.13.0 Benchmark v1.0.0](https://www.cisecurity.org/benchmark/docker/).
 
 ### CIS-DI-0001: Create a user for the container
 
