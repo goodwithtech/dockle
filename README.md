@@ -41,7 +41,7 @@ guard [YOUR_IMAGE_NAME]
   - [Clear image caches](#clear-image-caches)
 - [Continuous Integration](#continuous-integration-ci)
   - [Travis CI](#travis-ci)
-  - [Circle CI](#circle-ci)
+  - [CircleCI](#circleci)
   - [Authorization for Private Docker Registry](#authorization-for-private-docker-registry)
 - [Checkpoint Detail](#checkpoint-detail)
   - [CIS's Docker Image Checkpoints](#docker-image-checkpoints)
