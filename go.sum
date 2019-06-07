@@ -78,10 +78,6 @@ github.com/golang/mock v1.2.0/go.mod h1:oTYuIxOrZwtPieC+H1uAHpcLFnEyAGVDL/k47Jfb
 github.com/golang/protobuf v1.2.0 h1:P3YflyNX/ehuJFLhxviNdFxQPkGK5cDcApsge1SqnvM=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
-github.com/goodwithtech/docker-guard v0.0.15 h1:5Anptg1r4pq1p4D/AKTI+0H7a9UkcwE0GhgAgQoXhyI=
-github.com/goodwithtech/docker-guard v0.0.15/go.mod h1:eEJ84HR1+VwN+kxMjDwsq3UISOwxdvN53zcwn5+FLYU=
-github.com/goodwithtech/fanal v0.0.0-20190607073741-b7000ee8325c h1:fwyH0q56rzPwBOJOUDVAvEAlCggZCEUfbyzBc1rNlzc=
-github.com/goodwithtech/fanal v0.0.0-20190607073741-b7000ee8325c/go.mod h1:guPOH3Sfj5M4j/LvCOoWmuYCXnjReDIwJO+S89Fje1E=
 github.com/goodwithtech/fanal v0.0.0-20190607090116-bffde1fd5a13 h1:WQuuvtV3Wxin32W1obswqzxT8xJ/ap2Vd11Y8D/PDV4=
 github.com/goodwithtech/fanal v0.0.0-20190607090116-bffde1fd5a13/go.mod h1:guPOH3Sfj5M4j/LvCOoWmuYCXnjReDIwJO+S89Fje1E=
 github.com/google/btree v0.0.0-20180813153112-4030bb1f1f0c/go.mod h1:lNA+9X1NB3Zf8V7Ke586lFgjr2dZNuvo3lPJSGZ5JPQ=

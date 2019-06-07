@@ -30,6 +30,7 @@ func TestAssess(t *testing.T) {
 		},
 		"ApkCached": {
 			path: "./testdata/apk_cache.json",
+
 			assesses: []*types.Assessment{
 				{
 					Type:     types.AvoidRootDefault,

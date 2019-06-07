@@ -37,7 +37,7 @@ dockle [YOUR_IMAGE_NAME]
   - [Scan an image](#scan-an-image)
   - [Scan an image file](#scan-an-image-file)
   - [Specify exit code](#specify-exit-code)
-  - [Ignore the specified checkpoints](#ignore-the-specified-checkpoints-only-work-with---exit-code)
+  - [Ignore the specified checkpoints](#ignore-the-specified-checkpoints)
   - [Clear image caches](#clear-image-caches)
 - [Continuous Integration](#continuous-integration-ci)
   - [Travis CI](#travis-ci)
@@ -272,7 +272,7 @@ Use the --exit-code option if you want to exit with a non-zero exit code.
 $ dockle  -exist-code 1 [IMAGE_NAME]
 ```
 
-## Ignore the specified checkpoints (only work with --exit-code)
+## Ignore the specified checkpoints
 
 Use `.dockleignore`.
 
