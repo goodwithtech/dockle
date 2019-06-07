@@ -93,9 +93,7 @@ func Run(c *cli.Context) (err error) {
 	exitCode := c.Int("exit-code")
 
 	// Store ignore checkpoint code
-	if exitCode != 0 {
-		getIgnoreCheckpointMap()
-	}
+	getIgnoreCheckpointMap()
 
 	var abendAssessments []*types.Assessment
 
@@ -104,29 +102,26 @@ func Run(c *cli.Context) (err error) {
 		filtered := filteredAssessments(targetType, assessments)
 		writer.ShowTargetResult(targetType, filtered)
 
-		if exitCode != 0 {
-			for _, assessment := range filtered {
-				abendAssessments = filterAbendAssessments(abendAssessments, assessment)
-			}
+		for _, assessment := range filtered {
+			abendAssessments = filterAbendAssessments(abendAssessments, assessment)
 		}
 		targetType++
 	}
 
-	if len(abendAssessments) > 0 {
-		writer.ShowABENDTitle()
-		for _, assessment := range abendAssessments {
-			detail := types.AlertDetails[assessment.Type]
-			writer.ShowWhyABEND(detail.Code, assessment)
-		}
-		os.Exit(1)
+	if exitCode != 0 && len(abendAssessments) > 0 {
+		os.Exit(exitCode)
 	}
 
 	return nil
 }
 
 func filteredAssessments(target int, assessments []*types.Assessment) (filtered []*types.Assessment) {
+	detail := types.AlertDetails[target]
 	for _, assessment := range assessments {
 		if assessment.Type == target {
+			if _, ok := ignoreCheckpointMap[detail.Code]; ok {
+				assessment.Level = types.IgnoreLevel
+			}
 			filtered = append(filtered, assessment)
 		}
 	}

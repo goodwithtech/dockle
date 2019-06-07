@@ -37,6 +37,7 @@ const (
 	FatalLevel
 	PassLevel
 	SkipLevel
+	IgnoreLevel
 )
 
 type AlertDetail struct {
