@@ -2,6 +2,7 @@ package credential
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/goodwithtech/docker-guard/pkg/log"
@@ -37,4 +38,8 @@ func (a CredentialAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessme
 
 func (a CredentialAssessor) RequiredFiles() []string {
 	return []string{"credentials.json", "credential.json", "credentials", "credential"}
+}
+
+func (a CredentialAssessor) RequiredPermissions() []os.FileMode {
+	return []os.FileMode{}
 }

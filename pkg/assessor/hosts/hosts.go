@@ -1,6 +1,8 @@
 package hosts
 
 import (
+	"os"
+
 	"github.com/goodwithtech/docker-guard/pkg/log"
 	"github.com/goodwithtech/docker-guard/pkg/types"
 	"github.com/knqyf263/fanal/extractor"
@@ -18,4 +20,8 @@ func (a HostsAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, e
 
 func (a HostsAssessor) RequiredFiles() []string {
 	return []string{"etc/hosts"}
+}
+
+func (a HostsAssessor) RequiredPermissions() []os.FileMode {
+	return []os.FileMode{}
 }

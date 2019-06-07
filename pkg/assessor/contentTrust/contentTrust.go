@@ -28,3 +28,7 @@ func (a ContentTrustAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assess
 func (a ContentTrustAssessor) RequiredFiles() []string {
 	return []string{}
 }
+
+func (a ContentTrustAssessor) RequiredPermissions() []os.FileMode {
+	return []os.FileMode{}
+}

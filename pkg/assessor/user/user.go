@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/goodwithtech/docker-guard/pkg/log"
@@ -24,7 +25,7 @@ func (a UserAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, er
 			continue
 		}
 		existFile = true
-		scanner := bufio.NewScanner(bytes.NewBuffer(file))
+		scanner := bufio.NewScanner(bytes.NewBuffer(file.Body))
 		uidMap := map[string]struct{}{}
 		for scanner.Scan() {
 			line := scanner.Text()
@@ -54,4 +55,8 @@ func (a UserAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, er
 
 func (a UserAssessor) RequiredFiles() []string {
 	return []string{"etc/passwd"}
+}
+
+func (a UserAssessor) RequiredPermissions() []os.FileMode {
+	return []os.FileMode{}
 }

@@ -1,6 +1,10 @@
 package assessor
 
 import (
+	"os"
+
+	"github.com/goodwithtech/docker-guard/pkg/assessor/priviledge"
+
 	"github.com/goodwithtech/docker-guard/pkg/assessor/contentTrust"
 	"github.com/goodwithtech/docker-guard/pkg/assessor/credential"
 	"github.com/goodwithtech/docker-guard/pkg/assessor/hosts"
@@ -20,10 +24,12 @@ var assessors []Assessor
 type Assessor interface {
 	Assess(extractor.FileMap) ([]*types.Assessment, error)
 	RequiredFiles() []string
+	RequiredPermissions() []os.FileMode
 }
 
 func init() {
 	RegisterAssessor(passwd.PasswdAssessor{})
+	RegisterAssessor(priviledge.PriviledgeAssessor{})
 	RegisterAssessor(user.UserAssessor{})
 	RegisterAssessor(group.GroupAssessor{})
 	RegisterAssessor(hosts.HostsAssessor{})
@@ -52,4 +58,11 @@ func LoadRequiredFiles() (filenames []string) {
 		filenames = append(filenames, assessor.RequiredFiles()...)
 	}
 	return filenames
+}
+
+func LoadRequiredPermissions() (permissions []os.FileMode) {
+	for _, assessor := range assessors {
+		permissions = append(permissions, assessor.RequiredPermissions()...)
+	}
+	return permissions
 }

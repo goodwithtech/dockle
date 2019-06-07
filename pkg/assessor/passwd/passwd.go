@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/goodwithtech/docker-guard/pkg/log"
@@ -26,7 +27,7 @@ func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, 
 			continue
 		}
 		existFile = true
-		scanner := bufio.NewScanner(bytes.NewBuffer(file))
+		scanner := bufio.NewScanner(bytes.NewBuffer(file.Body))
 		for scanner.Scan() {
 			line := scanner.Text()
 			passData := strings.Split(line, ":")
@@ -50,4 +51,8 @@ func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, 
 
 func (a PasswdAssessor) RequiredFiles() []string {
 	return []string{"etc/shadow", "etc/master.passwd"}
+}
+
+func (a PasswdAssessor) RequiredPermissions() []os.FileMode {
+	return []os.FileMode{}
 }

@@ -3,6 +3,7 @@ package manifest
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -28,7 +29,7 @@ func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []*types.A
 
 	var d types.Image
 
-	err = json.Unmarshal(file, &d)
+	err = json.Unmarshal(file.Body, &d)
 	if err != nil {
 		return nil, xerrors.New("Fail to parse docker config file.")
 	}
@@ -181,4 +182,8 @@ func reducableApkAdd(cmd string) bool {
 // manifest contains /config
 func (a ManifestAssessor) RequiredFiles() []string {
 	return []string{}
+}
+
+func (a ManifestAssessor) RequiredPermissions() []os.FileMode {
+	return []os.FileMode{}
 }

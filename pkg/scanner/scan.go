@@ -22,6 +22,7 @@ func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err
 
 	// add required files to fanal's analyzer
 	analyzer.AddRequiredFilenames(assessor.LoadRequiredFiles())
+	analyzer.AddRequiredPermissions(assessor.LoadRequiredPermissions())
 	if imageName != "" {
 		target = imageName
 		dockerOption, err := types.GetDockerOption()
