@@ -3,8 +3,8 @@ package hosts
 import (
 	"os"
 
-	"github.com/goodwithtech/docker-guard/pkg/log"
-	"github.com/goodwithtech/docker-guard/pkg/types"
+	"github.com/goodwithtech/dockle/pkg/log"
+	"github.com/goodwithtech/dockle/pkg/types"
 	"github.com/knqyf263/fanal/extractor"
 )
 

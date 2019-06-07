@@ -97,49 +97,49 @@ var AlertDetails = map[int]AlertDetail{
 	AvoidSudo: {
 		DefaultLevel: FatalLevel,
 		Title:        "Avoid sudo command",
-		Code:         "DGC-DI-0001",
+		Code:         "DKL-DI-0001",
 	},
 
 	AvoidSensitiveDirectoryMounting: {
 		DefaultLevel: FatalLevel,
 		Title:        "Avoid sensitive directory mounting",
-		Code:         "DGC-DI-0002",
+		Code:         "DKL-DI-0002",
 	},
 	AvoidDistUpgrade: {
 		DefaultLevel: FatalLevel,
 		Title:        "Avoid apt-get/apk/dist-upgrade",
-		Code:         "DGC-DI-0003",
+		Code:         "DKL-DI-0003",
 	},
 	UseApkAddNoCache: {
 		DefaultLevel: FatalLevel,
 		Title:        "Use apk add with --no-cache",
-		Code:         "DGC-DI-0004",
+		Code:         "DKL-DI-0004",
 	},
 	MinimizeAptGet: {
 		DefaultLevel: FatalLevel,
 		Title:        "Clear apt-get caches",
-		Code:         "DGC-DI-0005",
+		Code:         "DKL-DI-0005",
 	},
 	AvoidLatestTag: {
 		DefaultLevel: FatalLevel,
 		Title:        "Avoid latest tag",
-		Code:         "DGC-DI-0006",
+		Code:         "DKL-DI-0006",
 	},
 
 	// Docker Guard Checkpoints for Linux
 	AvoidEmptyPassword: {
 		DefaultLevel: FatalLevel,
 		Title:        "Avoid empty password",
-		Code:         "DGC-LI-0001",
+		Code:         "DKL-LI-0001",
 	},
 	AvoidDuplicateUser: {
 		DefaultLevel: WarnLevel,
 		Title:        "Be unique UID",
-		Code:         "DGC-LI-0002",
+		Code:         "DKL-LI-0002",
 	},
 	AvoidDuplicateGroup: {
 		DefaultLevel: WarnLevel,
 		Title:        "Be unique GROUP",
-		Code:         "DGC-LI-0002",
+		Code:         "DKL-LI-0002",
 	},
 }

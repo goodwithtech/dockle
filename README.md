@@ -1,11 +1,11 @@
 <img src="imgs/logo.png" width="450">
 
-[![GitHub release](https://img.shields.io/github/release/goodwithtech/docker-guard.svg)](https://github.com/goodwithtech/docker-guard/releases/latest)
-[![CircleCI](https://circleci.com/gh/goodwithtech/docker-guard.svg?style=svg)](https://circleci.com/gh/goodwithtech/docker-guard)
-[![Go Report Card](https://goreportcard.com/badge/github.com/goodwithtech/docker-guard)](https://goreportcard.com/report/github.com/goodwithtech/docker-guard)
+[![GitHub release](https://img.shields.io/github/release/goodwithtech/dockle.svg)](https://github.com/goodwithtech/dockle/releases/latest)
+[![CircleCI](https://circleci.com/gh/goodwithtech/dockle.svg?style=svg)](https://circleci.com/gh/goodwithtech/dockle)
+[![Go Report Card](https://goreportcard.com/badge/github.com/goodwithtech/dockle)](https://goreportcard.com/report/github.com/goodwithtech/dockle)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-`DockerGuard` is Security auditing tool that helps you
+`Dockle` is Security auditing tool that helps you
 1) Build secure Docker images
     - Checkpoints includes [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
 2) Build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images
@@ -45,15 +45,15 @@ guard [YOUR_IMAGE_NAME]
   - [Authorization for Private Docker Registry](#authorization-for-private-docker-registry)
 - [Checkpoint Detail](#checkpoint-detail)
   - [CIS's Docker Image Checkpoints](#docker-image-checkpoints)
-  - [DockerGuard Checkpoints for Docker](#dockerguard-checkpoints-for-docker)
-  - [DockerGuard Checkpoints for Linux](#dockerguard-checkpoints-for-linux)
+  - [Dockle Checkpoints for Docker](#dockle-checkpoints-for-docker)
+  - [Dockle Checkpoints for Linux](#dockle-checkpoints-for-linux)
 - [Credits](#credits)
 - [Roadmap](#roadmap)
 
 
 # Comparison (use CIS Benchmark checkpoints)
 
-|  | [DockerGuard](https://github.com/goodwithtech/docker-guard) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) | [hadolint](https://github.com/hadolint/hadolint) | 
+|  | [Dockle](https://github.com/goodwithtech/dockle) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) | [hadolint](https://github.com/hadolint/hadolint) | 
 |---|:---:|:---:|:---:|
 | 1.  Create a user for the container | ✓ | ✓ | ✓ |
 | 2.  Use trusted base images for containers | - | – | - |
@@ -75,13 +75,13 @@ All checkpoints [here](#checkpoint-summary)!
 ## RHEL/CentOS
 
 ```
-$ rpm -ivh https://github.com/goodwithtech/docker-guard/releases/download/v0.0.14/guard_0.0.14_Linux-64bit.rpm
+$ rpm -ivh https://github.com/goodwithtech/dockle/releases/download/v0.0.14/guard_0.0.14_Linux-64bit.rpm
 ```
 
 ## Debian/Ubuntu
 
 ```bash
-$ wget https://github.com/goodwithtech/docker-guard/releases/download/v0.0.14/guard_0.0.14_Linux-64bit.deb
+$ wget https://github.com/goodwithtech/dockle/releases/download/v0.0.14/guard_0.0.14_Linux-64bit.deb
 $ sudo dpkg -i guard_0.0.14_Linux-64bit.deb
 ```
 
@@ -96,13 +96,13 @@ $ brew install goodwithtech/guard/guard
 
 ## Binary (Including Windows)
 
-Get the latest version from [this page](https://github.com/goodwithtech/docker-guard/releases/latest), and download the archive file for your operating system/architecture. Unpack the archive, and put the binary somewhere in your `$PATH` (on UNIX-y systems, /usr/local/bin or the like). Make sure it has execution bits turned on.
+Get the latest version from [this page](https://github.com/goodwithtech/dockle/releases/latest), and download the archive file for your operating system/architecture. Unpack the archive, and put the binary somewhere in your `$PATH` (on UNIX-y systems, /usr/local/bin or the like). Make sure it has execution bits turned on.
 
 
 ## From source
 
 ```sh
-$ go get -u github.com/goodwithtech/docker-guard
+$ go get -u github.com/goodwithtech/dockle
 ```
 
 # Quick Start
@@ -186,20 +186,20 @@ Please re-pull latest `goodwithtech/guard` if an error occured.
 | [CIS-DI-0009](#cis-di-0009-use-copy-instead-of-add-in-dockerfile) | Use COPY instead of ADD in Dockerfile | FATAL
 | [CIS-DI-0010](#cis-di-0010-do-not-store-secrets-in-dockerfiles) | Do not store secrets in Dockerfiles | FATAL
 | [CIS-DI-0011](#cis-di-0011-install-verified-packages-only) | Install verified packages only | WARN
-|| [DockerGuard Checkpoints for Docker](#dockerguard-checkpoints-for-docker) |
-| [DGC-DI-0001](#dgc-di-0001-avoid-sudo-command) | Avoid `sudo` command | FATAL
-| [DGC-DI-0002](#dgc-di-0002-avoid-sensitive-directory-mounting) | Avoid sensitive directory mounting | FATAL
-| [DGC-DI-0003](#dgc-di-0003-avoid-apt-get-upgrade-apk-upgrade-dist-upgrade) | Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade` | FATAL
-| [DGC-DI-0004](#dgc-di-0004-use-apk-add-with---no-cache) | Use apk add with `--no-cache` | FATAL
-| [DGC-DI-0005](#dgc-di-0005-clear-apt-get-caches) | Clear apt-get caches | FATAL
-| [DGC-DI-0006](#dgc-di-0006-avoid-latest-tag) | Avoid `latest` tag | WARN
-|| [DockerGuard Checkpoints for Linux](#dockerguard-checkpoints-for-linux) |
-| [DGC-LI-0001](#dgc-li-0001-avoid-empty-password) | Avoid empty password | FATAL
-| [DGC-LI-0002](#dgc-li-0002-be-unique-uidgroups) | Be unique UID/GROUPs | FATAL
+|| [Dockle Checkpoints for Docker](#dockle-checkpoints-for-docker) |
+| [DKL-DI-0001](#dkl-di-0001-avoid-sudo-command) | Avoid `sudo` command | FATAL
+| [DKL-DI-0002](#dkl-di-0002-avoid-sensitive-directory-mounting) | Avoid sensitive directory mounting | FATAL
+| [DKL-DI-0003](#dkl-di-0003-avoid-apt-get-upgrade-apk-upgrade-dist-upgrade) | Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade` | FATAL
+| [DKL-DI-0004](#dkl-di-0004-use-apk-add-with---no-cache) | Use apk add with `--no-cache` | FATAL
+| [DKL-DI-0005](#dkl-di-0005-clear-apt-get-caches) | Clear apt-get caches | FATAL
+| [DKL-DI-0006](#dkl-di-0006-avoid-latest-tag) | Avoid `latest` tag | WARN
+|| [Dockle Checkpoints for Linux](#dockerguard-checkpoints-for-linux) |
+| [DKL-LI-0001](#dkl-li-0001-avoid-empty-password) | Avoid empty password | FATAL
+| [DKL-LI-0002](#dkl-li-0002-be-unique-uidgroups) | Be unique UID/GROUPs | FATAL
 
 #### Level
 
-`DockerGuard` has 5 check levels
+`Dockle` has 5 check levels
 
 | LEVEL | DESCRIPTION |
 |:---:|---|
@@ -242,18 +242,18 @@ FATAL   - CIS-DI-0010: Do not store secrets in ENVIRONMENT variables
         * Suspicious ENV key found : MYSQL_PASSWD
 FATAL   - CIS-DI-0010: Do not store secret files
         * Suspicious filename found : app/credentials.json
-PASS    - DGC-DI-0001: Avoid sudo command
-FATAL   - DGC-DI-0002: Avoid sensitive directory mounting
+PASS    - DKL-DI-0001: Avoid sudo command
+FATAL   - DKL-DI-0002: Avoid sensitive directory mounting
         * Avoid mounting sensitive dirs : /usr
-PASS    - DGC-DI-0003: Avoid apt-get/apk/dist-upgrade
-PASS    - DGC-DI-0004: Use apk add with --no-cache
-FATAL   - DGC-DI-0005: Clear apt-get caches
+PASS    - DKL-DI-0003: Avoid apt-get/apk/dist-upgrade
+PASS    - DKL-DI-0004: Use apk add with --no-cache
+FATAL   - DKL-DI-0005: Clear apt-get caches
         * Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
-PASS    - DGC-DI-0006: Avoid latest tag
-FATAL   - DGC-LI-0001: Avoid empty password
+PASS    - DKL-DI-0006: Avoid latest tag
+FATAL   - DKL-LI-0001: Avoid empty password
         * No password user found! username : nopasswd
-PASS    - DGC-LI-0002: Be unique UID
-PASS    - DGC-LI-0002: Be unique GROUP
+PASS    - DKL-LI-0002: Be unique UID
+PASS    - DKL-LI-0002: Be unique GROUP
 ```
 </details>
 
@@ -265,7 +265,7 @@ $ guard --input alpine.tar
 ```
 
 ## Specify exit code
-By default, `DockerGuard` exits with code 0 even if there are some problems.
+By default, `Dockle` exits with code 0 even if there are some problems.
 Use the --exit-code option if you want to exit with a non-zero exit code.
 
 ```bash
@@ -274,14 +274,14 @@ $ guard  -exist-code 1 [IMAGE_NAME]
 
 ## Ignore the specified checkpoints (only work with --exit-code)
 
-Use `.guardignore`.
+Use `.dockleignore`.
 
 ```bash
-$ cat .guardignore
+$ cat .dockleignore
 # set root to default user because we want to run nginx
 CIS-DI-0001
 # Use latest tag because only check for image inside
-DGC-DI-0006
+DKL-DI-0006
 ```
 
 ### Clear image caches
@@ -289,14 +289,14 @@ DGC-DI-0006
 The `--clear-cache` option removes image caches. This option is useful if the image which has the same tag is updated (such as when using `latest` tag).
 
 ```
-$ guard --clear-cache python:3.7
+$ dockle --clear-cache python:3.7
 ```
 
 # Continuous Integration (CI)
 
 Scan your image built in Travis CI/CircleCI. 
 The test will fail with if a error is found.
-You can skip target checkpoint if you use `.guardignore`.
+You can skip target checkpoint if you use `.dockleignore`.
  
 When you don't want to fail the test, specify `--exit-code 0`.
 
@@ -312,17 +312,17 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
 
 before_install:
-  - docker build -t guard-ci-test:${COMMIT} .
-  - export VERSION=$(curl --silent "https://api.github.com/repos/goodwithtech/docker-guard/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-  - wget https://github.com/goodwithtech/docker-guard/releases/download/v${VERSION}/guard_${VERSION}_Linux-64bit.tar.gz
-  - tar zxvf guard_${VERSION}_Linux-64bit.tar.gz
+  - docker build -t dockle-ci-test:${COMMIT} .
+  - export VERSION=$(curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+  - wget https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.tar.gz
+  - tar zxvf dockle_${VERSION}_Linux-64bit.tar.gz
 script:
-  - ./guard guard-ci-test:${COMMIT}
-  - ./guard --exit-code 1 guard-ci-test:${COMMIT}
+  - ./dockle dockle-ci-test:${COMMIT}
+  - ./dockle --exit-code 1 dockle-ci-test:${COMMIT}
 ```
 
-Example: https://travis-ci.org/goodwithtech/guard-ci-test<br/>
-Repository: https://github.com/goodwithtech/guard-ci-test
+Example: https://travis-ci.org/goodwithtech/dockle-ci-test<br/>
+Repository: https://github.com/goodwithtech/dockle-ci-test
 
 ## CircleCI
 
@@ -336,23 +336,23 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build image
-          command: docker build -t guard-ci-test:${CIRCLE_SHA1} .
+          command: docker build -t dockle-ci-test:${CIRCLE_SHA1} .
       - run:
-          name: Install guard
+          name: Install dockle
           command: |
             apk add --update curl
             VERSION=$(
-                curl --silent "https://api.github.com/repos/goodwithtech/docker-guard/releases/latest" | \
+                curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
                 grep '"tag_name":' | \
                 sed -E 's/.*"v([^"]+)".*/\1/'
             )
 
-            wget https://github.com/goodwithtech/docker-guard/releases/download/v${VERSION}/guard_${VERSION}_Linux-64bit.tar.gz
-            tar zxvf guard_${VERSION}_Linux-64bit.tar.gz
-            mv guard /usr/local/bin
+            wget https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.tar.gz
+            tar zxvf dockle_${VERSION}_Linux-64bit.tar.gz
+            mv dockle /usr/local/bin
       - run:
-          name: Scan the local image with guard
-          command: guard --exit-code 1 guard-ci-test:${CIRCLE_SHA1}
+          name: Scan the local image with dockle
+          command: dockle --exit-code 1 dockle-ci-test:${CIRCLE_SHA1}
 workflows:
   version: 2
   release:
@@ -360,53 +360,53 @@ workflows:
       - build
 ```
 
-Example : https://circleci.com/gh/goodwithtech/guard-ci-test<br/>
-Repository: https://github.com/goodwithtech/guard-ci-test
+Example : https://circleci.com/gh/goodwithtech/dockle-ci-test<br/>
+Repository: https://github.com/goodwithtech/dockle-ci-test
 
 ## Authorization for Private Docker Registry
 
-`DockerGuard` can download images from private registry, without installing `Docker` and any 3rd party tools.
+`Dockle` can download images from private registry, without installing `Docker` and any 3rd party tools.
 That's because it's easy to run in a CI process.
 
-All you have to do is install `DockerGuard` and set ENVIRONMENT variables.
+All you have to do is install `Dockle` and set ENVIRONMENT variables.
 But, I can't recommend using ENV vars in your local machine to you.
 
 ### Docker Hub
 
-Docker Hub needs `DOCKER_GUARD_AUTH_URL`, `DOCKER_GUARD_USERNAME` and `DOCKER_GUARD_PASSWORD`.
+Docker Hub needs `DOCKLE_AUTH_URL`, `DOCKLE_USERNAME` and `DOCKLE_PASSWORD`.
 You don't need to set ENV vars when download from public repository.
 
 ```bash
-export DOCKER_GUARD_AUTH_URL=https://registry.hub.docker.com
-export DOCKER_GUARD_USERNAME={DOCKERHUB_USERNAME}
-export DOCKER_GUARD_PASSWORD={DOCKERHUB_PASSWORD}
+export DOCKLE_AUTH_URL=https://registry.hub.docker.com
+export DOCKLE_USERNAME={DOCKERHUB_USERNAME}
+export DOCKLE_PASSWORD={DOCKERHUB_PASSWORD}
 ```
 
 ### Amazon ECR (Elastic Container Registry)
 
-`DockerGuard` uses AWS SDK. You don't need to install `aws` CLI tool.
-You can use [AWS CLI's ENV Vars](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html).
+`Dockle` uses AWS SDK. You don't need to install `aws` CLI tool.
+You can use [AWS CLI's ENVIRONMENT variables](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html).
 
 ### GCR (Google Container Registry)
 
-`DockerGuard` uses Google Cloud SDK. You don't need to install `gcloud` command.
+`Dockle` uses Google Cloud SDK. You don't need to install `gcloud` command.
 
 If you want to use target project's repository, you can settle via `GOOGLE_APPLICATION_CREDENTIAL`. 
 ```bash
-# must set DOCKER_GUARD_USERNAME empty char
+# must set DOCKLE_USERNAME empty char
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credential.json
 ```
 
 ### Self Hosted Registry (BasicAuth)
 
-BasicAuth server needs `DOCKER_GUARD_USERNAME` and `DOCKER_GUARD_PASSWORD`.
+BasicAuth server needs `DOCKLE_USERNAME` and `DOCKLE_PASSWORD`.
 
 ```bash
-export DOCKER_GUARD_USERNAME={USERNAME}
-export DOCKER_GUARD_PASSWORD={PASSWORD}
+export DOCKLE_USERNAME={USERNAME}
+export DOCKLE_PASSWORD={PASSWORD}
 
 # if you want to use 80 port, use NonSSL
-export DOCKER_GUARD_NON_SSL=true
+export DOCKLE_NON_SSL=true
 ```
 
 # Checkpoint Detail
@@ -499,47 +499,47 @@ COPY test.json /app/test.json
 
 > Do not store any secrets in Dockerfiles.
 
-`DockerGuard` checks ENVIRONMENT variables and credential files.
+`Dockle` checks ENVIRONMENT variables and credential files.
 
 ### CIS-DI-0011: Install verified packages only
 
 Not supported.
 It's better to use [Trivy](https://github.com/knqyf263/trivy).
 
-## DockerGuard Checkpoints for Docker
+## Dockle Checkpoints for Docker
 
 These checkpoints refered to [Docker Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) and so on.
 
-### DGC-DI-0001: Avoid `sudo` command
+### DKL-DI-0001: Avoid `sudo` command
 
 https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
 > Avoid installing or using sudo as it has unpredictable TTY and signal-forwarding behavior that can cause problems.
 
-### DGC-DI-0002: Avoid sensitive directory mounting
+### DKL-DI-0002: Avoid sensitive directory mounting
 
 A volume mount makes weakpoints. 
 This depends on mounting volumes.
-Currently, `DockerGuard` checks following directories.
+Currently, `Dockle` checks following directories.
 
 `/boot`,`/dev`,`/etc`,`/lib`,`/proc`,`/sys`, `/usr`
 
-`guard` only checks `VOLUME` statements. We can't check `docker run -v /lib:/lib ...`.
+`dockle` only checks `VOLUME` statements. We can't check `docker run -v /lib:/lib ...`.
 
 
-### DGC-DI-0003: Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade`
+### DKL-DI-0003: Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade`
 
 https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
  
 > Avoid RUN apt-get upgrade and dist-upgrade, as many of the “essential” packages from the parent images cannot upgrade inside an unprivileged container.
 
-### DGC-DI-0004: Use apk add with `--no-cache`
+### DKL-DI-0004: Use apk add with `--no-cache`
 
 https://github.com/gliderlabs/docker-alpine/blob/master/docs/usage.md#disabling-cache
 
 > As of Alpine Linux 3.3 there exists a new --no-cache option for apk. It allows users to install packages with an index that is updated and used on-the-fly and not cached locally:
 > This avoids the need to use --update and remove /var/cache/apk/* when done installing packages.
 
-### DGC-DI-0005: Clear apt-get caches
+### DKL-DI-0005: Clear apt-get caches
 
 Use “apt-get clearn && rm -rf /var/lib/apt/lists/*` if use apt-get install
 
@@ -547,23 +547,23 @@ https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-ge
 > In addition, when you clean up the apt cache by removing /var/lib/apt/lists it reduces the image size, since the apt cache is not stored in a layer. Since the RUN statement starts with apt-get update, the package cache is always refreshed prior to apt-get install.
 
 
-### DGC-DI-0006: Avoid `latest` tag
+### DKL-DI-0006: Avoid `latest` tag
 
 https://vsupalov.com/docker-latest-tag/
 
 > Docker images tagged with :latest have caused many people a lot of trouble.
 
-## DockerGuard Checkpoints for Linux
+## Dockle Checkpoints for Linux
 
 These checkpoints refered to [Linux Best Practices](https://www.cyberciti.biz/tips/linux-security.html) and so on.
 
-### DGC-LI-0001: Avoid empty password 
+### DKL-LI-0001: Avoid empty password 
 
 https://blog.aquasec.com/cve-2019-5021-alpine-docker-image-vulnerability
 
 > CVE-2019-5021: Alpine Docker Image ‘null root password’ Vulnerability
 
-### DGC-LI-0002: Be unique UID/GROUPs
+### DKL-LI-0002: Be unique UID/GROUPs
 
 http://www.linfo.org/uid.html
 

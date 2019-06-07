@@ -3,19 +3,19 @@ package assessor
 import (
 	"os"
 
-	"github.com/goodwithtech/docker-guard/pkg/assessor/priviledge"
+	"github.com/goodwithtech/dockle/pkg/assessor/priviledge"
 
-	"github.com/goodwithtech/docker-guard/pkg/assessor/contentTrust"
-	"github.com/goodwithtech/docker-guard/pkg/assessor/credential"
-	"github.com/goodwithtech/docker-guard/pkg/assessor/hosts"
+	"github.com/goodwithtech/dockle/pkg/assessor/contentTrust"
+	"github.com/goodwithtech/dockle/pkg/assessor/credential"
+	"github.com/goodwithtech/dockle/pkg/assessor/hosts"
 
-	"github.com/goodwithtech/docker-guard/pkg/assessor/group"
-	"github.com/goodwithtech/docker-guard/pkg/assessor/manifest"
-	"github.com/goodwithtech/docker-guard/pkg/assessor/passwd"
-	"github.com/goodwithtech/docker-guard/pkg/assessor/user"
+	"github.com/goodwithtech/dockle/pkg/assessor/group"
+	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
+	"github.com/goodwithtech/dockle/pkg/assessor/passwd"
+	"github.com/goodwithtech/dockle/pkg/assessor/user"
 
-	"github.com/goodwithtech/docker-guard/pkg/log"
-	"github.com/goodwithtech/docker-guard/pkg/types"
+	"github.com/goodwithtech/dockle/pkg/log"
+	"github.com/goodwithtech/dockle/pkg/types"
 	"github.com/knqyf263/fanal/extractor"
 )
 

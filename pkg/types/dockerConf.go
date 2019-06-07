@@ -8,12 +8,12 @@ import (
 )
 
 type DockerConfig struct {
-	AuthURL  string        `env:"DOCKER_GUARD_AUTH_URL"`
-	UserName string        `env:"DOCKER_GUARD_USERNAME"`
-	Password string        `env:"DOCKER_GUARD_PASSWORD"`
-	Timeout  time.Duration `env:"DOCKER_GUARD_TIMEOUT_SEC" envDefault:"60s"`
-	Insecure bool          `env:"DOCKER_GUARD_INSECURE" envDefault:"true"`
-	NonSSL   bool          `env:"DOCKER_GUARD_NON_SSL" envDefault:"false"`
+	AuthURL  string        `env:"DOCKLE_AUTH_URL"`
+	UserName string        `env:"DOCKLE_USERNAME"`
+	Password string        `env:"DOCKLE_PASSWORD"`
+	Timeout  time.Duration `env:"DOCKLE_TIMEOUT_SEC" envDefault:"60s"`
+	Insecure bool          `env:"DOCKLE_INSECURE" envDefault:"true"`
+	NonSSL   bool          `env:"DOCKLE_NON_SSL" envDefault:"false"`
 }
 
 func GetDockerOption() (types.DockerOption, error) {

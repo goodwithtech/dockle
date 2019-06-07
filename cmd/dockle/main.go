@@ -4,8 +4,8 @@ import (
 	l "log"
 	"os"
 
-	"github.com/goodwithtech/docker-guard/pkg"
-	"github.com/goodwithtech/docker-guard/pkg/log"
+	"github.com/goodwithtech/dockle/pkg"
+	"github.com/goodwithtech/dockle/pkg/log"
 	"github.com/urfave/cli"
 )
 
@@ -30,7 +30,7 @@ OPTIONS:
   {{end}}{{$option}}{{end}}{{end}}
 `
 	app := cli.NewApp()
-	app.Name = "DockerGuard"
+	app.Name = "dockle"
 	app.Version = version
 	app.ArgsUsage = "image_name"
 

@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: /go/src/github.com/goodwithtech/docker-guard
+  working_directory: /go/src/github.com/goodwithtech/dockle
   docker:
     - image: circleci/golang:1.12.3
       environment:

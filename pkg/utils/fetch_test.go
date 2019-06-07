@@ -3,7 +3,7 @@ package utils
 import (
 	"testing"
 
-	"github.com/goodwithtech/docker-guard/pkg/log"
+	"github.com/goodwithtech/dockle/pkg/log"
 )
 
 func TestFetchVersion(t *testing.T) {

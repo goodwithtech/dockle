@@ -1,7 +1,7 @@
-project_name: guard
+project_name: dockle
 builds:
-- main: cmd/guard/main.go
-  binary: guard
+- main: cmd/dockle/main.go
+  binary: dockle
   ldflags:
   - -s -w
   - "-extldflags '-static'"
@@ -70,8 +70,8 @@ archive:
 brew:
   github:
     owner: goodwithtech
-    name: homebrew-guard
-  homepage: "https://github.com/goodwithtech/docker-guard"
+    name: homebrew-dockle
+  homepage: "https://github.com/goodwithtech/dockle"
   description: ""
   test: |
     system "#{bin}/program --version"

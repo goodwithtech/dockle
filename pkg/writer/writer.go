@@ -3,7 +3,7 @@ package writer
 import (
 	"fmt"
 
-	"github.com/goodwithtech/docker-guard/pkg/types"
+	"github.com/goodwithtech/dockle/pkg/types"
 
 	"github.com/fatih/color"
 )

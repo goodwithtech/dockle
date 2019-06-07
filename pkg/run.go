@@ -6,17 +6,17 @@ import (
 	"os"
 	"strings"
 
-	"github.com/goodwithtech/docker-guard/pkg/utils"
+	"github.com/goodwithtech/dockle/pkg/utils"
 
-	"github.com/goodwithtech/docker-guard/pkg/writer"
+	"github.com/goodwithtech/dockle/pkg/writer"
 
 	"github.com/genuinetools/reg/registry"
-	"github.com/goodwithtech/docker-guard/pkg/scanner"
+	"github.com/goodwithtech/dockle/pkg/scanner"
 	"github.com/knqyf263/fanal/cache"
 	"golang.org/x/xerrors"
 
-	"github.com/goodwithtech/docker-guard/pkg/log"
-	"github.com/goodwithtech/docker-guard/pkg/types"
+	"github.com/goodwithtech/dockle/pkg/log"
+	"github.com/goodwithtech/dockle/pkg/types"
 	"github.com/urfave/cli"
 )
 
@@ -25,7 +25,7 @@ var (
 )
 
 const (
-	guardIgnore = ".guardignore"
+	dockleIgnore = ".dockleignore"
 )
 
 func Run(c *cli.Context) (err error) {
@@ -52,7 +52,7 @@ func Run(c *cli.Context) (err error) {
 	args := c.Args()
 	filePath := c.String("input")
 	if filePath == "" && len(args) == 0 {
-		log.Logger.Info(`"docker-guard" requires at least 1 argument or --input option.`)
+		log.Logger.Info(`"dockle" requires at least 1 argument or --input option.`)
 		cli.ShowAppHelpAndExit(c, 1)
 		return
 	}
@@ -141,10 +141,10 @@ func filterAbendAssessments(abendAssessments []*types.Assessment, assessment *ty
 }
 
 func getIgnoreCheckpointMap() {
-	f, err := os.Open(guardIgnore)
+	f, err := os.Open(dockleIgnore)
 	if err != nil {
-		log.Logger.Debug("There is no .guardignore file")
-		// docker-guard must work even if there isn't ignore file
+		log.Logger.Debug("There is no .dockleignore file")
+		// dockle must work even if there isn't ignore file
 		return
 	}
 

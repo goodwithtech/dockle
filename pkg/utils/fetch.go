@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/goodwithtech/docker-guard/pkg/log"
+	"github.com/goodwithtech/dockle/pkg/log"
 
 	"golang.org/x/xerrors"
 
@@ -27,7 +27,7 @@ func fetchURL(url string, cookie *http.Cookie) ([]byte, error) {
 func FetchLatestVersion() (version string, err error) {
 	log.Logger.Debug("Fetch latest version from github")
 	body, err := fetchURL(
-		"https://github.com/goodwithtech/docker-guard/releases/latest",
+		"https://github.com/goodwithtech/dockle/releases/latest",
 		&http.Cookie{Name: "user_session", Value: "guard"},
 	)
 	if err != nil {
