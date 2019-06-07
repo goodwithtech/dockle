@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/goodwithtech/docker-guard/pkg/log"
 
@@ -49,7 +50,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 		envKey := e[0]
 		for _, suspiciousKey := range suspiciousEnvKey {
 			if strings.Contains(envKey, suspiciousKey) {
-				if _, ok := acceptanceEnvKey[envKey]; ok{
+				if _, ok := acceptanceEnvKey[envKey]; ok {
 					continue
 				}
 				assesses = append(assesses, &types.Assessment{
@@ -69,53 +70,20 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 		})
 	}
 
-	// TODO: use goroutine
+	assessesCh := make(chan []*types.Assessment)
 	for index, cmd := range img.History {
-		if reducableApkAdd(cmd.CreatedBy) {
-			assesses = append(assesses, &types.Assessment{
-				Type:     types.UseApkAddNoCache,
-				Filename: "docker config",
-				Desc:     fmt.Sprintf("Use --no-cache option if use 'apk add': %s", cmd.CreatedBy),
-			})
-		}
+		go func(index int, cmd types.History) {
+			assessesCh <- assessHistory(index, cmd)
+		}(index, cmd)
+	}
 
-		if reducableAptGetInstall(cmd.CreatedBy) {
-			assesses = append(assesses, &types.Assessment{
-				Type:     types.MinimizeAptGet,
-				Filename: "docker config",
-				Desc:     fmt.Sprintf("Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : %s", cmd.CreatedBy),
-			})
-		}
-
-		if reducableAptGetUpdate(cmd.CreatedBy) {
-			assesses = append(assesses, &types.Assessment{
-				Type:     types.UseAptGetUpdateNoCache,
-				Filename: "docker config",
-				Desc:     fmt.Sprintf("Use 'apt-get update --no-cache' : %s", cmd.CreatedBy),
-			})
-		}
-
-		if strings.Contains(cmd.CreatedBy, "upgrade") {
-			assesses = append(assesses, &types.Assessment{
-				Type:     types.AvoidDistUpgrade,
-				Filename: "docker config",
-				Desc:     fmt.Sprintf("Avoid upgrade in container : %s", cmd.CreatedBy),
-			})
-		}
-		if strings.Contains(cmd.CreatedBy, "sudo") {
-			assesses = append(assesses, &types.Assessment{
-				Type:     types.AvoidSudo,
-				Filename: "docker config",
-				Desc:     fmt.Sprintf("Avoid sudo in container : %s", cmd.CreatedBy),
-			})
-		}
-
-		if index != 0 && strings.Contains(cmd.CreatedBy, "ADD") {
-			assesses = append(assesses, &types.Assessment{
-				Type:     types.UseCOPY,
-				Filename: "docker config",
-				Desc:     fmt.Sprintf("Use COPY : %s", cmd.CreatedBy),
-			})
+	timeout := time.After(10 * time.Second)
+	for i := 0; i < len(img.History); i++ {
+		select {
+		case results := <-assessesCh:
+			assesses = append(assesses, results...)
+		case <-timeout:
+			return nil, xerrors.New("timeout: manifest assessor")
 		}
 	}
 
@@ -129,6 +97,57 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 		}
 	}
 	return assesses, nil
+}
+
+func assessHistory(index int, cmd types.History) []*types.Assessment {
+	var assesses []*types.Assessment
+	if reducableApkAdd(cmd.CreatedBy) {
+		assesses = append(assesses, &types.Assessment{
+			Type:     types.UseApkAddNoCache,
+			Filename: "docker config",
+			Desc:     fmt.Sprintf("Use --no-cache option if use 'apk add': %s", cmd.CreatedBy),
+		})
+	}
+
+	if reducableAptGetInstall(cmd.CreatedBy) {
+		assesses = append(assesses, &types.Assessment{
+			Type:     types.MinimizeAptGet,
+			Filename: "docker config",
+			Desc:     fmt.Sprintf("Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : %s", cmd.CreatedBy),
+		})
+	}
+
+	if reducableAptGetUpdate(cmd.CreatedBy) {
+		assesses = append(assesses, &types.Assessment{
+			Type:     types.UseAptGetUpdateNoCache,
+			Filename: "docker config",
+			Desc:     fmt.Sprintf("Use 'apt-get update --no-cache' : %s", cmd.CreatedBy),
+		})
+	}
+
+	if strings.Contains(cmd.CreatedBy, "upgrade") {
+		assesses = append(assesses, &types.Assessment{
+			Type:     types.AvoidDistUpgrade,
+			Filename: "docker config",
+			Desc:     fmt.Sprintf("Avoid upgrade in container : %s", cmd.CreatedBy),
+		})
+	}
+	if strings.Contains(cmd.CreatedBy, "sudo") {
+		assesses = append(assesses, &types.Assessment{
+			Type:     types.AvoidSudo,
+			Filename: "docker config",
+			Desc:     fmt.Sprintf("Avoid sudo in container : %s", cmd.CreatedBy),
+		})
+	}
+
+	if index != 0 && strings.Contains(cmd.CreatedBy, "ADD") {
+		assesses = append(assesses, &types.Assessment{
+			Type:     types.UseCOPY,
+			Filename: "docker config",
+			Desc:     fmt.Sprintf("Use COPY : %s", cmd.CreatedBy),
+		})
+	}
+	return assesses
 }
 
 func reducableAptGetUpdate(cmd string) bool {
