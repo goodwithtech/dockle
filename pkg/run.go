@@ -38,7 +38,7 @@ func Run(c *cli.Context) (err error) {
 	latestVersion, err := utils.FetchLatestVersion()
 
 	// check latest version
-	if err == nil && cliVersion != latestVersion {
+	if err == nil && cliVersion != latestVersion && c.App.Version != "dev" {
 		log.Logger.Warnf("A new version %s is now available! You have %s.", latestVersion, cliVersion)
 	}
 
