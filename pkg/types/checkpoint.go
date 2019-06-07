@@ -96,7 +96,7 @@ var AlertDetails = map[int]AlertDetail{
 	AvoidSudo: {
 		DefaultLevel: FatalLevel,
 		Title:        "Avoid sudo command",
-		Code:         "DGC-DI-0001 ",
+		Code:         "DGC-DI-0001",
 	},
 
 	AvoidSensitiveDirectoryMounting: {

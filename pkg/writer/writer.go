@@ -10,6 +10,7 @@ import (
 
 const (
 	LISTMARK = "*"
+	COLON = ":"
 	SPACE    = " "
 	TAB      = "	"
 	NEWLINE  = "\n"
@@ -50,8 +51,9 @@ func ShowTargetResult(assessmentType int, assessments []*types.Assessment) {
 }
 
 func showTitleLine(assessmentType int, level int) {
+	blue :=color.New(color.FgCyan).SprintFunc()
 	detail := types.AlertDetails[assessmentType]
-	fmt.Print(colorizeAlert(level), TAB, "-", SPACE, detail.Title, NEWLINE)
+	fmt.Print(colorizeAlert(level), TAB, "-", SPACE, blue(detail.Code), COLON, SPACE, detail.Title, NEWLINE)
 }
 
 func showDescription(assessment *types.Assessment) {
