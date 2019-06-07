@@ -257,7 +257,7 @@ $ guard --input alpine.tar
 ```
 
 ## Specify exit code
-By default, `DockerGuard` exits with code 0 even if there is some problems.
+By default, `DockerGuard` exits with code 0 even if there are some problems.
 Use the --exit-code option if you want to exit with a non-zero exit code.
 
 ```bash
@@ -363,7 +363,7 @@ script:
 Example: https://travis-ci.org/goodwithtech/guard-ci-test<br/>
 Repository: https://github.com/goodwithtech/guard-ci-test
 
-## Circle CI
+## CircleCI
 
 ```yaml
 jobs:
