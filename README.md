@@ -12,13 +12,13 @@
 
 You can check a docker image only run... 
 ```bash
-guard [YOUR_IMAGE_NAME]
+dockle [YOUR_IMAGE_NAME]
 ``` 
 
-<img src="imgs/guard-screen.png" width="800">
+<img src="imgs/dockle-screen.png" width="800">
 
 
-<img src="imgs/guard-screen-exit-1.png" width="800">
+<img src="imgs/dockle-screen-exit-1.png" width="800">
 
 # TOC
 
@@ -75,14 +75,14 @@ All checkpoints [here](#checkpoint-summary)!
 ## RHEL/CentOS
 
 ```
-$ rpm -ivh https://github.com/goodwithtech/dockle/releases/download/v0.0.14/guard_0.0.14_Linux-64bit.rpm
+$ rpm -ivh https://github.com/goodwithtech/dockle/releases/download/v0.0.14/dockle_0.0.14_Linux-64bit.rpm
 ```
 
 ## Debian/Ubuntu
 
 ```bash
-$ wget https://github.com/goodwithtech/dockle/releases/download/v0.0.14/guard_0.0.14_Linux-64bit.deb
-$ sudo dpkg -i guard_0.0.14_Linux-64bit.deb
+$ wget https://github.com/goodwithtech/dockle/releases/download/v0.0.14/dockle_0.0.14_Linux-64bit.deb
+$ sudo dpkg -i dockle_0.0.14_Linux-64bit.deb
 ```
 
 ## Mac OS X / Homebrew
@@ -90,8 +90,8 @@ $ sudo dpkg -i guard_0.0.14_Linux-64bit.deb
 You can use homebrew on Mac OS.
 
 ```
-$ brew tap goodwithtech/guard 
-$ brew install goodwithtech/guard/guard
+$ brew tap goodwithtech/dockle 
+$ brew install goodwithtech/dockle/dockle
 ```
 
 ## Binary (Including Windows)
@@ -112,7 +112,7 @@ $ go get -u github.com/goodwithtech/dockle
 Simply specify an image name (and a tag).
 
 ```bash
-$ guard [YOUR_IMAGE_NAME]
+$ dockle [YOUR_IMAGE_NAME]
 ```
 
 <details>
@@ -154,13 +154,13 @@ PASS    - Be unique GROUP
 Replace [YOUR_CACHE_DIR] with the cache directory on your machine.
 
 ```
-$ docker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ goodwithtech/guard [YOUR_IMAGE_NAME]
+$ docker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ goodwithtech/dockle [YOUR_IMAGE_NAME]
 ```
 
 Example for macOS:
 
 ```
-$ docker run --rm -v $HOME/Library/Caches:/root/.cache/ goodwithtech/guard [YOUR_IMAGE_NAME]
+$ docker run --rm -v $HOME/Library/Caches:/root/.cache/ goodwithtech/dockle [YOUR_IMAGE_NAME]
 ```
 
 If you would like to scan the image on your host machine, you need to mount `docker.sock`.
@@ -169,7 +169,7 @@ If you would like to scan the image on your host machine, you need to mount `doc
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ...
 ```
 
-Please re-pull latest `goodwithtech/guard` if an error occured.
+Please re-pull latest `goodwithtech/dockle` if an error occured.
 
 # Checkpoint Summary
 
@@ -193,7 +193,7 @@ Please re-pull latest `goodwithtech/guard` if an error occured.
 | [DKL-DI-0004](#dkl-di-0004-use-apk-add-with---no-cache) | Use apk add with `--no-cache` | FATAL
 | [DKL-DI-0005](#dkl-di-0005-clear-apt-get-caches) | Clear apt-get caches | FATAL
 | [DKL-DI-0006](#dkl-di-0006-avoid-latest-tag) | Avoid `latest` tag | WARN
-|| [Dockle Checkpoints for Linux](#dockerguard-checkpoints-for-linux) |
+|| [Dockle Checkpoints for Linux](#dockerdockle-checkpoints-for-linux) |
 | [DKL-LI-0001](#dkl-li-0001-avoid-empty-password) | Avoid empty password | FATAL
 | [DKL-LI-0002](#dkl-li-0002-be-unique-uidgroups) | Be unique UID/GROUPs | FATAL
 
@@ -216,7 +216,7 @@ Please re-pull latest `goodwithtech/guard` if an error occured.
 Simply specify an image name (and a tag).
 
 ```bash
-$ guard goodwithtech/test-image:v1
+$ dockle goodwithtech/test-image:v1
 ```
 <details>
 <summary>Result</summary>
@@ -261,7 +261,7 @@ PASS    - DKL-LI-0002: Be unique GROUP
 
 ```bash
 $ docker save alpine:latest -o alpine.tar
-$ guard --input alpine.tar
+$ dockle --input alpine.tar
 ```
 
 ## Specify exit code
@@ -269,7 +269,7 @@ By default, `Dockle` exits with code 0 even if there are some problems.
 Use the --exit-code option if you want to exit with a non-zero exit code.
 
 ```bash
-$ guard  -exist-code 1 [IMAGE_NAME]
+$ dockle  -exist-code 1 [IMAGE_NAME]
 ```
 
 ## Ignore the specified checkpoints (only work with --exit-code)
