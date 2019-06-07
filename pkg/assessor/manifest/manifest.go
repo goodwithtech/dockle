@@ -16,6 +16,7 @@ type ManifestAssessor struct{}
 
 var sensitiveDirs = map[string]struct{}{"/boot": {}, "/dev": {}, "/etc": {}, "/lib": {}, "/proc": {}, "/sys": {}, "/usr": {}}
 var suspiciousEnvKey = []string{"PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS"}
+var acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}}
 
 func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []*types.Assessment, err error) {
 	log.Logger.Debug("Scan start : config file")
@@ -48,6 +49,9 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 		envKey := e[0]
 		for _, suspiciousKey := range suspiciousEnvKey {
 			if strings.Contains(envKey, suspiciousKey) {
+				if _, ok := acceptanceEnvKey[envKey]; ok{
+					continue
+				}
 				assesses = append(assesses, &types.Assessment{
 					Type:     types.AvoidEnvKeySecret,
 					Filename: "docker config",
