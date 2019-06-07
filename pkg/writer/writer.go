@@ -65,14 +65,6 @@ func showDescription(assessment *types.Assessment) {
 	fmt.Print(TAB, LISTMARK, SPACE, assessment.Desc, NEWLINE)
 }
 
-func ShowABENDTitle() {
-	fmt.Print(NEWLINE, "--- ERROR OCCURED ON... ----", NEWLINE)
-}
-
-func ShowWhyABEND(code string, assessment *types.Assessment) {
-	fmt.Print(color.New(color.FgRed).Sprint("ERROR"), TAB, code, SPACE, ":", SPACE, assessment.Desc, NEWLINE)
-}
-
 func colorizeAlert(alertLevel int) string {
 	return AlertLevelColors[alertLevel](AlertLabels[alertLevel])
 }
