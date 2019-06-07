@@ -25,4 +25,4 @@ require (
 
 replace github.com/genuinetools/reg => github.com/tomoyamachi/reg v0.16.2-0.20190418055600-c6010b917a55
 
-replace github.com/knqyf263/fanal => github.com/goodwithtech/fanal v0.0.0-20190607073741-b7000ee8325c
+replace github.com/knqyf263/fanal => github.com/goodwithtech/fanal v0.0.0-20190607090116-bffde1fd5a13

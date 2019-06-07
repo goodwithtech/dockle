@@ -47,6 +47,7 @@ guard [YOUR_IMAGE_NAME]
   - [CIS's Docker Image Checkpoints](#docker-image-checkpoints)
   - [DockerGuard Checkpoints for Docker](#dockerguard-checkpoints-for-docker)
   - [DockerGuard Checkpoints for Linux](#dockerguard-checkpoints-for-linux)
+- [Credits](#credits)
 - [Roadmap](#roadmap)
 
 
@@ -61,11 +62,11 @@ guard [YOUR_IMAGE_NAME]
 | 5.  Enable Content trust for Docker | ✓ | ✓ | - |
 | 6.  Add HEALTHCHECK instruction to the container image | ✓ | ✓ | - |
 | 7.  Do not use update instructions alone in the Dockerfile | ✓ | ✓ | ✓|
-| 8.  Remove setuid and setgid permissions in the images | - | - | - |
+| 8.  Remove setuid and setgid permissions in the images | ✓ | - | - |
 | 9.  Use COPY instead of ADD in Dockerfile | ✓ | ✓ | ✓|
 | 10. Do not store secrets in Dockerfiles | ✓ | - | - |
 | 11. Install verified packages only | -  |  - | - |
-| |6|5|3|
+| |7|5|3|
 
 All checkpoints [here](#checkpoint-summary)!
 
@@ -198,13 +199,15 @@ Please re-pull latest `goodwithtech/guard` if an error occured.
 
 #### Level
 
-`DockerGuard` has 3 check levels
+`DockerGuard` has 5 check levels
 
 | LEVEL | DESCRIPTION |
 |:---:|---|
 | FATAL | Be practical and prudent |
 | WARN | May negatively inhibit the utility or performance, but better to security |
 | INFO | For Your Information |
+| SKIP | Not found target files |
+| PASS | Not found any problems |
 
 # Examples
 
@@ -219,33 +222,38 @@ $ guard goodwithtech/test-image:v1
 <summary>Result</summary>
 
 ```
-FATAL   - Create a user for the container
+FATAL   - CIS-DI-0001: Create a user for the container
         * Last user should not be root
-WARN    - Enable Content trust for Docker
+WARN    - CIS-DI-0005: Enable Content trust for Docker
         * export DOCKER_CONTENT_TRUST=1 before docker pull/build
-FATAL   - Add HEALTHCHECK instruction to the container image
+FATAL   - CIS-DI-0006: Add HEALTHCHECK instruction to the container image
         * not found HEALTHCHECK statement
-FATAL   - Do not use update instructions alone in the Dockerfile
+FATAL   - CIS-DI-0007: Do not use update instructions alone in the Dockerfile
         * Use 'apt-get update --no-cache' : /bin/sh -c apt-get update && apt-get install -y git
-PASS    - Remove setuid and setgid permissions in the images
-FATAL   - Use COPY instead of ADD in Dockerfile
+FATAL   - CIS-DI-0008: Remove setuid and setgid permissions in the images
+        * Found setuid file: etc/passwd grw-r--r--
+        * Found setuid file: usr/lib/openssh/ssh-keysign urwxr-xr-x
+        * Found setuid file: app/hoge.txt ugrw-r--r--
+        * Found setuid file: app/hoge.txt ugrw-r--r--
+        * Found setuid file: etc/shadow urw-r-----
+FATAL   - CIS-DI-0009: Use COPY instead of ADD in Dockerfile
         * Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
-FATAL   - Do not store secrets in ENVIRONMENT variables
+FATAL   - CIS-DI-0010: Do not store secrets in ENVIRONMENT variables
         * Suspicious ENV key found : MYSQL_PASSWD
-FATAL   - Do not store secret files
+FATAL   - CIS-DI-0010: Do not store secret files
         * Suspicious filename found : app/credentials.json
-PASS    - Avoid sudo command
-FATAL   - Avoid sensitive directory mounting
+PASS    - DGC-DI-0001: Avoid sudo command
+FATAL   - DGC-DI-0002: Avoid sensitive directory mounting
         * Avoid mounting sensitive dirs : /usr
-PASS    - Avoid apt-get/apk/dist-upgrade
-PASS    - Use apk add with --no-cache
-FATAL   - Clear apt-get caches
+PASS    - DGC-DI-0003: Avoid apt-get/apk/dist-upgrade
+PASS    - DGC-DI-0004: Use apk add with --no-cache
+FATAL   - DGC-DI-0005: Clear apt-get caches
         * Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
-PASS    - Avoid latest tag
-FATAL   - Avoid empty password
+PASS    - DGC-DI-0006: Avoid latest tag
+FATAL   - DGC-LI-0001: Avoid empty password
         * No password user found! username : nopasswd
-PASS    - Be unique UID
-PASS    - Be unique GROUP
+PASS    - DGC-LI-0002: Be unique UID
+PASS    - DGC-LI-0002: Be unique GROUP
 ```
 </details>
 
@@ -263,53 +271,6 @@ Use the --exit-code option if you want to exit with a non-zero exit code.
 ```bash
 $ guard  -exist-code 1 [IMAGE_NAME]
 ```
-
-<details>
-<summary>Result</summary>
-
-```
-FATAL   - Create a user for the container
-        * Last user should not be root
-WARN    - Enable Content trust for Docker
-        * export DOCKER_CONTENT_TRUST=1 before docker pull/build
-FATAL   - Add HEALTHCHECK instruction to the container image
-        * not found HEALTHCHECK statement
-FATAL   - Do not use update instructions alone in the Dockerfile
-        * Use 'apt-get update --no-cache' : /bin/sh -c apt-get update && apt-get install -y git
-PASS    - Remove setuid and setgid permissions in the images
-FATAL   - Use COPY instead of ADD in Dockerfile
-        * Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
-FATAL   - Do not store secrets in ENVIRONMENT variables
-        * Suspicious ENV key found : MYSQL_PASSWD
-FATAL   - Do not store secret files
-        * Suspicious filename found : app/credentials.json
-PASS    - Avoid sudo command
-FATAL   - Avoid sensitive directory mounting
-        * Avoid mounting sensitive dirs : /usr
-PASS    - Avoid apt-get/apk/dist-upgrade
-PASS    - Use apk add with --no-cache
-FATAL   - Clear apt-get caches
-        * Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
-PASS    - Avoid latest tag
-FATAL   - Avoid empty password
-        * No password user found! username : nopasswd
-PASS    - Be unique UID
-PASS    - Be unique GROUP
-
---- ERROR OCCURED ON... ----
-ERROR   CIS-DI-0005 : export DOCKER_CONTENT_TRUST=1 before docker pull/build
-ERROR   CIS-DI-0006 : not found HEALTHCHECK statement
-ERROR   CIS-DI-0007 : Use 'apt-get update --no-cache' : /bin/sh -c apt-get update && apt-get install -y git
-ERROR   CIS-DI-0009 : Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
-ERROR   CIS-DI-0010 : Suspicious ENV key found : MYSQL_PASSWD
-ERROR   CIS-DI-0010 : Suspicious filename found : app/credentials.json
-ERROR   DGC-DI-0002 : Avoid mounting sensitive dirs : /usr
-ERROR   DGC-DI-0005 : Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
-ERROR   DGC-LI-0001 : No password user found! username : nopasswd
-
-```
-</details>
-
 
 ## Ignore the specified checkpoints (only work with --exit-code)
 
@@ -516,10 +477,12 @@ RUN apt-get update --no-cache
 
 ### CIS-DI-0008: Remove setuid and setgid permissions in the images
 
-Not supported yet.
-I will support it soon!
-
 > Removing setuid and setgid permissions in the images would prevent privilege escalation attacks in the containers.
+
+```bash
+chmod u-s setuid-file
+chmod u-g setgid-file
+```
 
 ### CIS-DI-0009: Use COPY instead of ADD in Dockerfile
 
@@ -606,28 +569,21 @@ http://www.linfo.org/uid.html
 
 > Contrary to popular belief, it is not necessary that each entry in the UID field be unique. However, non-unique UIDs can cause security problems, and thus UIDs should be kept unique across the entire organization.
 
+# Credits
+
+Special Thanks to [@knqyf263](https://github.com/knqyf263) (Teppei Fukuda) and [Trivy](https://github.com/knqyf263/trivy)
+
+# License
+
+AGPLv3
+
+# Author
+
+[@tomoyamachi](https://github.com/tomoyamachi) (Tomoya Amachi)
+
 # Roadmap
-
-- Users, Groups and Authentication
-  - [ ] Unnecessary priviledge escalation(setuid, setgid)
-    ```
-		fi := hdr.FileInfo()
-		fm := fi.Mode()
-		if fm&os.ModeSetuid != 0 {
-		    // suid
-		}
-		if fm&os.ModeSetgid != 0 {
-			// gid
-		}
-    ```
-- support Private repository    
-- General
-  - [ ] detect os
-  - [ ] use official container on the base
-
 - [ ] Check php.ini file
 - [ ] Check nginx.conf file
-- [ ] log to STDERR
 - Check /etc/hosts
   - [ ] duplicates
   - [ ] hostname
@@ -648,3 +604,4 @@ http://www.linfo.org/uid.html
 - Volume mount
   - mount dangerous 
     - /boot, /dev, /etc, /lib
+
