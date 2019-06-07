@@ -10,7 +10,7 @@ import (
 
 const (
 	LISTMARK = "*"
-	COLON = ":"
+	COLON    = ":"
 	SPACE    = " "
 	TAB      = "	"
 	NEWLINE  = "\n"
@@ -22,6 +22,7 @@ var AlertLabels = []string{
 	"FATAL",
 	"PASS",
 	"SKIP",
+	"IGNORE",
 }
 
 var AlertLevelColors = []func(a ...interface{}) string{
@@ -29,7 +30,8 @@ var AlertLevelColors = []func(a ...interface{}) string{
 	color.New(color.FgYellow).SprintFunc(),
 	color.New(color.FgRed).SprintFunc(),
 	color.New(color.FgGreen).SprintFunc(),
-	color.New(color.FgCyan).SprintFunc(),
+	color.New(color.FgBlue).SprintFunc(),
+	color.New(color.FgBlue).SprintFunc(),
 }
 
 func ShowTargetResult(assessmentType int, assessments []*types.Assessment) {
@@ -44,6 +46,9 @@ func ShowTargetResult(assessmentType int, assessments []*types.Assessment) {
 	}
 	detail := types.AlertDetails[assessmentType]
 	level := detail.DefaultLevel
+	if assessments[0].Level == types.IgnoreLevel {
+		level = types.IgnoreLevel
+	}
 	showTitleLine(assessmentType, level)
 	for _, assessment := range assessments {
 		showDescription(assessment)
@@ -51,9 +56,9 @@ func ShowTargetResult(assessmentType int, assessments []*types.Assessment) {
 }
 
 func showTitleLine(assessmentType int, level int) {
-	blue :=color.New(color.FgCyan).SprintFunc()
+	cyan := color.New(color.FgCyan).SprintFunc()
 	detail := types.AlertDetails[assessmentType]
-	fmt.Print(colorizeAlert(level), TAB, "-", SPACE, blue(detail.Code), COLON, SPACE, detail.Title, NEWLINE)
+	fmt.Print(colorizeAlert(level), TAB, "-", SPACE, cyan(detail.Code), COLON, SPACE, detail.Title, NEWLINE)
 }
 
 func showDescription(assessment *types.Assessment) {

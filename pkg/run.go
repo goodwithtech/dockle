@@ -93,9 +93,7 @@ func Run(c *cli.Context) (err error) {
 	exitCode := c.Int("exit-code")
 
 	// Store ignore checkpoint code
-	if exitCode != 0 {
-		getIgnoreCheckpointMap()
-	}
+	getIgnoreCheckpointMap()
 
 	var abendAssessments []*types.Assessment
 
@@ -125,8 +123,12 @@ func Run(c *cli.Context) (err error) {
 }
 
 func filteredAssessments(target int, assessments []*types.Assessment) (filtered []*types.Assessment) {
+	detail := types.AlertDetails[target]
 	for _, assessment := range assessments {
 		if assessment.Type == target {
+			if _, ok := ignoreCheckpointMap[detail.Code]; ok {
+				assessment.Level = types.IgnoreLevel
+			}
 			filtered = append(filtered, assessment)
 		}
 	}
