@@ -55,7 +55,7 @@ $ dockle [YOUR_IMAGE_NAME]
 
 
 
-|  | Dockle | Hadolint | Docker Bench for Security |
+|  | [Dockle](https://github.com/goodwithtech/dockle) | [Hadolint](https://github.com/hadolint/hadolint) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) |
 |--- |---:|---:|---:|
 | Target |  BuildImage | Dockerfile | Host<br/>DockerDaemon<br/>BuildImage<br/>ContainerRuntime |
 | How to run | Binary | Binary | ShellScript |
@@ -67,7 +67,6 @@ $ dockle [YOUR_IMAGE_NAME]
 
 <details>
 <summary>Detail of CIS Benchmark</summary>
-
 
 |  | [Dockle](https://github.com/goodwithtech/dockle) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) | [Hadolint](https://github.com/hadolint/hadolint) | 
 |---|:---:|:---:|:---:|
@@ -84,9 +83,9 @@ $ dockle [YOUR_IMAGE_NAME]
 | 11. Install verified packages only | -  |  - | - |
 | |7|5|3|
 
-</detail>
-
 All checkpoints [here](#checkpoint-summary)!
+</details>
+
 
 # Installation
 
