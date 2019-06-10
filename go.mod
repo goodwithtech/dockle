@@ -8,10 +8,8 @@ require (
 	github.com/docker/go-connections v0.4.0
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
-	github.com/fatih/color v1.7.0
 	github.com/genuinetools/reg v0.16.0
 	github.com/knqyf263/fanal v0.0.0-20190528042547-07e27879b658
-	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/parnurzeal/gorequest v0.2.15
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect

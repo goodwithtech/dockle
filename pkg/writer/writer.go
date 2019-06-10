@@ -4,8 +4,7 @@ import (
 	"fmt"
 
 	"github.com/goodwithtech/dockle/pkg/types"
-
-	"github.com/fatih/color"
+	"github.com/goodwithtech/dockle/pkg/color"
 )
 
 const (
@@ -25,13 +24,14 @@ var AlertLabels = []string{
 	"IGNORE",
 }
 
-var AlertLevelColors = []func(a ...interface{}) string{
-	color.New(color.FgMagenta).SprintFunc(),
-	color.New(color.FgYellow).SprintFunc(),
-	color.New(color.FgRed).SprintFunc(),
-	color.New(color.FgGreen).SprintFunc(),
-	color.New(color.FgBlue).SprintFunc(),
-	color.New(color.FgBlue).SprintFunc(),
+
+var AlertLevelColors = []color.Color{
+	color.Magenta,
+	color.Yellow,
+	color.Red,
+	color.Green,
+	color.Blue,
+	color.Blue,
 }
 
 func ShowTargetResult(assessmentType int, assessments []*types.Assessment) {
@@ -56,9 +56,9 @@ func ShowTargetResult(assessmentType int, assessments []*types.Assessment) {
 }
 
 func showTitleLine(assessmentType int, level int) {
-	cyan := color.New(color.FgCyan).SprintFunc()
+	cyan := color.Cyan
 	detail := types.AlertDetails[assessmentType]
-	fmt.Print(colorizeAlert(level), TAB, "-", SPACE, cyan(detail.Code), COLON, SPACE, detail.Title, NEWLINE)
+	fmt.Print(colorizeAlert(level), TAB, "-", SPACE, cyan.Add(detail.Code), COLON, SPACE, detail.Title, NEWLINE)
 }
 
 func showDescription(assessment *types.Assessment) {
@@ -66,5 +66,5 @@ func showDescription(assessment *types.Assessment) {
 }
 
 func colorizeAlert(alertLevel int) string {
-	return AlertLevelColors[alertLevel](AlertLabels[alertLevel])
+	return AlertLevelColors[alertLevel].Add(AlertLabels[alertLevel])
 }
