@@ -5,7 +5,9 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/goodwithtech/dockle)](https://goreportcard.com/report/github.com/goodwithtech/dockle)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-`Dockle` is Security auditing tool that helps you
+> Dockle - Simple security auditing and helping build the best docker image  
+
+`Dockle` helps you
 1) Build secure Docker images
     - Checkpoints includes [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
 2) Build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images
@@ -20,7 +22,7 @@ $ dockle [YOUR_IMAGE_NAME]
 
 # TOC
 
-- [Comparison](#comparison-use-cis-benchmark-checkpoints)
+- [Comparison](#comparison)
 - [Installation](#installation)
   - [RHEL/CentOS](#rhelcentos)
   - [Debian/Ubuntu](#debianubuntu)
@@ -49,14 +51,29 @@ $ dockle [YOUR_IMAGE_NAME]
 - [Roadmap](#roadmap)
 
 
-# Comparison (use CIS Benchmark checkpoints)
+# Comparison
 
-|  | [Dockle](https://github.com/goodwithtech/dockle) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) | [hadolint](https://github.com/hadolint/hadolint) | 
+
+
+|  | [Dockle](https://github.com/goodwithtech/dockle) | [Hadolint](https://github.com/hadolint/hadolint) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) |
+|--- |---:|---:|---:|
+| Target |  BuildImage | Dockerfile | Host<br/>DockerDaemon<br/>BuildImage<br/>ContainerRuntime |
+| How to run | Binary | Binary | ShellScript |
+| Dependency | No | No | Some dependencies |
+| Suitable CI | ✓ | ✓ | x |
+| Purpose |SecurityAudit<br/>DockerfileLint| DockerfileLint | SecurityAudit<br />DockerfileLint |
+| Covered CIS Benchmarks(Docker Image and Build File) | 7 | 3 | 5 |
+
+
+<details>
+<summary>Detail of CIS Benchmark</summary>
+
+|  | [Dockle](https://github.com/goodwithtech/dockle) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) | [Hadolint](https://github.com/hadolint/hadolint) | 
 |---|:---:|:---:|:---:|
 | 1.  Create a user for the container | ✓ | ✓ | ✓ |
 | 2.  Use trusted base images for containers | - | – | - |
-| 3.  Do not install unnecessary packages in the container | - | - | - |
-| 4.  Scan and rebuild the images to include security patches | - | - | - |  
+| 3.  Do not install unnecessary packages in the container | - | - | - | 
+| 4.  Scan and rebuild the images to include security patches | - | - | - | 
 | 5.  Enable Content trust for Docker | ✓ | ✓ | - |
 | 6.  Add HEALTHCHECK instruction to the container image | ✓ | ✓ | - |
 | 7.  Do not use update instructions alone in the Dockerfile | ✓ | ✓ | ✓|
@@ -67,6 +84,8 @@ $ dockle [YOUR_IMAGE_NAME]
 | |7|5|3|
 
 All checkpoints [here](#checkpoint-summary)!
+</details>
+
 
 # Installation
 
@@ -264,7 +283,7 @@ $ dockle --input alpine.tar
 
 ## Specify exit code
 By default, `Dockle` exits with code 0 even if there are some problems.
-Use the --exit-code option if you want to exit with a non-zero exit code.
+Use the --exit-code option if you may want to exit with a non-zero exit code.
 
 ```bash
 $ dockle  -exist-code 1 [IMAGE_NAME]
@@ -296,7 +315,7 @@ Scan your image built in Travis CI/CircleCI.
 The test will fail with if a error is found.
 You can skip target checkpoint if you use `.dockleignore`.
  
-When you don't want to fail the test, specify `--exit-code 0`.
+When you don't would like to fail the test, specify `--exit-code 0`.
 
 
 ## Travis CI
@@ -387,9 +406,9 @@ You can use [AWS CLI's ENVIRONMENT variables](https://docs.aws.amazon.com/cli/la
 
 ### GCR (Google Container Registry)
 
-`Dockle` uses Google Cloud SDK. You don't need to install `gcloud` command.
+`Dockle` uses Google Cloud SDK. So, you don't need to install `gcloud` command.
 
-If you want to use target project's repository, you can settle via `GOOGLE_APPLICATION_CREDENTIAL`. 
+If you would like to use target project's repository, you can settle via `GOOGLE_APPLICATION_CREDENTIAL`. 
 ```bash
 # must set DOCKLE_USERNAME empty char
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credential.json
@@ -403,7 +422,7 @@ BasicAuth server needs `DOCKLE_USERNAME` and `DOCKLE_PASSWORD`.
 export DOCKLE_USERNAME={USERNAME}
 export DOCKLE_PASSWORD={PASSWORD}
 
-# if you want to use 80 port, use NonSSL
+# if you'd like to use 80 port, use NonSSL
 export DOCKLE_NON_SSL=true
 ```
 
@@ -580,6 +599,7 @@ AGPLv3
 [@tomoyamachi](https://github.com/tomoyamachi) (Tomoya Amachi)
 
 # Roadmap
+
 - [ ] Check php.ini file
 - [ ] Check nginx.conf file
 - Check /etc/hosts
