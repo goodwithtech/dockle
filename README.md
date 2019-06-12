@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/goodwithtech/dockle)](https://goreportcard.com/report/github.com/goodwithtech/dockle)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-> Dockle - Simple security auditing and helping build the best docker image  
+> Dockle - Simple Security Auditing and helping build the Best Docker Images  
 
 `Dockle` helps you
 1) Build secure Docker images
@@ -14,6 +14,7 @@
 
 You can check a docker image only run... 
 ```bash
+$ brew install goodwithtech/dockle/dockle
 $ dockle [YOUR_IMAGE_NAME]
 ``` 
 
@@ -22,6 +23,7 @@ $ dockle [YOUR_IMAGE_NAME]
 
 # TOC
 
+- [Features](#features)
 - [Comparison](#comparison)
 - [Installation](#installation)
   - [RHEL/CentOS](#rhelcentos)
@@ -49,6 +51,20 @@ $ dockle [YOUR_IMAGE_NAME]
   - [Dockle Checkpoints for Linux](#dockle-checkpoints-for-linux)
 - [Credits](#credits)
 - [Roadmap](#roadmap)
+
+
+# Features
+
+- Detect container's vulnerabilities
+- Helping build Dockerfile best-practice
+- Simple
+  - Specify only an image name
+  - See [Quick Start](#quick-start) and [Examples](#examples)
+- Support CIS Benchmarks
+  - High accuracy
+- DevSecOps
+  - Suitable for CI such as Travis CI, CircleCI, Jenkins, etc.
+  - See [CI Example](#continuous-integration-ci)
 
 
 # Comparison
@@ -107,7 +123,6 @@ $ sudo dpkg -i dockle_0.0.17_Linux-64bit.deb
 You can use homebrew on Mac OS.
 
 ```
-$ brew tap goodwithtech/dockle 
 $ brew install goodwithtech/dockle/dockle
 ```
 
