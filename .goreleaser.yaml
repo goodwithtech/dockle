@@ -67,12 +67,12 @@ archive:
   - README.md
   - LICENSE
 
-brews:
+brew:
   github:
     owner: goodwithtech
     name: homebrew-dockle
   folder: Formula
   homepage: "https://github.com/goodwithtech/dockle"
-  description: "Simple Security Auditing and helping build the Best Docker Images"
+  description: "Simple security auditing, helping build the Best Docker Images"
   test: |
     system "#{bin}/program --version"
