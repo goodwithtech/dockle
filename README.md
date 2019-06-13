@@ -30,7 +30,8 @@ $ dockle [YOUR_IMAGE_NAME]
   - [RHEL/CentOS](#rhelcentos)
   - [Debian/Ubuntu](#debianubuntu)
   - [Mac OS X / Homebrew](#mac-os-x--homebrew)
-  - [Binary (Including Windows)](#binary-including-windows)
+  - [Windows](#windows)
+  - [Binary](#binary)
   - [From source](#from-source)
 - [Checkpoint Summary](#checkpoint-summary)
 - [Quick Start](#quick-start)
@@ -140,7 +141,20 @@ You can use homebrew on Mac OS.
 $ brew install goodwithtech/dockle/dockle
 ```
 
-## Binary (Including Windows)
+## Windows
+
+```bash
+$ VERSION=$(
+ curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+ grep '"tag_name":' | \
+ sed -E 's/.*"v([^"]+)".*/\1/' \
+) && curl -L -o dockle.zip https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Windows-64bit.zip
+$ unzip dockle.zip && rm dockle.zip
+$ ./dockle.exe [IMAGE_NAME]
+```
+
+
+## Binary
 
 Get the latest version from [this page](https://github.com/goodwithtech/dockle/releases/latest), and download the archive file for your operating system/architecture. Unpack the archive, and put the binary somewhere in your `$PATH` (on UNIX-y systems, /usr/local/bin or the like). Make sure it has execution bits turned on.
 
