@@ -26,6 +26,7 @@ $ dockle [YOUR_IMAGE_NAME]
 - [Features](#features)
 - [Comparison](#comparison)
 - [Installation](#installation)
+  - [Linuxbrew](#linuxbrew)
   - [RHEL/CentOS](#rhelcentos)
   - [Debian/Ubuntu](#debianubuntu)
   - [Mac OS X / Homebrew](#mac-os-x--homebrew)
@@ -105,6 +106,11 @@ All checkpoints [here](#checkpoint-summary)!
 
 # Installation
 
+## Linuxbrew
+
+```bash
+$ brew install goodwithtech/dockle/dockle
+```
 ## RHEL/CentOS
 
 ```bash
