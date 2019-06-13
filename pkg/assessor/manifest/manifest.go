@@ -134,7 +134,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.MinimizeAptGet,
 			Filename: "docker config",
-			Desc:     fmt.Sprintf("Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : %s", cmd.CreatedBy),
+			Desc:     fmt.Sprintf("Use 'rm -rf /var/lib/apt/lists' after 'apt-get install' : %s", cmd.CreatedBy),
 		})
 	}
 
@@ -175,11 +175,11 @@ func reducableAptGetUpdate(cmdSlices map[int][]string) bool {
 	var useAptUpdate bool
 	var useAptInstall bool
 	for _, cmdSlice := range cmdSlices {
-		if !useAptUpdate && ContainAll(cmdSlice, []string{"apt-get", "update"}) {
+		if !useAptUpdate && containsAll(cmdSlice, []string{"apt-get", "update"}) {
 			useAptUpdate = true
 		}
 
-		if !useAptInstall && ContainAll(cmdSlice, []string{"apt-get", "install"}) {
+		if !useAptInstall && containsAll(cmdSlice, []string{"apt-get", "install"}) {
 			useAptInstall = true
 		}
 		if useAptUpdate && useAptInstall {
@@ -196,25 +196,25 @@ func reducableAptGetInstall(cmdSlices map[int][]string) bool {
 	var useAptInstall bool
 	var useRmCache bool
 	for _, cmdSlice := range cmdSlices {
-		if !useAptInstall && ContainAll(cmdSlice, []string{"apt-get", "install"}) {
+		if !useAptInstall && containsAll(cmdSlice, []string{"apt-get", "install"}) {
 			useAptInstall = true
 		}
-		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists"}) {
+		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists"}) {
 			useRmCache = true
 		}
-		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists"}) {
+		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists"}) {
 			useRmCache = true
 		}
-		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists"}) {
+		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists"}) {
 			useRmCache = true
 		}
-		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists/*"}) {
+		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists/*"}) {
 			useRmCache = true
 		}
-		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists/*"}) {
+		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists/*"}) {
 			useRmCache = true
 		}
-		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists/*"}) {
+		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists/*"}) {
 			useRmCache = true
 		}
 
@@ -230,8 +230,8 @@ func reducableAptGetInstall(cmdSlices map[int][]string) bool {
 
 func reducableApkAdd(cmdSlices map[int][]string) bool {
 	for _, cmdSlice := range cmdSlices {
-		if ContainAll(cmdSlice, []string{"apk", "add"}) {
-			if !ContainAll(cmdSlice, []string{"--no-cache"}) {
+		if containsAll(cmdSlice, []string{"apk", "add"}) {
+			if !containsAll(cmdSlice, []string{"--no-cache"}) {
 				return true
 			}
 		}
@@ -248,7 +248,7 @@ func (a ManifestAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{}
 }
 
-func ContainAll(heystack []string, needles []string) bool {
+func containsAll(heystack []string, needles []string) bool {
 	needleMap := map[string]struct{}{}
 	for _, n := range needles {
 		needleMap[n] = struct{}{}

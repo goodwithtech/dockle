@@ -406,7 +406,6 @@ jobs:
                 grep '"tag_name":' | \
                 sed -E 's/.*"v([^"]+)".*/\1/'
             )
-
             wget https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.tar.gz
             tar zxvf dockle_${VERSION}_Linux-64bit.tar.gz
             mv dockle /usr/local/bin
@@ -477,23 +476,29 @@ These checkpoints refered to [CIS Docker 1.13.0 Benchmark v1.0.0](https://www.ci
 
 ### CIS-DI-0001: Create a user for the container
 
-> Create a non-root user for the container in the Dockerfile for the container image. 
-
+> Create a non-root user for the container in the Dockerfile for the container image.<br/>
+> It is a good practice to run the container as a non-root user, if possible. 
 ```
 # Dockerfile
-RUN useradd -d /home/username -m -s /bin/bash username
-USER username
+RUN useradd -d /home/dockle -m -s /bin/bash dockle
+USER dockle
+
+or 
+
+RUN addgroup -S dockle && adduser -S -G dockle dockle
+USER dockle
+
 ```
 
 
 ### CIS-DI-0002: Use trusted base images for containers
 
-Not supported.
+Dockle checks Content Trust. 
 Please check with [Trivy](https://github.com/knqyf263/trivy).
 
 ### CIS-DI-0003: Do not install unnecessary packages in the container
 
-Not supported yet.
+Not supported.
 
 ### CIS-DI-0004: Scan and rebuild the images to include security patches
 
@@ -509,18 +514,16 @@ $ export DOCKER_CONTENT_TRUST=1
 ```
 
 https://docs.docker.com/engine/security/trust/content_trust/#about-docker-content-trust-dct
-
 > Docker Content Trust (DCT) provides the ability to use digital signatures for data sent to and received from remote Docker registries.
 > Engine Signature Verification prevents the following:
 > - `$ docker container run` of an unsigned image.
 > - `$ docker pull` of an unsigned image.
 > - `$ docker build` where the FROM image is not signed or is not scratch.
 
-
 ### CIS-DI-0006: Add HEALTHCHECK instruction to the container image
 
-> Add `HEALTHCHECK` instruction in your docker container images to perform the health check on running containers.
-
+> Add `HEALTHCHECK` instruction in your docker container images to perform the health check on running containers.<br/>
+> Based on the reported health status, the docker engine could then exit non-working containers and instantiate new ones.
 ```
 # Dockerfile
 HEALTHCHECK --interval=5m --timeout=3s \
@@ -529,16 +532,16 @@ HEALTHCHECK --interval=5m --timeout=3s \
 
 ### CIS-DI-0007: Do not use update instructions alone in the Dockerfile
 
-> Do not use update instructions such as apt-get update alone or in a single line in the Dockerfile.
-
+> Do not use update instructions such as apt-get update alone or in a single line in the Dockerfile.<br/>
+> Adding the update instructions in a single line on the Dockerfile will cache the update layer.
 ```bash
 RUN apt-get update && apt-get install -y package-a
 ```
 
 ### CIS-DI-0008: Remove setuid and setgid permissions in the images
 
-> Removing setuid and setgid permissions in the images would prevent privilege escalation attacks in the containers.
-
+> Removing setuid and setgid permissions in the images would prevent privilege escalation attacks in the containers.<br/>
+> setuid and setgid permissions could be used for elevating privileges.
 ```bash
 chmod u-s setuid-file
 chmod u-g setgid-file
@@ -546,8 +549,8 @@ chmod u-g setgid-file
 
 ### CIS-DI-0009: Use COPY instead of ADD in Dockerfile
 
-> Use COPY instruction instead of ADD instruction in the Dockerfile.
-
+> Use COPY instruction instead of ADD instruction in the Dockerfile.<br/>
+> `ADD` instruction introduces risks such as adding malicious files from URLs without scanning and unpacking procedure vulnerabilities.
 ```
 # Dockerfile
 ADD test.json /app/test.json
@@ -557,7 +560,8 @@ COPY test.json /app/test.json
 
 ### CIS-DI-0010: Do not store secrets in Dockerfiles
 
-> Do not store any secrets in Dockerfiles.
+> Do not store any secrets in Dockerfiles.<br/>
+> the secrets within these Dockerfiles could be easily exposed and potentially be exploited.
 
 `Dockle` checks ENVIRONMENT variables and credential files.
 
