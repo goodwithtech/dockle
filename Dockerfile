@@ -8,8 +8,8 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o /dockle cmd/dockle/main
 
 FROM alpine:3.9
 COPY --from=builder /dockle /usr/local/bin/dockle
-RUN apk --no-cache add ca-certificates
 RUN chmod +x /usr/local/bin/dockle
+RUN apk --no-cache add ca-certificates
 
 RUN addgroup -S dockle && adduser -S -G dockle dockle
 USER dockle
