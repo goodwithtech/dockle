@@ -236,16 +236,16 @@ Please re-pull latest `goodwithtech/dockle` if an error occured.
 | CODE | DESCRIPTION | LEVEL[※](#level) |
 |---|---|:---:|
 | | [CIS's Docker Image Checkpoints](#docker-image-checkpoints) | |
-| [CIS-DI-0001](#cis-di-0001-create-a-user-for-the-container) | Create a user for the container | FATAL |
+| [CIS-DI-0001](#cis-di-0001-create-a-user-for-the-container) | Create a user for the container | WARN |
 | [CIS-DI-0002](#cis-di-0002-use-trusted-base-images-for-containers) | Use trusted base images for containers | FATAL
 | [CIS-DI-0003](#cis-di-0003-do-not-install-unnecessary-packages-in-the-container) | Do not install unnecessary packages in the container | FATAL
 | [CIS-DI-0004](#cis-di-0004-scan-and-rebuild-the-images-to-include-security-patches) | Scan and rebuild the images to include security patches | FATAL
-| [CIS-DI-0006](#cis-di-0006-add-healthcheck-instruction-to-the-container-image) | Add HEALTHCHECK instruction to the container image | FATAL
+| [CIS-DI-0006](#cis-di-0006-add-healthcheck-instruction-to-the-container-image) | Add HEALTHCHECK instruction to the container image | WARN
 | [CIS-DI-0007](#cis-di-0007-do-not-use-update-instructions-alone-in-the-dockerfile) | Do not use update instructions alone in the Dockerfile | FATAL
-| [CIS-DI-0008](#cis-di-0008-remove-setuid-and-setgid-permissions-in-the-images) | Remove setuid and setgid permissions in the images | WARN
+| [CIS-DI-0008](#cis-di-0008-remove-setuid-and-setgid-permissions-in-the-images) | Remove setuid and setgid permissions in the images | INFO
 | [CIS-DI-0009](#cis-di-0009-use-copy-instead-of-add-in-dockerfile) | Use COPY instead of ADD in Dockerfile | FATAL
 | [CIS-DI-0010](#cis-di-0010-do-not-store-secrets-in-dockerfiles) | Do not store secrets in Dockerfiles | FATAL
-| [CIS-DI-0011](#cis-di-0011-install-verified-packages-only) | Install verified packages only | WARN
+| [CIS-DI-0011](#cis-di-0011-install-verified-packages-only) | Install verified packages only | INFO
 || [Dockle Checkpoints for Docker](#dockle-checkpoints-for-docker) |
 | [DKL-DI-0001](#dkl-di-0001-avoid-sudo-command) | Avoid `sudo` command | FATAL
 | [DKL-DI-0002](#dkl-di-0002-avoid-sensitive-directory-mounting) | Avoid sensitive directory mounting | FATAL
@@ -264,8 +264,8 @@ Please re-pull latest `goodwithtech/dockle` if an error occured.
 | LEVEL | DESCRIPTION |
 |:---:|---|
 | FATAL | Be practical and prudent |
-| WARN | May negatively inhibit the utility or performance, but better to security |
-| INFO | For Your Information |
+| WARN | Be practical and prudent, but limited uses (official docker image ) |
+| INFO | May negatively inhibit the utility or performance |
 | SKIP | Not found target files |
 | PASS | Not found any problems |
 

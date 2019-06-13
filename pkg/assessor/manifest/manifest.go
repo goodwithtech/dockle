@@ -18,7 +18,7 @@ type ManifestAssessor struct{}
 
 var sensitiveDirs = map[string]struct{}{"/boot": {}, "/dev": {}, "/etc": {}, "/lib": {}, "/proc": {}, "/sys": {}, "/usr": {}}
 var suspiciousEnvKey = []string{"PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS"}
-var acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}}
+var acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
 
 func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []*types.Assessment, err error) {
 	log.Logger.Debug("Scan start : config file")
@@ -110,7 +110,7 @@ func splitByCommands(line string) map[int][]string {
 		for _, cmd := range splitted {
 			trimmed := strings.TrimSpace(cmd)
 			if trimmed != "" {
-				cmds = append(cmds, cmd)
+				cmds = append(cmds, trimmed)
 			}
 
 		}
@@ -199,22 +199,9 @@ func reducableAptGetInstall(cmdSlices map[int][]string) bool {
 		if !useAptInstall && containsAll(cmdSlice, []string{"apt-get", "install"}) {
 			useAptInstall = true
 		}
-		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists"}) {
-			useRmCache = true
-		}
-		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists"}) {
-			useRmCache = true
-		}
-		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists"}) {
-			useRmCache = true
-		}
-		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists/*"}) {
-			useRmCache = true
-		}
-		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists/*"}) {
-			useRmCache = true
-		}
-		if !useRmCache && containsAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists/*"}) {
+		if !useRmCache && containsThreshold(
+			cmdSlice,
+			[]string{"rm", "-rf", "-fr", "-r", "-fR", "/var/lib/apt/lists", "/var/lib/apt/lists/*", "/var/lib/apt/lists/*;"}, 3) {
 			useRmCache = true
 		}
 
@@ -258,6 +245,25 @@ func containsAll(heystack []string, needles []string) bool {
 		if _, ok := needleMap[v]; ok {
 			delete(needleMap, v)
 			if len(needleMap) == 0 {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func containsThreshold(heystack []string, needles []string, threshold int) bool {
+	needleMap := map[string]struct{}{}
+	for _, n := range needles {
+		needleMap[n] = struct{}{}
+	}
+
+	existCnt := 0
+	for _, v := range heystack {
+		if _, ok := needleMap[v]; ok {
+			delete(needleMap, v)
+			existCnt++
+			if existCnt >= threshold {
 				return true
 			}
 		}
