@@ -107,15 +107,23 @@ All checkpoints [here](#checkpoint-summary)!
 
 ## RHEL/CentOS
 
-```
-$ rpm -ivh https://github.com/goodwithtech/dockle/releases/download/v0.0.17/dockle_0.0.17_Linux-64bit.rpm
+```bash
+$ VERSION=$(
+ curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+ grep '"tag_name":' | \
+ sed -E 's/.*"v([^"]+)".*/\1/' \
+) && rpm -ivh https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.rpm
 ```
 
 ## Debian/Ubuntu
 
 ```bash
-$ wget https://github.com/goodwithtech/dockle/releases/download/v0.0.17/dockle_0.0.17_Linux-64bit.deb
-$ sudo dpkg -i dockle_0.0.17_Linux-64bit.deb
+$ VERSION=$(
+ curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+ grep '"tag_name":' | \
+ sed -E 's/.*"v([^"]+)".*/\1/' \
+) && curl -L -o dockle.deb https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.deb
+$ sudo dpkg -i dockle.deb && rm dockle.deb
 ```
 
 ## Mac OS X / Homebrew
@@ -614,9 +622,10 @@ AGPLv3
 [@tomoyamachi](https://github.com/tomoyamachi) (Tomoya Amachi)
 
 # Roadmap
-
+- [ ] JSON output
 - [ ] Check php.ini file
 - [ ] Check nginx.conf file
+- [ ] create CI badges
 - Check /etc/hosts
   - [ ] duplicates
   - [ ] hostname
