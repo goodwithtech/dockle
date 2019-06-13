@@ -122,7 +122,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.UseAptGetUpdateNoCache,
 			Filename: "docker config",
-			Desc:     fmt.Sprintf("Use 'apt-get update --no-cache' : %s", cmd.CreatedBy),
+			Desc:     fmt.Sprintf("Always combine 'apt-get update' with 'apt-get install' : %s", cmd.CreatedBy),
 		})
 	}
 
@@ -153,7 +153,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 
 func reducableAptGetUpdate(cmd string) bool {
 	if strings.Contains(cmd, "apt-get update") {
-		if !strings.Contains(cmd, "--no-cache") {
+		if !strings.Contains(cmd, "apt-get install") {
 			return true
 		}
 	}

@@ -158,7 +158,7 @@ WARN    - Enable Content trust for Docker
 FATAL   - Add HEALTHCHECK instruction to the container image
         * not found HEALTHCHECK statement
 FATAL   - Do not use update instructions alone in the Dockerfile
-        * Use 'apt-get update --no-cache' : /bin/sh -c apt-get update && apt-get install -y git
+        * Use 'Always combine RUN apt-get update with apt-get install' : /bin/sh -c apt-get update && apt-get install -y git
 PASS    - Remove setuid and setgid permissions in the images
 FATAL   - Use COPY instead of ADD in Dockerfile
         * Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
@@ -261,7 +261,7 @@ WARN    - CIS-DI-0005: Enable Content trust for Docker
 FATAL   - CIS-DI-0006: Add HEALTHCHECK instruction to the container image
         * not found HEALTHCHECK statement
 FATAL   - CIS-DI-0007: Do not use update instructions alone in the Dockerfile
-        * Use 'apt-get update --no-cache' : /bin/sh -c apt-get update && apt-get install -y git
+        * Use 'Always combine RUN 'apt-get update' with 'apt-get install' : /bin/sh -c apt-get update && apt-get install -y git
 FATAL   - CIS-DI-0008: Remove setuid and setgid permissions in the images
         * Found setuid file: etc/passwd grw-r--r--
         * Found setuid file: usr/lib/openssh/ssh-keysign urwxr-xr-x
@@ -504,7 +504,7 @@ HEALTHCHECK --interval=5m --timeout=3s \
 > Do not use update instructions such as apt-get update alone or in a single line in the Dockerfile.
 
 ```bash
-RUN apt-get update --no-cache
+RUN apt-get update && apt-get install -y package-a
 ```
 
 ### CIS-DI-0008: Remove setuid and setgid permissions in the images
