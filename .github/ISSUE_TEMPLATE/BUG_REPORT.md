@@ -22,7 +22,7 @@ Briefly describe the problem you are having in a few paragraphs.
 (paste your output here)
 ```
 
-**Output of `guard -v`:**
+**Output of `dockle -v`:**
 
 ```
 (paste your output here)
