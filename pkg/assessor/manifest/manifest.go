@@ -175,11 +175,11 @@ func reducableAptGetUpdate(cmdSlices map[int][]string) bool {
 	var useAptUpdate bool
 	var useAptInstall bool
 	for _, cmdSlice := range cmdSlices {
-		if useAptUpdate == false && ContainAll(cmdSlice, []string{"apt-get", "update"}) {
+		if !useAptUpdate && ContainAll(cmdSlice, []string{"apt-get", "update"}) {
 			useAptUpdate = true
 		}
 
-		if useAptInstall == false && ContainAll(cmdSlice, []string{"apt-get", "install"}) {
+		if !useAptInstall && ContainAll(cmdSlice, []string{"apt-get", "install"}) {
 			useAptInstall = true
 		}
 		if useAptUpdate && useAptInstall {
@@ -199,22 +199,22 @@ func reducableAptGetInstall(cmdSlices map[int][]string) bool {
 		if useAptInstall == false && ContainAll(cmdSlice, []string{"apt-get", "install"}) {
 			useAptInstall = true
 		}
-		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists"}) {
+		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists"}) {
 			useRmCache = true
 		}
-		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists"}) {
+		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists"}) {
 			useRmCache = true
 		}
-		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists"}) {
+		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists"}) {
 			useRmCache = true
 		}
-		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists/*"}) {
+		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists/*"}) {
 			useRmCache = true
 		}
-		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists/*"}) {
+		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists/*"}) {
 			useRmCache = true
 		}
-		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists/*"}) {
+		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists/*"}) {
 			useRmCache = true
 		}
 
