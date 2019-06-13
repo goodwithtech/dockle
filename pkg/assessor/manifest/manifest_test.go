@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"sort"
 	"testing"
 
 	"github.com/d4l3k/messagediff"
@@ -37,11 +38,11 @@ func TestAssess(t *testing.T) {
 					Filename: "docker config",
 				},
 				{
-					Type:     types.AddHealthcheck,
+					Type:     types.UseApkAddNoCache,
 					Filename: "docker config",
 				},
 				{
-					Type:     types.UseApkAddNoCache,
+					Type:     types.AddHealthcheck,
 					Filename: "docker config",
 				},
 				{
@@ -73,12 +74,22 @@ func TestAssess(t *testing.T) {
 		}
 
 		diff, equal := messagediff.PrettyDiff(
-			v.assesses,
-			actual,
+			sortByType(v.assesses),
+			sortByType(actual),
 			messagediff.IgnoreStructField("Desc"),
 		)
 		if !equal {
 			t.Errorf("%s diff : %v", testname, diff)
 		}
 	}
+}
+
+func sortByType(assesses []*types.Assessment) []*types.Assessment {
+	sort.Slice(assesses, func(i, j int) bool {
+		if assesses[i].Type != assesses[j].Type {
+			return assesses[i].Type < assesses[j].Type
+		}
+		return assesses[i].Type < assesses[j].Type
+	})
+	return assesses
 }
