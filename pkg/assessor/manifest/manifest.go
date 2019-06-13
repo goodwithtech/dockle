@@ -196,7 +196,7 @@ func reducableAptGetInstall(cmdSlices map[int][]string) bool {
 	var useAptInstall bool
 	var useRmCache bool
 	for _, cmdSlice := range cmdSlices {
-		if useAptInstall == false && ContainAll(cmdSlice, []string{"apt-get", "install"}) {
+		if !useAptInstall && ContainAll(cmdSlice, []string{"apt-get", "install"}) {
 			useAptInstall = true
 		}
 		if !useRmCache && ContainAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists"}) {
