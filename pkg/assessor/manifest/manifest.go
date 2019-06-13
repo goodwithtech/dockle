@@ -100,9 +100,29 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 	return assesses, nil
 }
 
+func splitByCommands(line string) map[int][]string {
+	commands := strings.Split(line, "&&")
+
+	tokens := map[int][]string{}
+	for index, command := range commands {
+		splitted := strings.Split(command, " ")
+		cmds := []string{}
+		for _, cmd := range splitted {
+			trimmed := strings.TrimSpace(cmd)
+			if trimmed != "" {
+				cmds = append(cmds, cmd)
+			}
+
+		}
+		tokens[index] = cmds
+	}
+	return tokens
+}
+
 func assessHistory(index int, cmd types.History) []*types.Assessment {
 	var assesses []*types.Assessment
-	if reducableApkAdd(cmd.CreatedBy) {
+	cmdSlices := splitByCommands(cmd.CreatedBy)
+	if reducableApkAdd(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.UseApkAddNoCache,
 			Filename: "docker config",
@@ -110,7 +130,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		})
 	}
 
-	if reducableAptGetInstall(cmd.CreatedBy) {
+	if reducableAptGetInstall(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.MinimizeAptGet,
 			Filename: "docker config",
@@ -118,7 +138,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		})
 	}
 
-	if reducableAptGetUpdate(cmd.CreatedBy) {
+	if reducableAptGetUpdate(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.UseAptGetUpdateNoCache,
 			Filename: "docker config",
@@ -151,29 +171,69 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 	return assesses
 }
 
-func reducableAptGetUpdate(cmd string) bool {
-	if strings.Contains(cmd, "apt-get update") {
-		if !strings.Contains(cmd, "apt-get install") {
-			return true
+func reducableAptGetUpdate(cmdSlices map[int][]string) bool {
+	var useAptUpdate bool
+	var useAptInstall bool
+	for _, cmdSlice := range cmdSlices {
+		if useAptUpdate == false && ContainAll(cmdSlice, []string{"apt-get", "update"}) {
+			useAptUpdate = true
 		}
-	}
-	return false
-}
 
-func reducableAptGetInstall(cmd string) bool {
-	if strings.Contains(cmd, "apt-get install") {
-		if strings.Contains(cmd, "apt-get clean") && strings.Contains(cmd, "rm -rf /var/lib/apt/lists") {
+		if useAptInstall == false && ContainAll(cmdSlice, []string{"apt-get", "install"}) {
+			useAptInstall = true
+		}
+		if useAptUpdate && useAptInstall {
 			return false
 		}
+	}
+	if useAptUpdate && !useAptInstall {
 		return true
 	}
 	return false
 }
 
-func reducableApkAdd(cmd string) bool {
-	if strings.Contains(cmd, "apk add") {
-		if !strings.Contains(cmd, "--no-cache") {
-			return true
+func reducableAptGetInstall(cmdSlices map[int][]string) bool {
+	var useAptInstall bool
+	var useRmCache bool
+	for _, cmdSlice := range cmdSlices {
+		if useAptInstall == false && ContainAll(cmdSlice, []string{"apt-get", "install"}) {
+			useAptInstall = true
+		}
+		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists"}) {
+			useRmCache = true
+		}
+		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists"}) {
+			useRmCache = true
+		}
+		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists"}) {
+			useRmCache = true
+		}
+		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-rf", "/var/lib/apt/lists/*"}) {
+			useRmCache = true
+		}
+		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-fr", "/var/lib/apt/lists/*"}) {
+			useRmCache = true
+		}
+		if useRmCache == false && ContainAll(cmdSlice, []string{"rm", "-fR", "/var/lib/apt/lists/*"}) {
+			useRmCache = true
+		}
+
+		if useAptInstall && useRmCache {
+			return false
+		}
+	}
+	if useAptInstall && !useRmCache {
+		return true
+	}
+	return false
+}
+
+func reducableApkAdd(cmdSlices map[int][]string) bool {
+	for _, cmdSlice := range cmdSlices {
+		if ContainAll(cmdSlice, []string{"apk", "add"}) {
+			if !ContainAll(cmdSlice, []string{"--no-cache"}) {
+				return true
+			}
 		}
 	}
 	return false
@@ -186,4 +246,21 @@ func (a ManifestAssessor) RequiredFiles() []string {
 
 func (a ManifestAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{}
+}
+
+func ContainAll(heystack []string, needles []string) bool {
+	needleMap := map[string]struct{}{}
+	for _, n := range needles {
+		needleMap[n] = struct{}{}
+	}
+
+	for _, v := range heystack {
+		if _, ok := needleMap[v]; ok {
+			delete(needleMap, v)
+			if len(needleMap) == 0 {
+				return true
+			}
+		}
+	}
+	return false
 }
