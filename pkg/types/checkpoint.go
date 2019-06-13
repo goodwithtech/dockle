@@ -48,19 +48,19 @@ type AlertDetail struct {
 
 var AlertDetails = map[int]AlertDetail{
 	AvoidRootDefault: {
-		DefaultLevel: FatalLevel,
+		DefaultLevel: WarnLevel,
 		Title:        "Create a user for the container",
 		Code:         "CIS-DI-0001",
 	},
 
 	UseContentTrust: {
-		DefaultLevel: WarnLevel,
+		DefaultLevel: InfoLevel,
 		Title:        "Enable Content trust for Docker",
 		Code:         "CIS-DI-0005",
 	},
 
 	AddHealthcheck: {
-		DefaultLevel: FatalLevel,
+		DefaultLevel: WarnLevel,
 		Title:        "Add HEALTHCHECK instruction to the container image",
 		Code:         "CIS-DI-0006",
 	},
@@ -72,7 +72,7 @@ var AlertDetails = map[int]AlertDetail{
 	},
 
 	RemoveSetuidSetgid: {
-		DefaultLevel: FatalLevel,
+		DefaultLevel: InfoLevel,
 		Title:        "Remove setuid and setgid permissions in the images",
 		Code:         "CIS-DI-0008",
 	},
@@ -121,7 +121,7 @@ var AlertDetails = map[int]AlertDetail{
 		Code:         "DKL-DI-0005",
 	},
 	AvoidLatestTag: {
-		DefaultLevel: FatalLevel,
+		DefaultLevel: WarnLevel,
 		Title:        "Avoid latest tag",
 		Code:         "DKL-DI-0006",
 	},
@@ -133,12 +133,12 @@ var AlertDetails = map[int]AlertDetail{
 		Code:         "DKL-LI-0001",
 	},
 	AvoidDuplicateUser: {
-		DefaultLevel: WarnLevel,
+		DefaultLevel: FatalLevel,
 		Title:        "Be unique UID",
 		Code:         "DKL-LI-0002",
 	},
 	AvoidDuplicateGroup: {
-		DefaultLevel: WarnLevel,
+		DefaultLevel: FatalLevel,
 		Title:        "Be unique GROUP",
 		Code:         "DKL-LI-0002",
 	},
