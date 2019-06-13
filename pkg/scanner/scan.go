@@ -17,14 +17,12 @@ import (
 
 func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err error) {
 	ctx := context.Background()
-	var target string
 	var files extractor.FileMap
 
 	// add required files to fanal's analyzer
 	analyzer.AddRequiredFilenames(assessor.LoadRequiredFiles())
 	analyzer.AddRequiredPermissions(assessor.LoadRequiredPermissions())
 	if imageName != "" {
-		target = imageName
 		dockerOption, err := types.GetDockerOption()
 		if err != nil {
 			return nil, xerrors.Errorf("failed to get docker option: %w", err)
@@ -34,7 +32,6 @@ func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err
 			return nil, xerrors.Errorf("failed to analyze image: %w", err)
 		}
 	} else if filePath != "" {
-		target = filePath
 		rc, err := openStream(filePath)
 		if err != nil {
 			return nil, xerrors.Errorf("failed to open stream: %w", err)
@@ -49,9 +46,6 @@ func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err
 	}
 
 	assessments = assessor.GetAssessments(files)
-	if len(assessments) == 0 {
-		return nil, xerrors.Errorf("failed scan %s: %w", target, err)
-	}
 	return assessments, nil
 }
 
