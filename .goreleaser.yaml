@@ -37,7 +37,7 @@ nfpm:
     386: 32bit
     arm: ARM
     arm64: ARM64
-    darwin: macOS
+    darwin: Darwin
     linux: Linux
     windows: Windows
     openbsd: OpenBSD
@@ -67,7 +67,8 @@ archive:
   - README.md
   - LICENSE
 
-brew:
+brews:
+-
   github:
     owner: goodwithtech
     name: homebrew-dockle
