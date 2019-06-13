@@ -32,7 +32,12 @@ workflows:
   version: 2
   test_and_release:
     jobs:
-    - test
+    - test:
+        filters:
+          branches:
+            only: /.*/
+          tags:
+            only: /v[0-9]+(\.[0-9]+)*(-.*)*/
     - release:
         filters:
           branches:
