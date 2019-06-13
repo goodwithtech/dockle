@@ -1,7 +1,7 @@
 ---
 name: Support Question
 labels: question
-about: If you have a question about DockerGuard.
+about: If you have a question about Dockle.
 ---
 
 <!--
