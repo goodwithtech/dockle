@@ -1,7 +1,8 @@
-package writer
+package report
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/goodwithtech/dockle/pkg/color"
 	"github.com/goodwithtech/dockle/pkg/types"
@@ -15,15 +16,6 @@ const (
 	NEWLINE  = "\n"
 )
 
-var AlertLabels = []string{
-	"INFO",
-	"WARN",
-	"FATAL",
-	"PASS",
-	"SKIP",
-	"IGNORE",
-}
-
 var AlertLevelColors = []color.Color{
 	color.Magenta,
 	color.Yellow,
@@ -33,7 +25,28 @@ var AlertLevelColors = []color.Color{
 	color.Blue,
 }
 
-func ShowTargetResult(assessmentType int, assessments []*types.Assessment) {
+type ListWriter struct {
+	Output    io.Writer
+	IgnoreMap map[string]struct{}
+}
+
+func (lw ListWriter) Write(assessments []*types.Assessment) (bool, error) {
+	var abendAssessments []*types.Assessment
+
+	targetType := types.MinTypeNumber
+	for targetType <= types.MaxTypeNumber {
+		filtered := filteredAssessments(lw.IgnoreMap, targetType, assessments)
+		showTargetResult(targetType, filtered)
+
+		for _, assessment := range filtered {
+			abendAssessments = filterAbendAssessments(lw.IgnoreMap, abendAssessments, assessment)
+		}
+		targetType++
+	}
+	return len(abendAssessments) > 0, nil
+}
+
+func showTargetResult(assessmentType int, assessments []*types.Assessment) {
 	if len(assessments) == 0 {
 		showTitleLine(assessmentType, types.PassLevel)
 		return

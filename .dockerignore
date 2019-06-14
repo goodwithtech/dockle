@@ -1,3 +1,9 @@
 .circleci
 .git
 imgs
+.github
+.goreleaser.yaml
+.gitignore
+Dockerfile
+LICENSE
+README.md

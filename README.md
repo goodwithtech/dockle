@@ -41,6 +41,7 @@ $ dockle [YOUR_IMAGE_NAME]
 - [Examples](#examples)
   - [Scan an image](#scan-an-image)
   - [Scan an image file](#scan-an-image-file)
+  - [Save the results as JSON](#save-the-results-as-json)
   - [Specify exit code](#specify-exit-code)
   - [Ignore the specified checkpoints](#ignore-the-specified-checkpoints)
   - [Clear image caches](#clear-image-caches)
@@ -324,6 +325,110 @@ PASS    - DKL-LI-0002: Be unique GROUP
 $ docker save alpine:latest -o alpine.tar
 $ dockle --input alpine.tar
 ```
+
+## Save the results as JSON
+
+```bash
+$ dockle -f json goodwithtech/test-image:v1
+$ dockle -f json -o results.json goodwithtech/test-image:v1
+```
+
+<details>
+<summary>Result</summary>
+
+```json
+{
+  "summary": {
+    "fatal": 6,
+    "warn": 2,
+    "info": 2,
+    "pass": 7
+  },
+  "details": [
+    {
+      "code": "CIS-DI-0001",
+      "title": "Create a user for the container",
+      "level": "WARN",
+      "alerts": [
+        "Last user should not be root"
+      ]
+    },
+    {
+      "code": "CIS-DI-0005",
+      "title": "Enable Content trust for Docker",
+      "level": "INFO",
+      "alerts": [
+        "export DOCKER_CONTENT_TRUST=1 before docker pull/build"
+      ]
+    },
+    {
+      "code": "CIS-DI-0006",
+      "title": "Add HEALTHCHECK instruction to the container image",
+      "level": "WARN",
+      "alerts": [
+        "not found HEALTHCHECK statement"
+      ]
+    },
+    {
+      "code": "CIS-DI-0008",
+      "title": "Remove setuid and setgid permissions in the images",
+      "level": "INFO",
+      "alerts": [
+        "Found setuid file: usr/lib/openssh/ssh-keysign urwxr-xr-x"
+      ]
+    },
+    {
+      "code": "CIS-DI-0009",
+      "title": "Use COPY instead of ADD in Dockerfile",
+      "level": "FATAL",
+      "alerts": [
+        "Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json "
+      ]
+    },
+    {
+      "code": "CIS-DI-0010",
+      "title": "Do not store secrets in ENVIRONMENT variables",
+      "level": "FATAL",
+      "alerts": [
+        "Suspicious ENV key found : MYSQL_PASSWD"
+      ]
+    },
+    {
+      "code": "CIS-DI-0010",
+      "title": "Do not store secret files",
+      "level": "FATAL",
+      "alerts": [
+        "Suspicious filename found : app/credentials.json "
+      ]
+    },
+    {
+      "code": "DKL-DI-0002",
+      "title": "Avoid sensitive directory mounting",
+      "level": "FATAL",
+      "alerts": [
+        "Avoid mounting sensitive dirs : /usr"
+      ]
+    },
+    {
+      "code": "DKL-DI-0005",
+      "title": "Clear apt-get caches",
+      "level": "FATAL",
+      "alerts": [
+        "Use 'rm -rf /var/lib/apt/lists' after 'apt-get install' : /bin/sh -c apt-get update \u0026\u0026 apt-get install -y git"
+      ]
+    },
+    {
+      "code": "DKL-LI-0001",
+      "title": "Avoid empty password",
+      "level": "FATAL",
+      "alerts": [
+        "No password user found! username : nopasswd"
+      ]
+    }
+  ]
+}
+```
+<details>
 
 ## Specify exit code
 By default, `Dockle` exits with code 0 even if there are some problems.
@@ -647,7 +752,7 @@ AGPLv3
 [@tomoyamachi](https://github.com/tomoyamachi) (Tomoya Amachi)
 
 # Roadmap
-- [ ] JSON output
+- [x] JSON output
 - [ ] Check php.ini file
 - [ ] Check nginx.conf file
 - [ ] create CI badges
