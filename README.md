@@ -18,8 +18,8 @@ $ brew install goodwithtech/dockle/dockle
 $ dockle [YOUR_IMAGE_NAME]
 ``` 
 
-<img src="imgs/usage_pass.png" width="800">
-<img src="imgs/usage_fail.png" width="800">
+<img src="imgs/usage_pass_light.png" width="800">
+<img src="imgs/usage_fail_light.png" width="800">
 
 
 # TOC
