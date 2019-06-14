@@ -3,8 +3,8 @@ package writer
 import (
 	"fmt"
 
-	"github.com/goodwithtech/dockle/pkg/types"
 	"github.com/goodwithtech/dockle/pkg/color"
+	"github.com/goodwithtech/dockle/pkg/types"
 )
 
 const (
@@ -23,7 +23,6 @@ var AlertLabels = []string{
 	"SKIP",
 	"IGNORE",
 }
-
 
 var AlertLevelColors = []color.Color{
 	color.Magenta,

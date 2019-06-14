@@ -3,7 +3,7 @@ package assessor
 import (
 	"os"
 
-	"github.com/goodwithtech/dockle/pkg/assessor/priviledge"
+	"github.com/goodwithtech/dockle/pkg/assessor/privilege"
 
 	"github.com/goodwithtech/dockle/pkg/assessor/contentTrust"
 	"github.com/goodwithtech/dockle/pkg/assessor/credential"
@@ -29,7 +29,7 @@ type Assessor interface {
 
 func init() {
 	RegisterAssessor(passwd.PasswdAssessor{})
-	RegisterAssessor(priviledge.PriviledgeAssessor{})
+	RegisterAssessor(privilege.privilegeAssessor{})
 	RegisterAssessor(user.UserAssessor{})
 	RegisterAssessor(group.GroupAssessor{})
 	RegisterAssessor(hosts.HostsAssessor{})
