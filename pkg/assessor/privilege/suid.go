@@ -9,9 +9,9 @@ import (
 	"github.com/knqyf263/fanal/extractor"
 )
 
-type privilegeAssessor struct{}
+type PrivilegeAssessor struct{}
 
-func (a privilegeAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
+func (a PrivilegeAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
 	var assesses []*types.Assessment
 
 	for filename, filedata := range fileMap {
@@ -41,12 +41,12 @@ func (a privilegeAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessmen
 	return assesses, nil
 }
 
-func (a privilegeAssessor) RequiredFiles() []string {
+func (a PrivilegeAssessor) RequiredFiles() []string {
 	return []string{}
 }
 
 //const GidMode os.FileMode = 4000
 
-func (a privilegeAssessor) RequiredPermissions() []os.FileMode {
+func (a PrivilegeAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{os.ModeSocket, os.ModeSetuid}
 }

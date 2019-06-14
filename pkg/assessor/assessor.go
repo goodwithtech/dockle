@@ -29,7 +29,7 @@ type Assessor interface {
 
 func init() {
 	RegisterAssessor(passwd.PasswdAssessor{})
-	RegisterAssessor(privilege.privilegeAssessor{})
+	RegisterAssessor(privilege.PrivilegeAssessor{})
 	RegisterAssessor(user.UserAssessor{})
 	RegisterAssessor(group.GroupAssessor{})
 	RegisterAssessor(hosts.HostsAssessor{})
