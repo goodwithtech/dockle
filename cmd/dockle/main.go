@@ -42,6 +42,15 @@ OPTIONS:
 			Value: "",
 			Usage: "input file path instead of image name",
 		},
+		cli.StringFlag{
+			Name:  "format, f",
+			Value: "",
+			Usage: "format (json)",
+		},
+		cli.StringFlag{
+			Name:  "output, o",
+			Usage: "output file name",
+		},
 		cli.IntFlag{
 			Name:  "exit-code",
 			Usage: "Exit code when alert were found",

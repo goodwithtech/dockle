@@ -8,7 +8,7 @@ import (
 
 	"github.com/goodwithtech/dockle/pkg/utils"
 
-	"github.com/goodwithtech/dockle/pkg/writer"
+	"github.com/goodwithtech/dockle/pkg/report"
 
 	"github.com/genuinetools/reg/registry"
 	"github.com/goodwithtech/dockle/pkg/scanner"
@@ -94,50 +94,31 @@ func Run(c *cli.Context) (err error) {
 
 	// Store ignore checkpoint code
 	getIgnoreCheckpointMap()
-
-	var abendAssessments []*types.Assessment
-
-	targetType := types.MinTypeNumber
-	for targetType <= types.MaxTypeNumber {
-		filtered := filteredAssessments(targetType, assessments)
-		writer.ShowTargetResult(targetType, filtered)
-
-		for _, assessment := range filtered {
-			abendAssessments = filterAbendAssessments(abendAssessments, assessment)
+	o := c.String("output")
+	output := os.Stdout
+	if o != "" {
+		if output, err = os.Create(o); err != nil {
+			return xerrors.Errorf("failed to create an output file: %w", err)
 		}
-		targetType++
 	}
 
-	if exitCode != 0 && len(abendAssessments) > 0 {
+	var writer report.Writer
+	switch format := c.String("format"); format {
+	case "json":
+		writer = &report.JsonWriter{Output: output, IgnoreMap: ignoreCheckpointMap}
+	default:
+		writer = &report.ListWriter{Output: output, IgnoreMap: ignoreCheckpointMap}
+	}
+
+	abend, err := writer.Write(assessments)
+	if err != nil {
+		return xerrors.Errorf("failed to write results: %w", err)
+	}
+	if exitCode != 0 && abend {
 		os.Exit(exitCode)
 	}
 
 	return nil
-}
-
-func filteredAssessments(target int, assessments []*types.Assessment) (filtered []*types.Assessment) {
-	detail := types.AlertDetails[target]
-	for _, assessment := range assessments {
-		if assessment.Type == target {
-			if _, ok := ignoreCheckpointMap[detail.Code]; ok {
-				assessment.Level = types.IgnoreLevel
-			}
-			filtered = append(filtered, assessment)
-		}
-	}
-	return filtered
-}
-
-func filterAbendAssessments(abendAssessments []*types.Assessment, assessment *types.Assessment) []*types.Assessment {
-	if assessment.Level == types.SkipLevel {
-		return abendAssessments
-	}
-
-	detail := types.AlertDetails[assessment.Type]
-	if _, ok := ignoreCheckpointMap[detail.Code]; ok {
-		return abendAssessments
-	}
-	return append(abendAssessments, assessment)
 }
 
 func getIgnoreCheckpointMap() {
