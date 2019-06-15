@@ -9,8 +9,10 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o /dockle cmd/dockle/main
 FROM alpine:3.9
 COPY --from=builder /dockle /usr/local/bin/dockle
 RUN chmod +x /usr/local/bin/dockle
-RUN apk --no-cache add ca-certificates
+RUN apk --no-cache add ca-certificates shadow
 
-RUN addgroup -S dockle && adduser -S -G dockle dockle
+# for use docker daemon via mounted /var/run/docker.sock
+RUN addgroup -S docker && adduser -S -G docker dockle && usermod -aG root dockle
 USER dockle
+
 ENTRYPOINT ["dockle"]

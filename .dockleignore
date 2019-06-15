@@ -1,0 +1,2 @@
+# doesn't need HEALTHCHECK for onetime CLI tool
+CIS-DI-0006
