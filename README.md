@@ -7,19 +7,21 @@
 
 > Dockle - Simple Security Auditing and helping build the Best Docker Images  
 
-`Dockle` helps you
-1) Build secure Docker images
+`Dockle` helps you:
+
+1. Build secure Docker images
     - Checkpoints includes [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
-2) Build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images
+2. Build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images
 
-You can check a docker image only run... 
-```bash
-$ brew install goodwithtech/dockle/dockle
-$ dockle [YOUR_IMAGE_NAME]
-``` 
+To check your Docker image, only run:
 
-<img src="imgs/usage_pass_light.png" width="800">
-<img src="imgs/usage_fail_light.png" width="800">
+  ```bash
+  $ brew install goodwithtech/dockle/dockle
+  $ dockle [YOUR_IMAGE_NAME]
+  ``` 
+
+  <img src="imgs/usage_pass_light.png" width="800">
+  <img src="imgs/usage_fail_light.png" width="800">
 
 
 # TOC
@@ -60,11 +62,11 @@ $ dockle [YOUR_IMAGE_NAME]
 # Features
 
 - Detect container's vulnerabilities
-- Helping build Dockerfile best-practice
-- Simple
-  - Specify only an image name
+- Helping build best-practice Dockerfile
+- Simple usage
+  - Specify only the image name
   - See [Quick Start](#quick-start) and [Examples](#examples)
-- Support CIS Benchmarks
+- CIS Benchmarks Support
   - High accuracy
 - DevSecOps
   - Suitable for CI such as Travis CI, CircleCI, Jenkins, etc.
@@ -72,8 +74,6 @@ $ dockle [YOUR_IMAGE_NAME]
 
 
 # Comparison
-
-
 
 |  | [Dockle](https://github.com/goodwithtech/dockle) | [Hadolint](https://github.com/hadolint/hadolint) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) |
 |--- |---:|---:|---:|
@@ -111,9 +111,12 @@ All checkpoints [here](#checkpoint-summary)!
 
 ## Linuxbrew
 
+You can use [Homebrew](https://docs.brew.sh/Homebrew-on-Linux) on Linux and WSL(Windows Subsystem for Linux).
+
 ```bash
 $ brew install goodwithtech/dockle/dockle
 ```
+
 ## RHEL/CentOS
 
 ```bash
@@ -137,7 +140,7 @@ $ sudo dpkg -i dockle.deb && rm dockle.deb
 
 ## Mac OS X / Homebrew
 
-You can use homebrew on Mac OS.
+You can use [Homebrew](https://brew.sh/) on macOS.
 
 ```
 $ brew install goodwithtech/dockle/dockle
@@ -155,11 +158,13 @@ $ unzip dockle.zip && rm dockle.zip
 $ ./dockle.exe [IMAGE_NAME]
 ```
 
-
 ## Binary
 
-Get the latest version from [this page](https://github.com/goodwithtech/dockle/releases/latest), and download the archive file for your operating system/architecture. Unpack the archive, and put the binary somewhere in your `$PATH` (on UNIX-y systems, /usr/local/bin or the like). Make sure it has execution bits turned on.
+You can get the latest version binary from [this page](https://github.com/goodwithtech/dockle/releases/latest).
 
+Download the archive file for your operating system/architecture. Unpack the archive, and put the binary somewhere in your `$PATH` (on UNIX-y systems, `/usr/local/bin` or the like).
+
+- NOTE: Make sure that it's execution bits turned on. (`chmod +x dockle`)
 
 ## From source
 
@@ -231,7 +236,7 @@ If you would like to scan the image on your host machine, you need to mount `doc
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ...
 ```
 
-Please re-pull latest `goodwithtech/dockle` if an error occured.
+Please, re-pull latest `goodwithtech/dockle` if an error occurs.
 
 # Checkpoint Summary
 
@@ -326,7 +331,7 @@ $ docker save alpine:latest -o alpine.tar
 $ dockle --input alpine.tar
 ```
 
-## Save the results as JSON
+## Get or Save the results as JSON
 
 ```bash
 $ dockle -f json goodwithtech/test-image:v1
@@ -431,8 +436,10 @@ $ dockle -f json -o results.json goodwithtech/test-image:v1
 </details>
 
 ## Specify exit code
-By default, `Dockle` exits with code 0 even if there are some problems.
-Use the --exit-code option if you may want to exit with a non-zero exit code.
+
+By default, `Dockle` exits with code `0` even if there are some problems.
+
+Use the `--exit-code` option to exit with a non-zero exit code if any alert were found.
 
 ```bash
 $ dockle  -exist-code 1 [IMAGE_NAME]
@@ -446,7 +453,7 @@ Use `.dockleignore`.
 $ cat .dockleignore
 # set root to default user because we want to run nginx
 CIS-DI-0001
-# Use latest tag because only check for image inside
+# Use latest tag because to check only the image inside
 DKL-DI-0006
 ```
 
@@ -461,7 +468,7 @@ $ dockle --clear-cache python:3.7
 # Continuous Integration (CI)
 
 Scan your image built in Travis CI/CircleCI. 
-The test will fail with if a error is found.
+The test will fail with if an error is found.
 You can skip target checkpoint if you use `.dockleignore`.
  
 When you don't would like to fail the test, specify `--exit-code 0`.
@@ -487,8 +494,8 @@ script:
   - ./dockle --exit-code 1 dockle-ci-test:${COMMIT}
 ```
 
-Example: https://travis-ci.org/goodwithtech/dockle-ci-test<br/>
-Repository: https://github.com/goodwithtech/dockle-ci-test
+- Example: https://travis-ci.org/goodwithtech/dockle-ci-test
+- Repository: https://github.com/goodwithtech/dockle-ci-test
 
 ## CircleCI
 
@@ -525,12 +532,12 @@ workflows:
       - build
 ```
 
-Example : https://circleci.com/gh/goodwithtech/dockle-ci-test<br/>
-Repository: https://github.com/goodwithtech/dockle-ci-test
+- Example: https://circleci.com/gh/goodwithtech/dockle-ci-test
+- Repository: https://github.com/goodwithtech/dockle-ci-test
 
 ## Authorization for Private Docker Registry
 
-`Dockle` can download images from private registry, without installing `Docker` and any 3rd party tools.
+`Dockle` can download images from a private registry, without installing `Docker` and any 3rd party tools.
 That's because it's easy to run in a CI process.
 
 All you have to do is install `Dockle` and set ENVIRONMENT variables.
@@ -538,8 +545,9 @@ But, I can't recommend using ENV vars in your local machine to you.
 
 ### Docker Hub
 
-Docker Hub needs `DOCKLE_AUTH_URL`, `DOCKLE_USERNAME` and `DOCKLE_PASSWORD`.
-You don't need to set ENV vars when download from public repository.
+You don't need to set ENV vars as below when downloading from the public repository.
+
+For the private repository, Docker Hub needs `DOCKLE_AUTH_URL`, `DOCKLE_USERNAME` and `DOCKLE_PASSWORD`.
 
 ```bash
 export DOCKLE_AUTH_URL=https://registry.hub.docker.com
@@ -556,7 +564,8 @@ You can use [AWS CLI's ENVIRONMENT variables](https://docs.aws.amazon.com/cli/la
 
 `Dockle` uses Google Cloud SDK. So, you don't need to install `gcloud` command.
 
-If you would like to use target project's repository, you can settle via `GOOGLE_APPLICATION_CREDENTIAL`. 
+If you would like to use the target project's repository, you can settle via `GOOGLE_APPLICATION_CREDENTIAL`. 
+
 ```bash
 # must set DOCKLE_USERNAME empty char
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credential.json
@@ -582,8 +591,10 @@ These checkpoints refered to [CIS Docker 1.13.0 Benchmark v1.0.0](https://www.ci
 
 ### CIS-DI-0001: Create a user for the container
 
-> Create a non-root user for the container in the Dockerfile for the container image.<br/>
+> Create a non-root user for the container in the Dockerfile for the container image.
+>
 > It is a good practice to run the container as a non-root user, if possible. 
+
 ```
 # Dockerfile
 RUN useradd -d /home/dockle -m -s /bin/bash dockle
@@ -596,10 +607,9 @@ USER dockle
 
 ```
 
-
 ### CIS-DI-0002: Use trusted base images for containers
 
-Dockle checks Content Trust. 
+Dockle checks [Content Trust](https://docs.docker.com/engine/security/trust/content_trust/). 
 Please check with [Trivy](https://github.com/knqyf263/trivy).
 
 ### CIS-DI-0003: Do not install unnecessary packages in the container
@@ -628,7 +638,8 @@ https://docs.docker.com/engine/security/trust/content_trust/#about-docker-conten
 
 ### CIS-DI-0006: Add HEALTHCHECK instruction to the container image
 
-> Add `HEALTHCHECK` instruction in your docker container images to perform the health check on running containers.<br/>
+> Add `HEALTHCHECK` instruction in your docker container images to perform the health check on running containers.
+>
 > Based on the reported health status, the docker engine could then exit non-working containers and instantiate new ones.
 ```
 # Dockerfile
@@ -638,7 +649,8 @@ HEALTHCHECK --interval=5m --timeout=3s \
 
 ### CIS-DI-0007: Do not use update instructions alone in the Dockerfile
 
-> Do not use update instructions such as apt-get update alone or in a single line in the Dockerfile.<br/>
+> Do not use update instructions such as `apt-get update` alone or in a single line in the Dockerfile.
+> 
 > Adding the update instructions in a single line on the Dockerfile will cache the update layer.
 ```bash
 RUN apt-get update && apt-get install -y package-a
@@ -655,7 +667,8 @@ chmod u-g setgid-file
 
 ### CIS-DI-0009: Use COPY instead of ADD in Dockerfile
 
-> Use COPY instruction instead of ADD instruction in the Dockerfile.<br/>
+> Use COPY instruction instead of ADD instruction in the Dockerfile.
+>
 > `ADD` instruction introduces risks such as adding malicious files from URLs without scanning and unpacking procedure vulnerabilities.
 ```
 # Dockerfile
@@ -678,7 +691,7 @@ It's better to use [Trivy](https://github.com/knqyf263/trivy).
 
 ## Dockle Checkpoints for Docker
 
-These checkpoints refered to [Docker Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) and so on.
+These checkpoints referred to [Docker Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) and so on.
 
 ### DKL-DI-0001: Avoid `sudo` command
 
@@ -687,11 +700,11 @@ https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
 
 ### DKL-DI-0002: Avoid sensitive directory mounting
 
-A volume mount makes weakpoints. 
+A volume mount makes weak points. 
 This depends on mounting volumes.
 Currently, `Dockle` checks following directories.
 
-`/boot`,`/dev`,`/etc`,`/lib`,`/proc`,`/sys`, `/usr`
+`/boot`, `/dev`, `/etc`, `/lib`, `/proc`, `/sys`,  `/usr`
 
 `dockle` only checks `VOLUME` statements. We can't check `docker run -v /lib:/lib ...`.
 
@@ -700,21 +713,21 @@ Currently, `Dockle` checks following directories.
 
 https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
  
-> Avoid RUN apt-get upgrade and dist-upgrade, as many of the “essential” packages from the parent images cannot upgrade inside an unprivileged container.
+> Avoid `RUN apt-get upgrade` and `dist-upgrade`, as many of the “essential” packages from the parent images cannot upgrade inside an unprivileged container.
 
 ### DKL-DI-0004: Use apk add with `--no-cache`
 
 https://github.com/gliderlabs/docker-alpine/blob/master/docs/usage.md#disabling-cache
 
-> As of Alpine Linux 3.3 there exists a new --no-cache option for apk. It allows users to install packages with an index that is updated and used on-the-fly and not cached locally:
-> This avoids the need to use --update and remove /var/cache/apk/* when done installing packages.
+> As of Alpine Linux 3.3 there exists a new `--no-cache` option for `apk`. It allows users to install packages with an index that is updated and used on-the-fly and not cached locally:
+> This avoids the need to use `--update` and remove `/var/cache/apk/*` when done installing packages.
 
 ### DKL-DI-0005: Clear apt-get caches
 
-Use “apt-get clearn && rm -rf /var/lib/apt/lists/*` if use apt-get install
+Use `apt-get clearn && rm -rf /var/lib/apt/lists/*` after `apt-get install`.
 
 https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
-> In addition, when you clean up the apt cache by removing /var/lib/apt/lists it reduces the image size, since the apt cache is not stored in a layer. Since the RUN statement starts with apt-get update, the package cache is always refreshed prior to apt-get install.
+> In addition, when you clean up the `apt cache` by removing `/var/lib/apt/lists` it reduces the image size, since the apt cache is not stored in a layer. Since the RUN statement starts with apt-get update, the package cache is always refreshed prior to `apt-get install`.
 
 
 ### DKL-DI-0006: Avoid `latest` tag
@@ -725,7 +738,7 @@ https://vsupalov.com/docker-latest-tag/
 
 ## Dockle Checkpoints for Linux
 
-These checkpoints refered to [Linux Best Practices](https://www.cyberciti.biz/tips/linux-security.html) and so on.
+These checkpoints referred to [Linux Best Practices](https://www.cyberciti.biz/tips/linux-security.html) and so on.
 
 ### DKL-LI-0001: Avoid empty password 
 
