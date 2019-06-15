@@ -180,7 +180,7 @@ $ VERSION=$(
  curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
-) && docker run --rm goodwithtech/dockle:${VERSION} [YOUR_IMAGE_NAME]
+) && docker run --rm goodwithtech/dockle:v${VERSION} [YOUR_IMAGE_NAME]
 ```
 
 # Quick Start
@@ -241,7 +241,7 @@ $ export DOCKLE_LATEST=$(
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
 )
-$ docker run --rm goodwithtech/dockle:${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
+$ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 ```
 
 For more suitable use, I suggest mounting a cache directory. Replace `[YOUR_CACHE_DIR]` below with the cache directory on your machine.
@@ -252,13 +252,13 @@ $ export DOCKLE_LATEST=$(
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
 )
-$ docker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ goodwithtech/dockle:${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
+$ docker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 ```
 
 - Example for macOS:
 
     ```bash
-    $ docker run --rm -v $HOME/Library/Caches:/root/.cache/ goodwithtech/dockle:${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
+    $ docker run --rm -v $HOME/Library/Caches:/root/.cache/ goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
     ```
 
 - If you'd like to scan the image on your host machine, you need to mount `docker.sock`.
