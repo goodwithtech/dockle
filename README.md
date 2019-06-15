@@ -428,7 +428,7 @@ $ dockle -f json -o results.json goodwithtech/test-image:v1
   ]
 }
 ```
-<details>
+</details>
 
 ## Specify exit code
 By default, `Dockle` exits with code 0 even if there are some problems.
