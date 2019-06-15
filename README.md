@@ -80,7 +80,7 @@ To check your Docker image, only run:
 | Target |  BuildImage | Dockerfile | Host<br/>DockerDaemon<br/>BuildImage<br/>ContainerRuntime |
 | How to run | Binary | Binary | ShellScript |
 | Dependency | No | No | Some dependencies |
-| Suitable CI | ✓ | ✓ | x |
+| CI Suitable | ✓ | ✓ | x |
 | Purpose |SecurityAudit<br/>DockerfileLint| DockerfileLint | SecurityAudit<br />DockerfileLint |
 | Covered CIS Benchmarks(Docker Image and Build File) | 7 | 3 | 5 |
 
