@@ -167,7 +167,8 @@ Download the archive file for your operating system/architecture. Unpack the arc
 ## From source
 
 ```bash
-$ go get -u github.com/goodwithtech/dockle
+$ GO111MODULE=off go get github.com/goodwithtech/dockle/cmd/dockle
+$ cd $GOPATH/src/github.com/goodwithtech/dockle && GO111MODULE=on go build -o $GOPATH/bin/dockle cmd/dockle/main.go
 ```
 
 ## Use Docker
@@ -175,7 +176,11 @@ $ go get -u github.com/goodwithtech/dockle
 There's a [`Dockle` image on Docker Hub](https://hub.docker.com/r/goodwithtech/dockle) also. You can try `dockle` before installing the command.
 
 ```
-$ docker pull goodwithtech/dockle:latest
+$ VERSION=$(
+ curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+ grep '"tag_name":' | \
+ sed -E 's/.*"v([^"]+)".*/\1/' \
+) && docker run --rm goodwithtech/dockle:${VERSION} [YOUR_IMAGE_NAME]
 ```
 
 # Quick Start
@@ -231,19 +236,29 @@ PASS    - Be unique GROUP
 Also, you can use Docker to use `dockle` command as follow.
 
 ```bash
-$ docker run --rm goodwithtech/dockle [YOUR_IMAGE_NAME]
+$ export DOCKLE_LATEST=$(
+ curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+ grep '"tag_name":' | \
+ sed -E 's/.*"v([^"]+)".*/\1/' \
+)
+$ docker run --rm goodwithtech/dockle:${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 ```
 
 For more suitable use, I suggest mounting a cache directory. Replace `[YOUR_CACHE_DIR]` below with the cache directory on your machine.
 
 ```bash
-$ docker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ goodwithtech/dockle [YOUR_IMAGE_NAME]
+$ export DOCKLE_LATEST=$(
+ curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+ grep '"tag_name":' | \
+ sed -E 's/.*"v([^"]+)".*/\1/' \
+)
+$ docker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ goodwithtech/dockle:${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 ```
 
 - Example for macOS:
 
     ```bash
-    $ docker run --rm -v $HOME/Library/Caches:/root/.cache/ goodwithtech/dockle [YOUR_IMAGE_NAME]
+    $ docker run --rm -v $HOME/Library/Caches:/root/.cache/ goodwithtech/dockle:${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
     ```
 
 - If you'd like to scan the image on your host machine, you need to mount `docker.sock`.
@@ -251,9 +266,6 @@ $ docker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ goodwithtech/dockle [YOUR_IM
     ```bash
     $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ...
     ```
-
-- NOTE: `Dockle` is often updated. Please, re-pull the latest `goodwithtech/dockle` if an error occurs.
-
 
 # Checkpoint Summary
 
