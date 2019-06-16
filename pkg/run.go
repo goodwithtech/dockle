@@ -93,7 +93,8 @@ func Run(c *cli.Context) (err error) {
 	exitCode := c.Int("exit-code")
 
 	// Store ignore checkpoint code
-	getIgnoreCheckpointMap()
+	ignoreRules := c.StringSlice("ignore")
+	getIgnoreCheckpointMap(ignoreRules)
 	o := c.String("output")
 	output := os.Stdout
 	if o != "" {
@@ -121,7 +122,7 @@ func Run(c *cli.Context) (err error) {
 	return nil
 }
 
-func getIgnoreCheckpointMap() {
+func getIgnoreCheckpointMap(ignoreRules []string) {
 	f, err := os.Open(dockleIgnore)
 	if err != nil {
 		log.Logger.Debug("There is no .dockleignore file")
@@ -130,6 +131,10 @@ func getIgnoreCheckpointMap() {
 	}
 
 	ignoreCheckpointMap = map[string]struct{}{}
+	for _, rule := range ignoreRules {
+		ignoreCheckpointMap[rule] = struct{}{}
+	}
+
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := scanner.Text()
