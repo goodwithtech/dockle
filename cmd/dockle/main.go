@@ -38,9 +38,13 @@ OPTIONS:
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:  "input, i",
+			Name:  "input",
 			Value: "",
 			Usage: "input file path instead of image name",
+		},
+		cli.StringSliceFlag{
+			Name:  "ignore, i",
+			Usage: "A checkpoint to ignore. You can use .dockleignore too.",
 		},
 		cli.StringFlag{
 			Name:  "format, f",
