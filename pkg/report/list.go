@@ -62,8 +62,10 @@ func showTargetResult(assessmentType int, assessments []*types.Assessment) {
 		level = types.IgnoreLevel
 	}
 	showTitleLine(assessmentType, level)
-	for _, assessment := range assessments {
-		showDescription(assessment)
+	if level != types.IgnoreLevel {
+		for _, assessment := range assessments {
+			showDescription(assessment)
+		}
 	}
 }
 
