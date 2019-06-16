@@ -5,13 +5,13 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/goodwithtech/dockle)](https://goreportcard.com/report/github.com/goodwithtech/dockle)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-> Dockle - Simple Security Auditing and helping build the Best Docker Images
+> Dockle - Helping build the Best-Practice Docker Image and Security Audit, Easy to start
 
 `Dockle` helps you:
 
-1. Build secure Docker images
+1. Build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images
+2. Build secure Docker images
     - Checkpoints includes [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
-2. Build [Best Practice](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) Docker images
 
 To check your Docker image, only run:
 
