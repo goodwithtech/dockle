@@ -64,12 +64,12 @@ $ dockle [YOUR_IMAGE_NAME]
 - Helping build best-practice Dockerfile
 - Simple usage
   - Specify only the image name
-  - See [Quick Start](#quick-start) and [Examples](EXAMPLES.md)
+  - See [Quick Start](#quick-start) and [Examples](#examples)
 - CIS Benchmarks Support
   - High accuracy
 - DevSecOps
   - Suitable for CI such as Travis CI, CircleCI, Jenkins, etc.
-  - See [CI Example](EXAMPLES.md#continuous-integration-ci)
+  - See [CI Example](#continuous-integration-ci)
 
 # Comparison
 
@@ -178,9 +178,6 @@ $ VERSION=$(
 You only need `-v /var/run/docker.sock:/var/run/docker.sock` when you'd like to scan the image on your host machine.
 
 # Quick Start
-
-Here's a quick start. For more detailed usage and samples, such as using `dockle` on CIs, see [EXAMPLES.md](./EXAMPLES.md).
-
 
 ## Basic
 
