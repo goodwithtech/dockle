@@ -29,10 +29,9 @@ $ dockle [YOUR_IMAGE_NAME]
 - [Features](#features)
 - [Comparison](#comparison)
 - [Installation](#installation)
-  - [Linuxbrew](#linuxbrew)
+  - [Homebrew (Mac OS X / Linux and WSL)](#homebrew-mac-os-x--linux-and-wsl)
   - [RHEL/CentOS](#rhelcentos)
   - [Debian/Ubuntu](#debianubuntu)
-  - [Mac OS X / Homebrew](#mac-os-x--homebrew)
   - [Windows](#windows)
   - [Binary](#binary)
   - [From source](#from-source)
@@ -107,9 +106,9 @@ All checkpoints [here](#checkpoint-summary)!
 
 # Installation
 
-## Linuxbrew
+## Homebrew (Mac OS X / Linux and WSL)
 
-You can use [Homebrew](https://docs.brew.sh/Homebrew-on-Linux) on Linux and WSL (Windows Subsystem for Linux).
+You can use Homebrew on [Mac OS X](https://brew.sh/) or [Linux and WSL (Windows Subsystem for Linux)](https://docs.brew.sh/Homebrew-on-Linux).
 
 ```bash
 $ brew install goodwithtech/dockle/dockle
@@ -134,14 +133,6 @@ $ VERSION=$(
  sed -E 's/.*"v([^"]+)".*/\1/' \
 ) && curl -L -o dockle.deb https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.deb
 $ sudo dpkg -i dockle.deb && rm dockle.deb
-```
-
-## Mac OS X / Homebrew
-
-You can use [Homebrew](https://brew.sh/) on macOS.
-
-```bash
-$ brew install goodwithtech/dockle/dockle
 ```
 
 ## Windows
@@ -180,8 +171,11 @@ $ VERSION=$(
  curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
-) && docker run --rm goodwithtech/dockle:v${VERSION} [YOUR_IMAGE_NAME]
+) && docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  goodwithtech/dockle:v${VERSION} [YOUR_IMAGE_NAME]
 ```
+
+You only need `-v /var/run/docker.sock:/var/run/docker.sock` when you'd like to scan the image on your host machine.
 
 # Quick Start
 
@@ -200,33 +194,27 @@ $ dockle [YOUR_IMAGE_NAME]
 <summary>Result</summary>
 
 ```
-FATAL   - Create a user for the container
+WARN    - CIS-DI-0001: Create a user for the container
         * Last user should not be root
-WARN    - Enable Content trust for Docker
+INFO    - CIS-DI-0005: Enable Content trust for Docker
         * export DOCKER_CONTENT_TRUST=1 before docker pull/build
-FATAL   - Add HEALTHCHECK instruction to the container image
+WARN    - CIS-DI-0006: Add HEALTHCHECK instruction to the container image
         * not found HEALTHCHECK statement
-FATAL   - Do not use update instructions alone in the Dockerfile
-        * Use 'Always combine RUN apt-get update with apt-get install' : /bin/sh -c apt-get update && apt-get install -y git
-PASS    - Remove setuid and setgid permissions in the images
-FATAL   - Use COPY instead of ADD in Dockerfile
-        * Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
-FATAL   - Do not store secrets in ENVIRONMENT variables
-        * Suspicious ENV key found : MYSQL_PASSWD
-FATAL   - Do not store secret files
-        * Suspicious filename found : app/credentials.json
-PASS    - Avoid sudo command
-FATAL   - Avoid sensitive directory mounting
-        * Avoid mounting sensitive dirs : /usr
-PASS    - Avoid apt-get/apk/dist-upgrade
-PASS    - Use apk add with --no-cache
-FATAL   - Clear apt-get caches
-        * Use 'apt-get clean && rm -rf /var/lib/apt/lists/*' : /bin/sh -c apt-get update && apt-get install -y git
-PASS    - Avoid latest tag
-FATAL   - Avoid empty password
-        * No password user found! username : nopasswd
-PASS    - Be unique UID
-PASS    - Be unique GROUP
+PASS    - CIS-DI-0007: Do not use update instructions alone in the Dockerfile
+PASS    - CIS-DI-0008: Remove setuid and setgid permissions in the images
+PASS    - CIS-DI-0009: Use COPY instead of ADD in Dockerfile
+PASS    - CIS-DI-0010: Do not store secrets in ENVIRONMENT variables
+PASS    - CIS-DI-0010: Do not store secret files
+PASS    - DKL-DI-0001: Avoid sudo command
+PASS    - DKL-DI-0002: Avoid sensitive directory mounting
+PASS    - DKL-DI-0003: Avoid apt-get/apk/dist-upgrade
+PASS    - DKL-DI-0004: Use apk add with --no-cache
+PASS    - DKL-DI-0005: Clear apt-get caches
+WARN    - DKL-DI-0006: Avoid latest tag
+        * Avoid 'latest' tag
+PASS    - DKL-LI-0001: Avoid empty password
+PASS    - DKL-LI-0002: Be unique UID
+PASS    - DKL-LI-0002: Be unique GROUP
 ```
 
 </details>
@@ -243,23 +231,6 @@ $ export DOCKLE_LATEST=$(
 )
 $ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 ```
-
-For more suitable use, I suggest mounting a cache directory. Replace `[YOUR_CACHE_DIR]` below with the cache directory on your machine.
-
-```bash
-$ export DOCKLE_LATEST=$(
- curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
- grep '"tag_name":' | \
- sed -E 's/.*"v([^"]+)".*/\1/' \
-)
-$ docker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
-```
-
-- Example for macOS:
-
-    ```bash
-    $ docker run --rm -v $HOME/Library/Caches:/root/.cache/ goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
-    ```
 
 - If you'd like to scan the image on your host machine, you need to mount `docker.sock`.
 
