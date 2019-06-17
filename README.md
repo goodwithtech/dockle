@@ -444,7 +444,7 @@ By default, `Dockle` exits with code `0` even if there are some problems.
 Use the `--exit-code` option to exit with a non-zero exit code if any alert were found.
 
 ```bash
-$ dockle  -exist-code 1 [IMAGE_NAME]
+$ dockle  --exit-code 1 [IMAGE_NAME]
 ```
 
 ### Ignore the specified checkpoints
