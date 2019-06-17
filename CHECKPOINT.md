@@ -145,7 +145,7 @@ Currently, `Dockle` checks following directories:
 
 ### DKL-DI-0005: Clear `apt-get` caches
 
-Use `apt-get clearn && rm -rf /var/lib/apt/lists/*` after `apt-get install`.
+Use `apt-get clean && rm -rf /var/lib/apt/lists/*` after `apt-get install`.
 
 - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
 
