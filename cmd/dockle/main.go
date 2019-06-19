@@ -61,10 +61,6 @@ OPTIONS:
 			Value: 0,
 		},
 		cli.BoolFlag{
-			Name:  "clear-cache, c",
-			Usage: "clear image caches",
-		},
-		cli.BoolFlag{
 			Name:  "debug, d",
 			Usage: "debug mode",
 		},
