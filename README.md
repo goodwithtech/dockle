@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/goodwithtech/dockle)](https://goreportcard.com/report/github.com/goodwithtech/dockle)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-> Dockle - Helping build the Best-Practice Docker Image and Security Audit, Easy to start
+> Dockle - Container Image Linter for Security, Helping build the Best-Practice Docker Image, Easy to start
 
 `Dockle` helps you:
 
