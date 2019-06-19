@@ -46,7 +46,6 @@ $ dockle [YOUR_IMAGE_NAME]
   - [Save the results as JSON](#save-the-results-as-json)
   - [Specify exit code](#specify-exit-code)
   - [Ignore the specified checkpoints](#ignore-the-specified-checkpoints)
-  - [Clear image caches](#clear-image-caches)
 - [Continuous Integration](#continuous-integration-ci)
   - [Travis CI](#travis-ci)
   - [CircleCI](#circleci)
