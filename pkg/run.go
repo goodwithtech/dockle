@@ -42,12 +42,9 @@ func Run(c *cli.Context) (err error) {
 		log.Logger.Warnf("A new version %s is now available! You have %s.", latestVersion, cliVersion)
 	}
 
-	clearCache := c.Bool("clear-cache")
-	if clearCache {
-		log.Logger.Info("Removing image caches...")
-		if err = cache.Clear(); err != nil {
-			return xerrors.New("failed to remove image layer cache")
-		}
+	// delete image cache each time
+	if err = cache.Clear(); err != nil {
+		return xerrors.New("failed to remove image layer cache")
 	}
 	args := c.Args()
 	filePath := c.String("input")
@@ -69,9 +66,8 @@ func Run(c *cli.Context) (err error) {
 		if err != nil {
 			return xerrors.Errorf("invalid image: %w", err)
 		}
-		if image.Tag == "latest" && !clearCache {
+		if image.Tag == "latest" {
 			useLatestTag = true
-			log.Logger.Warn("You should avoid using the :latest tag as it is cached. You need to specify '--clear-cache' option when :latest image is changed")
 		}
 	}
 

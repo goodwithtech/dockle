@@ -11,6 +11,8 @@ import (
 
 type PrivilegeAssessor struct{}
 
+var ignoreDirs = map[string]struct{}{"bin/": {}, "usr/lib/": {}}
+
 func (a PrivilegeAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
 	var assesses []*types.Assessment
 
