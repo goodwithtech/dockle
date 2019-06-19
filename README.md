@@ -465,14 +465,6 @@ CIS-DI-0001
 DKL-DI-0006
 ```
 
-### Clear image caches
-
-The `--clear-cache` option removes image caches. Use this option if the image with the same tag is updated (such as `latest` tag).
-
-```bash
-$ dockle --clear-cache python:3.7
-```
-
 ## Continuous Integration (CI)
 
 You can scan your built image with `Dockle` in Travis CI/CircleCI.
