@@ -26,7 +26,6 @@ USER dockle
 ### CIS-DI-0002: Use trusted base images for containers
 
 Dockle checks [Content Trust](https://docs.docker.com/engine/security/trust/content_trust/).
-Please check with [Trivy](https://github.com/knqyf263/trivy).
 
 ### CIS-DI-0003: Do not install unnecessary packages in the container
 

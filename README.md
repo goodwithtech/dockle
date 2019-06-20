@@ -78,34 +78,12 @@ $ dockle [YOUR_IMAGE_NAME]
 
 |  | [Dockle](https://github.com/goodwithtech/dockle) | [Hadolint](https://github.com/hadolint/hadolint) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) |
 |--- |---:|---:|---:|
-| Target |  BuildImage | Dockerfile | Host<br/>DockerDaemon<br/>BuildImage<br/>ContainerRuntime |
+| Target |  Image | Dockerfile | Host<br/>DockerDaemon<br/>Image<br/>ContainerRuntime |
 | How to run | Binary | Binary | ShellScript |
 | Dependency | No | No | Some dependencies |
 | CI Suitable | ✓ | ✓ | x |
 | Purpose |SecurityAudit<br/>DockerfileLint| DockerfileLint | SecurityAudit<br/>DockerfileLint |
 | Covered CIS Benchmarks (Docker Image and Build File) | 7 | 3 | 5 |
-
-<details>
-<summary>Detail of CIS Benchmark</summary>
-
-|  | [Dockle](https://github.com/goodwithtech/dockle) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) | [Hadolint](https://github.com/hadolint/hadolint) |
-|---|:---:|:---:|:---:|
-| 1.  Create a user for the container | ✓ | ✓ | ✓ |
-| 2.  Use trusted base images for containers | - | – | - |
-| 3.  Do not install unnecessary packages in the container | - | - | - |
-| 4.  Scan and rebuild the images to include security patches | - | - | - |
-| 5.  Enable Content trust for Docker | ✓ | ✓ | - |
-| 6.  Add `HEALTHCHECK` instruction to the container image | ✓ | ✓ | - |
-| 7.  Do not use `update` instructions alone in the Dockerfile | ✓ | ✓ | ✓|
-| 8.  Remove `setuid` and `setgid` permissions in the images | ✓ | - | - |
-| 9.  Use `COPY` instead of `ADD` in Dockerfile | ✓ | ✓ | ✓|
-| 10. Do not store secrets in Dockerfiles | ✓ | - | - |
-| 11. Install verified packages only | -  |  - | - |
-| |7|5|3|
-
-All checkpoints [here](#checkpoint-summary)!
-
-</details>
 
 # Installation
 
