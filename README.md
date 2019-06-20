@@ -78,12 +78,11 @@ $ dockle [YOUR_IMAGE_NAME]
 
 |  | [Dockle](https://github.com/goodwithtech/dockle) | [Hadolint](https://github.com/hadolint/hadolint) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) |
 |--- |---:|---:|---:|
-| Target |  Image | Dockerfile | Host<br/>DockerDaemon<br/>Image<br/>ContainerRuntime |
+| Target |  Image | Dockerfile | Host<br/>Docker Daemon<br/>Image<br/>Container Runtime |
 | How to run | Binary | Binary | ShellScript |
 | Dependency | No | No | Some dependencies |
 | CI Suitable | ✓ | ✓ | x |
-| Purpose |SecurityAudit<br/>DockerfileLint| DockerfileLint | SecurityAudit<br/>DockerfileLint |
-| Covered CIS Benchmarks (Docker Image and Build File) | 7 | 3 | 5 |
+| Purpose |Security Audit<br/>Dockerfile Lint| Dockerfile Lint | Security Audit<br/>Dockerfile Lint |
 
 # Installation
 
