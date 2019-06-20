@@ -76,13 +76,13 @@ $ dockle [YOUR_IMAGE_NAME]
 
 # Comparison
 
-|  | [Dockle](https://github.com/goodwithtech/dockle) | [Hadolint](https://github.com/hadolint/hadolint) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) |
-|--- |---:|---:|---:|
-| Target |  Image | Dockerfile | Host<br/>Docker Daemon<br/>Image<br/>Container Runtime |
-| How to run | Binary | Binary | ShellScript |
-| Dependency | No | No | Some dependencies |
-| CI Suitable | ✓ | ✓ | x |
-| Purpose |Security Audit<br/>Dockerfile Lint| Dockerfile Lint | Security Audit<br/>Dockerfile Lint |
+|  | [Dockle](https://github.com/goodwithtech/dockle) | [Hadolint](https://github.com/hadolint/hadolint) | [Docker Bench for Security](https://github.com/docker/docker-bench-security) | [Clair](https://github.com/coreos/clair) |
+|--- |---:|---:|---:|---:|
+| Target |  Image | Dockerfile | Host<br/>Docker Daemon<br/>Image<br/>Container Runtime | Image |
+| How to run | Binary | Binary | ShellScript | Binary |
+| Dependency | No | No | Some dependencies | No |
+| CI Suitable | ✓ | ✓ | x | x | 
+| Purpose |Security Audit<br/>Dockerfile Lint| Dockerfile Lint | Security Audit<br/>Dockerfile Lint | Scan Vulnerabilities |
 
 # Installation
 
