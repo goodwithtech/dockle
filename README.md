@@ -245,7 +245,7 @@ $ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 | [CIS-DI-0002](CHECKPOINT.md#cis-di-0002-use-trusted-base-images-for-containers) | Use trusted base images for containers | FATAL
 | [CIS-DI-0003](CHECKPOINT.md#cis-di-0003-do-not-install-unnecessary-packages-in-the-container) | Do not install unnecessary packages in the container | FATAL
 | [CIS-DI-0004](CHECKPOINT.md#cis-di-0004-scan-and-rebuild-the-images-to-include-security-patches) | Scan and rebuild the images to include security patches | FATAL
-| [CIS-DI-0005](CHECKPOINT.md#cis-di-0005-enable-content-trust-for-docker) | Do not install unnecessary packages in the container | FATAL
+| [CIS-DI-0005](CHECKPOINT.md#cis-di-0005-enable-content-trust-for-docker) | Enable Content trust for Docker | FATAL
 | [CIS-DI-0006](CHECKPOINT.md#cis-di-0006-add-healthcheck-instruction-to-the-container-image) | Add `HEALTHCHECK` instruction to the container image | WARN
 | [CIS-DI-0007](CHECKPOINT.md#cis-di-0007-do-not-use-update-instructions-alone-in-the-dockerfile) | Do not use `update` instructions alone in the Dockerfile | FATAL
 | [CIS-DI-0008](CHECKPOINT.md#cis-di-0008-remove-setuid-and-setgid-permissions-in-the-images) | Remove `setuid` and `setgid` permissions in the images | INFO
