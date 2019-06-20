@@ -13,12 +13,11 @@
 2. Build secure Docker images
     - Checkpoints includes [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
 
-To check your Docker image, only run:
-
 ```bash
 $ brew install goodwithtech/dockle/dockle
 $ dockle [YOUR_IMAGE_NAME]
 ```
+See [Installation](#installation) and [Common Examples](#common-examples)
 
 <img src="imgs/usage_pass_light.png" width="800">
 <img src="imgs/usage_fail_light.png" width="800">
@@ -44,10 +43,10 @@ $ dockle [YOUR_IMAGE_NAME]
   - [Basic](#basic)
   - [Docker](#docker)
 - [Checkpoint Summary](#checkpoint-summary)
-- [Examples](#examples)
+- [Common Examples](#common-examples)
   - [Scan an image](#scan-an-image)
   - [Scan an image file](#scan-an-image-file)
-  - [Save the results as JSON](#save-the-results-as-json)
+  - [Get or Save the results as JSON](#get-or-save-the-results-as-json)
   - [Specify exit code](#specify-exit-code)
   - [Ignore the specified checkpoints](#ignore-the-specified-checkpoints)
 - [Continuous Integration](#continuous-integration-ci)
@@ -67,7 +66,7 @@ $ dockle [YOUR_IMAGE_NAME]
 - Helping build best-practice Dockerfile
 - Simple usage
   - Specify only the image name
-  - See [Quick Start](#quick-start) and [Examples](#examples)
+  - See [Quick Start](#quick-start) and [Common Examples](#common-examples)
 - CIS Benchmarks Support
   - High accuracy
 - DevSecOps
