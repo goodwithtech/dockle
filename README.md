@@ -52,6 +52,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
 - [Continuous Integration](#continuous-integration-ci)
   - [Travis CI](#travis-ci)
   - [CircleCI](#circleci)
+  - [GitLab CI](#gitlab-ci)
   - [Authorization for Private Docker Registry](#authorization-for-private-docker-registry) 
 - [Checkpoint Details](CHECKPOINT.md)
   - CIS's Docker Image Checkpoints
@@ -521,6 +522,42 @@ workflows:
 </details>
 
 - Example: https://circleci.com/gh/goodwithtech/dockle-ci-test
+- Repository: https://github.com/goodwithtech/dockle-ci-test
+
+## GitLab CI
+
+<details>
+<summary>.gitlab-ci.yml</summary>
+
+```yaml
+image: docker:stable
+stages:
+  - test
+
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+services:
+  - docker:dind
+
+unit_test:
+  stage: test
+  before_script:
+    - apk -Uuv add bash git curl tar sed grep
+  script:
+    - docker build -t dockle-ci-test:${CI_COMMIT_SHORT_SHA} .
+    - |
+      VERSION=$(
+      curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+      grep '"tag_name":' | \
+      sed -E 's/.*"v([^"]+)".*/\1/' \
+      ) && curl -L -o dockle.tar.gz https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.tar.gz &&  \
+      tar zxvf dockle.tar.gz
+    - ./dockle --exit-code 1 dockle-ci-test:${CI_COMMIT_SHORT_SHA}
+```
+</details>
+
+- Example: https://gitlab.com/tomoyamachi/dockle-ci-test/-/jobs/238215077
 - Repository: https://github.com/goodwithtech/dockle-ci-test
 
 ## Authorization for Private Docker Registry
