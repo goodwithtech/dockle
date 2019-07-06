@@ -21,6 +21,6 @@ require (
 	golang.org/x/xerrors v0.0.0-20190513163551-3ee3066db522
 )
 
-replace github.com/genuinetools/reg => github.com/tomoyamachi/reg v0.16.2-0.20190418055600-c6010b917a55
+replace github.com/genuinetools/reg => github.com/tomoyamachi/reg v0.16.1-0.20190706172545-2a2250fd7c00
 
-replace github.com/knqyf263/fanal => github.com/goodwithtech/fanal v0.0.0-20190607090116-bffde1fd5a13
+replace github.com/knqyf263/fanal => github.com/goodwithtech/fanal v0.0.0-20190706194703-57e52a04aa8b
