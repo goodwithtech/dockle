@@ -68,7 +68,7 @@
     },
     {
       "created": "2019-06-03T18:21:23.2554118Z",
-      "created_by": "/bin/sh -c #(nop) ADD file:cf1415d8f82ed259f8e9cd1d44120662a8e5fea652935195313426c3f5712a5c in /app/credential.json "
+      "created_by": "/bin/sh -c #(nop) ADD file:cf1415d8f82ed259f8e9cd1d44120662a8e5fea652935195313426c3f5712a5c in /app/credential.json"
     }
   ],
   "os": "linux",
