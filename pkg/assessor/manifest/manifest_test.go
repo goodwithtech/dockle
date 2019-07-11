@@ -296,6 +296,42 @@ func TestReducableAptGetInstall(t *testing.T) {
 	}
 }
 
+func TestAddStatement(t *testing.T) {
+	var tests = map[string]struct {
+		cmdSlices map[int][]string
+		expected  bool
+	}{
+		"UseADD": {
+			cmdSlices: map[int][]string{
+				0: {
+					"/bin/sh", "-c", "#(nop)", "ADD", "file:2e3a37883f56a4a278bec2931fc9f91fb9ebdaa9047540fe8fde419b84a1701b", "in", "/cmd",
+				},
+			},
+			expected: true,
+		},
+		"NotADD": {
+			cmdSlices: map[int][]string{
+				0: {"/bin/sh", "-c", "set", "-x"},
+				1: {"addgroup", "--system", "--gid", "101", "nginx"},
+			},
+			expected: false,
+		},
+		"UseADDR": {
+			cmdSlices: map[int][]string{
+				0: {"/bin/sh", "-c", "set", "-x"},
+				1: {"/bin/sh", "-c", "RETHINKDB_CLUSTER_IP_ADDR"},
+			},
+			expected: false,
+		},
+	}
+	for testname, v := range tests {
+		actual := useADDstatement(v.cmdSlices)
+		if actual != v.expected {
+			t.Errorf("%s want: %t, got %t", testname, v.expected, actual)
+		}
+	}
+}
+
 func loadImageFromFile(path string) (config types.Image, err error) {
 	read, err := os.Open(path)
 	if err != nil {

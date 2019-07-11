@@ -146,6 +146,14 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		})
 	}
 
+	if index != 0 && useADDstatement(cmdSlices) {
+		assesses = append(assesses, &types.Assessment{
+			Type:     types.UseCOPY,
+			Filename: "docker config",
+			Desc:     fmt.Sprintf("Use COPY : %s", cmd.CreatedBy),
+		})
+	}
+
 	if strings.Contains(cmd.CreatedBy, "upgrade") {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.AvoidDistUpgrade,
@@ -161,14 +169,16 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		})
 	}
 
-	if index != 0 && strings.Contains(cmd.CreatedBy, "ADD") {
-		assesses = append(assesses, &types.Assessment{
-			Type:     types.UseCOPY,
-			Filename: "docker config",
-			Desc:     fmt.Sprintf("Use COPY : %s", cmd.CreatedBy),
-		})
-	}
 	return assesses
+}
+
+func useADDstatement(cmdSlices map[int][]string) bool {
+	for _, cmdSlice := range cmdSlices {
+		if containsAll(cmdSlice, []string{"ADD", "in"}) {
+			return true
+		}
+	}
+	return false
 }
 
 func reducableAptGetUpdate(cmdSlices map[int][]string) bool {
