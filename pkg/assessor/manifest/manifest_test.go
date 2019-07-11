@@ -332,6 +332,42 @@ func TestAddStatement(t *testing.T) {
 	}
 }
 
+func TestUseDistUpgrade(t *testing.T) {
+	var tests = map[string]struct {
+		cmdSlices map[int][]string
+		expected  bool
+	}{
+		"UseUpgrade": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apt-get", "upgrade",
+				},
+			},
+			expected: true,
+		},
+		"UseAptUpgrade": {
+			cmdSlices: map[int][]string{
+				0: {"apt", "upgrade"},
+				1: {"addgroup", "--system", "--gid", "101", "nginx"},
+			},
+			expected: true,
+		},
+		"NoAptUpgrade": {
+			cmdSlices: map[int][]string{
+				0: {"pip", "install", "--upgrade", "pip", "setuptools"},
+				1: {"pip", "install", "upgrade", "pip", "setuptools"},
+			},
+			expected: false,
+		},
+	}
+	for testname, v := range tests {
+		actual := useDistUpgrade(v.cmdSlices)
+		if actual != v.expected {
+			t.Errorf("%s want: %t, got %t", testname, v.expected, actual)
+		}
+	}
+}
+
 func loadImageFromFile(path string) (config types.Image, err error) {
 	read, err := os.Open(path)
 	if err != nil {

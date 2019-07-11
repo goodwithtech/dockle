@@ -154,14 +154,14 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		})
 	}
 
-	if strings.Contains(cmd.CreatedBy, "upgrade") {
+	if useDistUpgrade(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.AvoidDistUpgrade,
 			Filename: "docker config",
 			Desc:     fmt.Sprintf("Avoid upgrade in container : %s", cmd.CreatedBy),
 		})
 	}
-	if strings.Contains(cmd.CreatedBy, "sudo") {
+	if useSudo(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.AvoidSudo,
 			Filename: "docker config",
@@ -170,6 +170,28 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 	}
 
 	return assesses
+}
+
+func useSudo(cmdSlices map[int][]string) bool {
+	for _, cmdSlice := range cmdSlices {
+		if containsAll(cmdSlice, []string{"sudo"}) {
+			return true
+		}
+	}
+	return false
+
+}
+
+func useDistUpgrade(cmdSlices map[int][]string) bool {
+	for _, cmdSlice := range cmdSlices {
+		if containsThreshold(cmdSlice, []string{"apt-get", "apt", "apk", "dist-upgrade"}, 2) {
+			return true
+		}
+		if containsThreshold(cmdSlice, []string{"apt-get", "apt", "apk", "upgrade"}, 2) {
+			return true
+		}
+	}
+	return false
 }
 
 func useADDstatement(cmdSlices map[int][]string) bool {
