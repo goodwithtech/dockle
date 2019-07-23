@@ -1,6 +1,6 @@
 <img src="imgs/logo.png" width="450">
 
-[![GitHub release](https://img.shields.io/github/release/goodwithtech/dockle.svg)](https://github.com/goodwithtech/dockle/releases/latest)
+[![Financial Contributors on Open Collective](https://opencollective.com/dockle/all/badge.svg?label=financial+contributors)](https://opencollective.com/dockle) [![GitHub release](https://img.shields.io/github/release/goodwithtech/dockle.svg)](https://github.com/goodwithtech/dockle/releases/latest)
 [![CircleCI](https://circleci.com/gh/goodwithtech/dockle.svg?style=svg)](https://circleci.com/gh/goodwithtech/dockle)
 [![Go Report Card](https://goreportcard.com/badge/github.com/goodwithtech/dockle)](https://goreportcard.com/report/github.com/goodwithtech/dockle)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
@@ -619,6 +619,36 @@ export DOCKLE_NON_SSL=true
 # Credits
 
 Special Thanks to [@knqyf263](https://github.com/knqyf263) (Teppei Fukuda) and [Trivy](https://github.com/knqyf263/trivy)
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/goodwithtech/dockle/graphs/contributors"><img src="https://opencollective.com/dockle/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/dockle/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/dockle"><img src="https://opencollective.com/dockle/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/dockle/contribute)]
+
+<a href="https://opencollective.com/dockle/organization/0/website"><img src="https://opencollective.com/dockle/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/dockle/organization/1/website"><img src="https://opencollective.com/dockle/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/dockle/organization/2/website"><img src="https://opencollective.com/dockle/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/dockle/organization/3/website"><img src="https://opencollective.com/dockle/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/dockle/organization/4/website"><img src="https://opencollective.com/dockle/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/dockle/organization/5/website"><img src="https://opencollective.com/dockle/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/dockle/organization/6/website"><img src="https://opencollective.com/dockle/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/dockle/organization/7/website"><img src="https://opencollective.com/dockle/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/dockle/organization/8/website"><img src="https://opencollective.com/dockle/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/dockle/organization/9/website"><img src="https://opencollective.com/dockle/organization/9/avatar.svg"></a>
 
 # License
 
