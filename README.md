@@ -35,6 +35,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
   - [Homebrew (Mac OS X / Linux and WSL)](#homebrew-mac-os-x--linux-and-wsl)
   - [RHEL/CentOS](#rhelcentos)
   - [Debian/Ubuntu](#debianubuntu)
+  - [Arch Linux](#arch-linux)
   - [Windows](#windows)
   - [Binary](#binary)
   - [From source](#from-source)
@@ -114,7 +115,15 @@ $ VERSION=$(
 ) && curl -L -o dockle.deb https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.deb
 $ sudo dpkg -i dockle.deb && rm dockle.deb
 ```
-
+## Arch Linux
+dockle-bin can be installed from the Arch User Repository. Examples:
+```
+pikaur -Sy dockle-bin
+```
+or
+```
+yay -Sy dockle-bin
+```
 ## Windows
 
 ```bash
