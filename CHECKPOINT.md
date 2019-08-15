@@ -123,7 +123,7 @@ A volume mount makes weak points. This depends on mounting volumes.
 
 Currently, `Dockle` checks following directories:
 
- - `/boot`, `/dev`, `/etc`, `/lib`, `/proc`, `/sys`,  `/usr`
+ - `/dev`, `/proc`, `/sys`
 
 `dockle` only checks `VOLUME` statements, since we can't check `docker run -v /lib:/lib ...`.
 

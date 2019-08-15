@@ -16,7 +16,7 @@ import (
 
 type ManifestAssessor struct{}
 
-var sensitiveDirs = map[string]struct{}{"/boot": {}, "/dev": {}, "/etc": {}, "/lib": {}, "/proc": {}, "/sys": {}, "/usr": {}}
+var sensitiveDirs = map[string]struct{}{"/sys": {}, "/dev": {}, "/proc": {}}
 var suspiciousEnvKey = []string{"PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS"}
 var acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
 
