@@ -11,8 +11,7 @@ import (
 )
 
 type JsonWriter struct {
-	Output    io.Writer
-	IgnoreMap map[string]struct{}
+	Output io.Writer
 }
 
 type JsonOutputFormat struct {
@@ -32,13 +31,14 @@ type JsonDetail struct {
 	Alerts []string `json:"alerts"`
 }
 
-func (jw JsonWriter) Write(assessments []*types.Assessment) (bool, error) {
-	var abendAssessments []*types.Assessment
+func (jw JsonWriter) Write(assessments AssessmentSlice) (bool, error) {
+	abend := AssessmentSlice{}
+	abendAssessments := &abend
 	jsonSummary := JsonSummary{}
 	jsonDetails := []*JsonDetail{}
 	targetType := types.MinTypeNumber
 	for targetType <= types.MaxTypeNumber {
-		filtered := filteredAssessments(jw.IgnoreMap, targetType, assessments)
+		filtered := assessments.FilteredByTargetCode(targetType)
 		level, detail := jsonDetail(targetType, filtered)
 		if detail != nil {
 			jsonDetails = append(jsonDetails, detail)
@@ -57,7 +57,7 @@ func (jw JsonWriter) Write(assessments []*types.Assessment) (bool, error) {
 		}
 
 		for _, assessment := range filtered {
-			abendAssessments = filterAbendAssessments(jw.IgnoreMap, abendAssessments, assessment)
+			abendAssessments.AddAbend(assessment)
 		}
 		targetType++
 	}
@@ -73,7 +73,7 @@ func (jw JsonWriter) Write(assessments []*types.Assessment) (bool, error) {
 	if _, err = fmt.Fprint(jw.Output, string(output)); err != nil {
 		return false, xerrors.Errorf("failed to write json: %w", err)
 	}
-	return len(abendAssessments) > 0, nil
+	return len(*abendAssessments) > 0, nil
 }
 func jsonDetail(assessmentType int, assessments []*types.Assessment) (level int, jsonInfo *JsonDetail) {
 	if len(assessments) == 0 {
