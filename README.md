@@ -49,6 +49,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
   - [Scan an image file](#scan-an-image-file)
   - [Get or Save the results as JSON](#get-or-save-the-results-as-json)
   - [Specify exit code](#specify-exit-code)
+  - [Specify exit level](#specify-exit-level)
   - [Ignore the specified checkpoints](#ignore-the-specified-checkpoints)
 - [Continuous Integration](#continuous-integration-ci)
   - [Travis CI](#travis-ci)
@@ -430,10 +431,21 @@ $ dockle -f json -o results.json goodwithtech/test-image:v1
 
 By default, `Dockle` exits with code `0` even if there are some problems.
 
-Use the `--exit-code` option to exit with a non-zero exit code if any alert were found.
+Use the `--exit-code, -c` option to exit with a non-zero exit code if any alert were found.
 
 ```bash
-$ dockle  --exit-code 1 [IMAGE_NAME]
+$ dockle --exit-code 1 [IMAGE_NAME]
+```
+
+### Specify exit level
+
+By default, `--exit-code` occur when there are `WARN` or `FATAL` level alerts.
+
+Use the `--exit-level, -l` option to change alert level. You can set `info`, `warn` or `fatal`.
+
+```bash
+$ dockle --exit-code 1 --exit-level info [IMAGE_NAME]
+$ dockle --exit-code 1 --exit-level fatal [IMAGE_NAME]
 ```
 
 ### Ignore the specified checkpoints
