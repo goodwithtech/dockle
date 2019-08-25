@@ -32,12 +32,12 @@ const (
 )
 
 const (
-	InfoLevel = iota
+	PassLevel = iota + 1
+	IgnoreLevel
+	SkipLevel
+	InfoLevel
 	WarnLevel
 	FatalLevel
-	PassLevel
-	SkipLevel
-	IgnoreLevel
 )
 
 type AlertDetail struct {
