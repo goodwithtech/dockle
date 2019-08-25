@@ -34,7 +34,7 @@ OPTIONS:
 	app.Version = version
 	app.ArgsUsage = "image_name"
 
-	app.Usage = "A Simple Security Checker for Container Image, Suitable for CI"
+	app.Usage = "Container Image Linter for Security, Helping build the Best-Practice Docker Image, Easy to start"
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
@@ -56,9 +56,14 @@ OPTIONS:
 			Usage: "output file name",
 		},
 		cli.IntFlag{
-			Name:  "exit-code",
+			Name:  "exit-code, c",
 			Usage: "Exit code when alert were found",
 			Value: 0,
+		},
+		cli.StringFlag{
+			Name:  "exit-level, l",
+			Usage: "change ABEND level when use exit-code=1",
+			Value: "WARN",
 		},
 		cli.BoolFlag{
 			Name:  "debug, d",
