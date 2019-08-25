@@ -1,11 +1,10 @@
 package pkg
 
 import (
-	"bufio"
 	l "log"
 	"os"
-	"strings"
 
+	"github.com/goodwithtech/dockle/config"
 	"github.com/goodwithtech/dockle/pkg/utils"
 
 	"github.com/goodwithtech/dockle/pkg/report"
@@ -24,15 +23,12 @@ var (
 	ignoreCheckpointMap map[string]struct{}
 )
 
-const (
-	dockleIgnore = ".dockleignore"
-)
-
 func Run(c *cli.Context) (err error) {
 	debug := c.Bool("debug")
 	if err = log.InitLogger(debug); err != nil {
 		l.Fatal(err)
 	}
+	config.CreateFromCli(c)
 
 	cliVersion := "v" + c.App.Version
 	latestVersion, err := utils.FetchLatestVersion()
@@ -86,11 +82,7 @@ func Run(c *cli.Context) (err error) {
 
 	log.Logger.Debug("End assessments...")
 
-	exitCode := c.Int("exit-code")
-
 	// Store ignore checkpoint code
-	ignoreRules := c.StringSlice("ignore")
-	getIgnoreCheckpointMap(ignoreRules)
 	o := c.String("output")
 	output := os.Stdout
 	if o != "" {
@@ -102,43 +94,19 @@ func Run(c *cli.Context) (err error) {
 	var writer report.Writer
 	switch format := c.String("format"); format {
 	case "json":
-		writer = &report.JsonWriter{Output: output, IgnoreMap: ignoreCheckpointMap}
+		writer = &report.JsonWriter{Output: output}
 	default:
-		writer = &report.ListWriter{Output: output, IgnoreMap: ignoreCheckpointMap}
+		writer = &report.ListWriter{Output: output}
 	}
 
 	abend, err := writer.Write(assessments)
 	if err != nil {
 		return xerrors.Errorf("failed to write results: %w", err)
 	}
-	if exitCode != 0 && abend {
-		os.Exit(exitCode)
+
+	if config.Conf.ExitCode != 0 && abend {
+		os.Exit(config.Conf.ExitCode)
 	}
 
 	return nil
-}
-
-func getIgnoreCheckpointMap(ignoreRules []string) {
-	ignoreCheckpointMap = map[string]struct{}{}
-	for _, rule := range ignoreRules {
-		ignoreCheckpointMap[rule] = struct{}{}
-	}
-
-	f, err := os.Open(dockleIgnore)
-	if err != nil {
-		log.Logger.Debug("There is no .dockleignore file")
-		// dockle must work even if there isn't ignore file
-		return
-	}
-
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		line := scanner.Text()
-		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "#") || line == "" {
-			continue
-		}
-		log.Logger.Debugf("Add new ignore code: %s", line)
-		ignoreCheckpointMap[line] = struct{}{}
-	}
 }

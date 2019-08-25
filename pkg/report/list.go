@@ -16,34 +16,33 @@ const (
 	NEWLINE  = "\n"
 )
 
-var AlertLevelColors = []color.Color{
-	color.Magenta,
-	color.Yellow,
-	color.Red,
-	color.Green,
-	color.Blue,
-	color.Blue,
+var AlertLevelColors = map[int]color.Color{
+	types.InfoLevel:   color.Magenta,
+	types.WarnLevel:   color.Yellow,
+	types.FatalLevel:  color.Red,
+	types.PassLevel:   color.Green,
+	types.SkipLevel:   color.Blue,
+	types.IgnoreLevel: color.Blue,
 }
 
 type ListWriter struct {
-	Output    io.Writer
-	IgnoreMap map[string]struct{}
+	Output io.Writer
 }
 
-func (lw ListWriter) Write(assessments []*types.Assessment) (bool, error) {
-	var abendAssessments []*types.Assessment
-
+func (lw ListWriter) Write(assessments AssessmentSlice) (bool, error) {
+	abend := AssessmentSlice{}
+	abendAssessments := &abend
 	targetType := types.MinTypeNumber
 	for targetType <= types.MaxTypeNumber {
-		filtered := filteredAssessments(lw.IgnoreMap, targetType, assessments)
+		filtered := assessments.FilteredByTargetCode(targetType)
 		showTargetResult(targetType, filtered)
 
 		for _, assessment := range filtered {
-			abendAssessments = filterAbendAssessments(lw.IgnoreMap, abendAssessments, assessment)
+			abendAssessments.AddAbend(assessment)
 		}
 		targetType++
 	}
-	return len(abendAssessments) > 0, nil
+	return len(*abendAssessments) > 0, nil
 }
 
 func showTargetResult(assessmentType int, assessments []*types.Assessment) {

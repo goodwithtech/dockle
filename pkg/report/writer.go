@@ -1,27 +1,30 @@
 package report
 
 import (
+	"github.com/goodwithtech/dockle/config"
 	"github.com/goodwithtech/dockle/pkg/types"
 )
 
-var AlertLabels = []string{
-	"INFO",
-	"WARN",
-	"FATAL",
-	"PASS",
-	"SKIP",
-	"IGNORE",
+var AlertLabels = map[int]string{
+	types.InfoLevel:   "INFO",
+	types.WarnLevel:   "WARN",
+	types.FatalLevel:  "FATAL",
+	types.PassLevel:   "PASS",
+	types.SkipLevel:   "SKIP",
+	types.IgnoreLevel: "IGNORE",
 }
 
+type AssessmentSlice []*types.Assessment
 type Writer interface {
-	Write(assessments []*types.Assessment) (bool, error)
+	Write(assessments AssessmentSlice) (bool, error)
 }
 
-func filteredAssessments(ignoreCheckpointMap map[string]struct{}, target int, assessments []*types.Assessment) (filtered []*types.Assessment) {
+// FilteredByTargetCode returns only target type assessments from all assessments slice
+func (as *AssessmentSlice) FilteredByTargetCode(target int) (filtered AssessmentSlice) {
 	detail := types.AlertDetails[target]
-	for _, assessment := range assessments {
+	for _, assessment := range *as {
 		if assessment.Type == target {
-			if _, ok := ignoreCheckpointMap[detail.Code]; ok {
+			if _, ok := config.Conf.IgnoreMap[detail.Code]; ok {
 				assessment.Level = types.IgnoreLevel
 			}
 			filtered = append(filtered, assessment)
@@ -30,14 +33,18 @@ func filteredAssessments(ignoreCheckpointMap map[string]struct{}, target int, as
 	return filtered
 }
 
-func filterAbendAssessments(ignoreCheckpointMap map[string]struct{}, abendAssessments []*types.Assessment, assessment *types.Assessment) []*types.Assessment {
-	if assessment.Level == types.SkipLevel {
-		return abendAssessments
-	}
-
+// AddAbend add assessment to AssessmentSlice pointer if abend level
+func (as *AssessmentSlice) AddAbend(assessment *types.Assessment) {
+	level := assessment.Level
 	detail := types.AlertDetails[assessment.Type]
-	if _, ok := ignoreCheckpointMap[detail.Code]; ok {
-		return abendAssessments
+	if level == 0 {
+		level = detail.DefaultLevel
 	}
-	return append(abendAssessments, assessment)
+	if level < config.Conf.ExitLevel {
+		return
+	}
+	if _, ok := config.Conf.IgnoreMap[detail.Code]; ok {
+		return
+	}
+	*as = append(*as, assessment)
 }
