@@ -14,7 +14,7 @@
     - Checkpoints includes [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
 
 ```bash
-$ brew install goodwithtech/dockle/dockle
+$ brew install goodwithtech/r/dockle
 $ dockle [YOUR_IMAGE_NAME]
 ```
 See [Installation](#installation) and [Common Examples](#common-examples)

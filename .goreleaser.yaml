@@ -71,7 +71,7 @@ brews:
 -
   github:
     owner: goodwithtech
-    name: homebrew-dockle
+    name: homebrew-r
   folder: Formula
   homepage: "https://github.com/goodwithtech/dockle"
   description: "Simple security auditing, helping build the Best Docker Images"
