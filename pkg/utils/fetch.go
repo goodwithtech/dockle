@@ -1,12 +1,11 @@
 package utils
 
 import (
+	"fmt"
 	"net/http"
 	"regexp"
 
 	"github.com/goodwithtech/dockle/pkg/log"
-
-	"golang.org/x/xerrors"
 
 	"github.com/parnurzeal/gorequest"
 )
@@ -16,10 +15,10 @@ var versionPattern = regexp.MustCompile(`v[0-9]+\.[0-9]+\.[0-9]+`)
 func fetchURL(url string, cookie *http.Cookie) ([]byte, error) {
 	resp, body, err := gorequest.New().AddCookie(cookie).Get(url).Type("text").EndBytes()
 	if err != nil {
-		return nil, xerrors.Errorf("fail to fetch : %w", err)
+		return nil, fmt.Errorf("fail to fetch : %w", err)
 	}
 	if resp.StatusCode != 200 {
-		return nil, xerrors.Errorf("HTTP error code : %d, url : %s", resp.StatusCode, url)
+		return nil, fmt.Errorf("HTTP error code : %d, url : %s", resp.StatusCode, url)
 	}
 	return body, nil
 }

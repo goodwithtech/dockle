@@ -2,6 +2,7 @@ package manifest
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -9,9 +10,8 @@ import (
 
 	"github.com/goodwithtech/dockle/pkg/log"
 
+	"github.com/goodwithtech/deckoder/extractor"
 	"github.com/goodwithtech/dockle/pkg/types"
-	"github.com/knqyf263/fanal/extractor"
-	"golang.org/x/xerrors"
 )
 
 type ManifestAssessor struct{}
@@ -24,14 +24,14 @@ func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []*types.A
 	log.Logger.Debug("Scan start : config file")
 	file, ok := fileMap["/config"]
 	if !ok {
-		return nil, xerrors.New("config json file doesn't exist")
+		return nil, errors.New("config json file doesn't exist")
 	}
 
 	var d types.Image
 
 	err = json.Unmarshal(file.Body, &d)
 	if err != nil {
-		return nil, xerrors.New("Fail to parse docker config file.")
+		return nil, errors.New("Fail to parse docker config file.")
 	}
 
 	return checkAssessments(d)
@@ -84,7 +84,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 		case results := <-assessesCh:
 			assesses = append(assesses, results...)
 		case <-timeout:
-			return nil, xerrors.New("timeout: manifest assessor")
+			return nil, errors.New("timeout: manifest assessor")
 		}
 	}
 

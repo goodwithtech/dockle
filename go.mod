@@ -9,7 +9,7 @@ require (
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/genuinetools/reg v0.16.0
-	github.com/knqyf263/fanal v0.0.0-20190528042547-07e27879b658
+	github.com/goodwithtech/deckoder v0.0.0-20190914194445-f4d07d25a3b6
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/parnurzeal/gorequest v0.2.15
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
@@ -18,9 +18,6 @@ require (
 	go.uber.org/multierr v1.1.0 // indirect
 	go.uber.org/zap v1.10.0
 	golang.org/x/crypto v0.0.0-20190404164418-38d8ce5564a5
-	golang.org/x/xerrors v0.0.0-20190513163551-3ee3066db522
 )
 
 replace github.com/genuinetools/reg => github.com/tomoyamachi/reg v0.16.1-0.20190706172545-2a2250fd7c00
-
-replace github.com/knqyf263/fanal => github.com/goodwithtech/fanal v0.0.0-20190706194703-57e52a04aa8b

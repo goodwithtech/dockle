@@ -14,9 +14,9 @@ import (
 	"github.com/goodwithtech/dockle/pkg/assessor/passwd"
 	"github.com/goodwithtech/dockle/pkg/assessor/user"
 
+	"github.com/goodwithtech/deckoder/extractor"
 	"github.com/goodwithtech/dockle/pkg/log"
 	"github.com/goodwithtech/dockle/pkg/types"
-	"github.com/knqyf263/fanal/extractor"
 )
 
 var assessors []Assessor

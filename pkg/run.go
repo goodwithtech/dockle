@@ -1,6 +1,8 @@
 package pkg
 
 import (
+	"errors"
+	"fmt"
 	l "log"
 	"os"
 
@@ -10,9 +12,8 @@ import (
 	"github.com/goodwithtech/dockle/pkg/report"
 
 	"github.com/genuinetools/reg/registry"
+	"github.com/goodwithtech/deckoder/cache"
 	"github.com/goodwithtech/dockle/pkg/scanner"
-	"github.com/knqyf263/fanal/cache"
-	"golang.org/x/xerrors"
 
 	"github.com/goodwithtech/dockle/pkg/log"
 	"github.com/goodwithtech/dockle/pkg/types"
@@ -40,7 +41,7 @@ func Run(c *cli.Context) (err error) {
 
 	// delete image cache each time
 	if err = cache.Clear(); err != nil {
-		return xerrors.New("failed to remove image layer cache")
+		return errors.New("failed to remove image layer cache")
 	}
 	args := c.Args()
 	filePath := c.String("input")
@@ -60,7 +61,7 @@ func Run(c *cli.Context) (err error) {
 	if imageName != "" {
 		image, err := registry.ParseImage(imageName)
 		if err != nil {
-			return xerrors.Errorf("invalid image: %w", err)
+			return fmt.Errorf("invalid image: %w", err)
 		}
 		if image.Tag == "latest" {
 			useLatestTag = true
@@ -87,7 +88,7 @@ func Run(c *cli.Context) (err error) {
 	output := os.Stdout
 	if o != "" {
 		if output, err = os.Create(o); err != nil {
-			return xerrors.Errorf("failed to create an output file: %w", err)
+			return fmt.Errorf("failed to create an output file: %w", err)
 		}
 	}
 
@@ -101,7 +102,7 @@ func Run(c *cli.Context) (err error) {
 
 	abend, err := writer.Write(assessments)
 	if err != nil {
-		return xerrors.Errorf("failed to write results: %w", err)
+		return fmt.Errorf("failed to write results: %w", err)
 	}
 
 	if config.Conf.ExitCode != 0 && abend {

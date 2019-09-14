@@ -3,9 +3,9 @@ package hosts
 import (
 	"os"
 
+	"github.com/goodwithtech/deckoder/extractor"
 	"github.com/goodwithtech/dockle/pkg/log"
 	"github.com/goodwithtech/dockle/pkg/types"
-	"github.com/knqyf263/fanal/extractor"
 )
 
 type HostsAssessor struct{}
