@@ -76,7 +76,6 @@ func createPathPermissionFilterFunc(filenames []string, permissions []os.FileMod
 		for _, p := range permissions {
 			if fileMode&p != 0 {
 				return true, nil
-				break
 			}
 		}
 		return false, nil
