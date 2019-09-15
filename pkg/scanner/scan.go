@@ -3,7 +3,6 @@ package scanner
 import (
 	"archive/tar"
 	"context"
-	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -22,16 +21,11 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err error) {
+func ScanImage(imageName, filePath string, dockerOption deckodertypes.DockerOption) (assessments []*types.Assessment, err error) {
 	ctx := context.Background()
 	var files extractor.FileMap
-
 	filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredPermissions())
 	if imageName != "" {
-		dockerOption, err := types.GetDockerOption()
-		if err != nil {
-			return nil, fmt.Errorf("failed to get docker option: %w", err)
-		}
 		files, err = analyzer.Analyze(ctx, imageName, filterFunc, dockerOption)
 		if err != nil {
 			return nil, fmt.Errorf("failed to analyze image: %w", err)
@@ -47,7 +41,7 @@ func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err
 			return nil, err
 		}
 	} else {
-		return nil, errors.New("image name or image file must be specified")
+		return nil, types.ErrSetImageOrFile
 	}
 
 	assessments = assessor.GetAssessments(files)
