@@ -55,22 +55,30 @@ func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err
 }
 
 func createPathPermissionFilterFunc(filenames []string, permissions []os.FileMode) deckodertypes.FilterFunc {
+	requiredDirNames := []string{}
+	requiredFileNames := []string{}
+	for _, filename := range filenames {
+		if filename[len(filename)-1] == '/' {
+			// if filename end "/", it is directory and requiredDirNames removes last "/"
+			requiredDirNames = append(requiredDirNames, filepath.Clean(filename))
+		} else {
+			requiredFileNames = append(requiredFileNames, filename)
+		}
+	}
+
 	return func(h *tar.Header) (bool, error) {
 		filePath := filepath.Clean(h.Name)
 		fileName := filepath.Base(filePath)
-		fileDirBase := filepath.Base(filepath.Dir(filePath))
-
-		for _, s := range filenames {
-			if s[len(s)-1] == '/' {
-				if filepath.Clean(s) == fileDirBase {
-					return true, nil
-				}
-			}
-		}
-
-		if utils.StringInSlice(filePath, filenames) || utils.StringInSlice(fileName, filenames) {
+		if utils.StringInSlice(filePath, requiredFileNames) || utils.StringInSlice(fileName, requiredFileNames) {
 			return true, nil
 		}
+
+		fileDir := filepath.Dir(filePath)
+		fileDirBase := filepath.Base(fileDir)
+		if utils.StringInSlice(fileDir, requiredDirNames) || utils.StringInSlice(fileDirBase, requiredDirNames) {
+			return true, nil
+		}
+
 		fi := h.FileInfo()
 		fileMode := fi.Mode()
 		for _, p := range permissions {

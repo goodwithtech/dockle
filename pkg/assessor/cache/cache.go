@@ -14,7 +14,8 @@ import (
 )
 
 var (
-	reqFiles           = []string{"Dockerfile", "docker-compose.yml", ".vimrc"}
+	reqFiles = []string{"Dockerfile", "docker-compose.yml", ".vimrc"}
+	// Directory ends "/" separator
 	reqDirs            = []string{".cache/", "tmp/", ".git/", ".vscode/", ".idea/", ".npm/"}
 	uncontrollableDirs = []string{"node_modules/", "vendor/"}
 	detectedDir        = map[string]struct{}{}
@@ -30,7 +31,8 @@ func (a CacheAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, e
 		dirName := filepath.Dir(filename)
 		dirBase := filepath.Base(dirName)
 
-		if utils.StringInSlice(dirBase+"/", reqDirs) {
+		// match Directory
+		if utils.StringInSlice(dirBase+"/", reqDirs) || utils.StringInSlice(dirName+"/", reqDirs) {
 			if _, ok := detectedDir[dirName]; ok {
 				continue
 			}
@@ -46,28 +48,26 @@ func (a CacheAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, e
 				&types.Assessment{
 					Type:     types.InfoDeletableFiles,
 					Filename: dirName,
-					Desc:     fmt.Sprintf("looks unnecessary directory : %s ", dirName),
+					Desc:     fmt.Sprintf("Suspitcious directory : %s ", dirName),
 				})
 
 		}
-		if utils.StringInSlice(fileBase, reqFiles) {
-			// Skip uncontrollable dependency directory e.g) npm : node_modules, php: composer
-			if inIgnoreDir(filename) {
-				continue
-			}
 
+		// match File
+		if utils.StringInSlice(filename, reqFiles) || utils.StringInSlice(fileBase, reqFiles) {
 			assesses = append(
 				assesses,
 				&types.Assessment{
 					Type:     types.InfoDeletableFiles,
 					Filename: filename,
-					Desc:     fmt.Sprintf("looks unnecessary file : %s ", filename),
+					Desc:     fmt.Sprintf("unnecessary file : %s ", filename),
 				})
 		}
 	}
 	return assesses, nil
 }
 
+// check and register uncontrollable directory e.g) npm : node_modules, php: composer
 func inIgnoreDir(filename string) bool {
 	for _, ignoreDir := range uncontrollableDirs {
 		if strings.Contains(filename, ignoreDir) {
