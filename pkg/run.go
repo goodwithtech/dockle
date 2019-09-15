@@ -6,6 +6,8 @@ import (
 	l "log"
 	"os"
 
+	deckodertypes "github.com/goodwithtech/deckoder/types"
+
 	"github.com/goodwithtech/dockle/config"
 	"github.com/goodwithtech/dockle/pkg/utils"
 
@@ -29,6 +31,7 @@ func Run(c *cli.Context) (err error) {
 	if err = log.InitLogger(debug); err != nil {
 		l.Fatal(err)
 	}
+
 	config.CreateFromCli(c)
 
 	cliVersion := "v" + c.App.Version
@@ -68,8 +71,18 @@ func Run(c *cli.Context) (err error) {
 		}
 	}
 
+	// set docker option
+	dockerOption := deckodertypes.DockerOption{
+		Timeout:  c.Duration("timeout"),
+		AuthURL:  c.String("authurl"),
+		UserName: c.String("username"),
+		Password: c.String("password"),
+		Insecure: c.BoolT("insecure"),
+		NonSSL:   c.BoolT("nonssl"),
+	}
 	log.Logger.Debug("Start assessments...")
-	assessments, err := scanner.ScanImage(imageName, filePath)
+
+	assessments, err := scanner.ScanImage(imageName, filePath, dockerOption)
 	if err != nil {
 		return err
 	}
