@@ -3,6 +3,7 @@ package assessor
 import (
 	"os"
 
+	"github.com/goodwithtech/dockle/pkg/assessor/cache"
 	"github.com/goodwithtech/dockle/pkg/assessor/privilege"
 
 	"github.com/goodwithtech/dockle/pkg/assessor/contentTrust"
@@ -36,6 +37,7 @@ func init() {
 	RegisterAssessor(credential.CredentialAssessor{})
 	RegisterAssessor(manifest.ManifestAssessor{})
 	RegisterAssessor(contentTrust.ContentTrustAssessor{})
+	RegisterAssessor(cache.CacheAssessor{})
 }
 
 func GetAssessments(files extractor.FileMap) (assessments []*types.Assessment) {

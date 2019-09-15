@@ -171,3 +171,7 @@ These checkpoints referred to [Linux Best Practices](https://www.cyberciti.biz/t
 - http://www.linfo.org/uid.html
 
     > Contrary to popular belief, it is not necessary that each entry in the UID field be unique. However, non-unique UIDs can cause security problems, and thus UIDs should be kept unique across the entire organization.
+
+### DKL-LI-0003: Only put necessary files
+
+Check `.cache`, `tmp` and so on directories.

@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/goodwithtech/deckoder/utils"
 
@@ -57,12 +56,18 @@ func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err
 
 func createPathPermissionFilterFunc(filenames []string, permissions []os.FileMode) deckodertypes.FilterFunc {
 	return func(h *tar.Header) (bool, error) {
-
 		filePath := filepath.Clean(h.Name)
 		fileName := filepath.Base(filePath)
-		if strings.HasPrefix(fileName, ".wh.") {
-			return true, nil
+		fileDirBase := filepath.Base(filepath.Dir(filePath))
+
+		for _, s := range filenames {
+			if s[len(s)-1] == '/' {
+				if filepath.Clean(s) == fileDirBase {
+					return true, nil
+				}
+			}
 		}
+
 		if utils.StringInSlice(filePath, filenames) || utils.StringInSlice(fileName, filenames) {
 			return true, nil
 		}

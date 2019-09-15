@@ -9,7 +9,6 @@ const (
 	AddHealthcheck
 	UseAptGetUpdateNoCache
 
-	// TODO: change fanal FileMap structure
 	RemoveSetuidSetgid
 	UseCOPY
 	AvoidEnvKeySecret
@@ -27,8 +26,9 @@ const (
 	AvoidEmptyPassword
 	AvoidDuplicateUser
 	AvoidDuplicateGroup
+	InfoDeletableFiles
 
-	MaxTypeNumber = AvoidDuplicateGroup
+	MaxTypeNumber = InfoDeletableFiles
 )
 
 const (
@@ -60,7 +60,7 @@ var AlertDetails = map[int]AlertDetail{
 	},
 
 	AddHealthcheck: {
-		DefaultLevel: WarnLevel,
+		DefaultLevel: InfoLevel,
 		Title:        "Add HEALTHCHECK instruction to the container image",
 		Code:         "CIS-DI-0006",
 	},
@@ -141,5 +141,10 @@ var AlertDetails = map[int]AlertDetail{
 		DefaultLevel: FatalLevel,
 		Title:        "Be unique GROUP",
 		Code:         "DKL-LI-0002",
+	},
+	InfoDeletableFiles: {
+		DefaultLevel: InfoLevel,
+		Title:        "Only put necessary files",
+		Code:         "DKL-LI-0003",
 	},
 }

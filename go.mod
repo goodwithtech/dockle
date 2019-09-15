@@ -9,7 +9,7 @@ require (
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/genuinetools/reg v0.16.0
-	github.com/goodwithtech/deckoder v0.0.0-20190914194445-f4d07d25a3b6
+	github.com/goodwithtech/deckoder v0.0.0-20190914200440-2d3347be7dd3
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/parnurzeal/gorequest v0.2.15
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
