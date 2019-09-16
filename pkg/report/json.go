@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"io"
 
-	"golang.org/x/xerrors"
-
 	"github.com/goodwithtech/dockle/pkg/types"
 )
 
@@ -67,11 +65,11 @@ func (jw JsonWriter) Write(assessments AssessmentSlice) (bool, error) {
 	}
 	output, err := json.MarshalIndent(result, "", "  ")
 	if err != nil {
-		return false, xerrors.Errorf("failed to marshal json: %w", err)
+		return false, fmt.Errorf("failed to marshal json: %w", err)
 	}
 
 	if _, err = fmt.Fprint(jw.Output, string(output)); err != nil {
-		return false, xerrors.Errorf("failed to write json: %w", err)
+		return false, fmt.Errorf("failed to write json: %w", err)
 	}
 	return len(*abendAssessments) > 0, nil
 }

@@ -1,52 +1,87 @@
 package scanner
 
 import (
+	"archive/tar"
 	"context"
 	"flag"
+	"fmt"
 	"os"
+	"path/filepath"
+
+	"github.com/goodwithtech/deckoder/utils"
+
+	deckodertypes "github.com/goodwithtech/deckoder/types"
 
 	"github.com/goodwithtech/dockle/pkg/types"
 
 	"github.com/goodwithtech/dockle/pkg/assessor"
 
-	"github.com/knqyf263/fanal/analyzer"
-	"github.com/knqyf263/fanal/extractor"
+	"github.com/goodwithtech/deckoder/analyzer"
+	"github.com/goodwithtech/deckoder/extractor"
 	"golang.org/x/crypto/ssh/terminal"
-	"golang.org/x/xerrors"
 )
 
-func ScanImage(imageName, filePath string) (assessments []*types.Assessment, err error) {
+func ScanImage(imageName, filePath string, dockerOption deckodertypes.DockerOption) (assessments []*types.Assessment, err error) {
 	ctx := context.Background()
 	var files extractor.FileMap
-
-	// add required files to fanal's analyzer
-	analyzer.AddRequiredFilenames(assessor.LoadRequiredFiles())
-	analyzer.AddRequiredPermissions(assessor.LoadRequiredPermissions())
+	filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredPermissions())
 	if imageName != "" {
-		dockerOption, err := types.GetDockerOption()
+		files, err = analyzer.Analyze(ctx, imageName, filterFunc, dockerOption)
 		if err != nil {
-			return nil, xerrors.Errorf("failed to get docker option: %w", err)
-		}
-		files, err = analyzer.Analyze(ctx, imageName, dockerOption)
-		if err != nil {
-			return nil, xerrors.Errorf("failed to analyze image: %w", err)
+			return nil, fmt.Errorf("failed to analyze image: %w", err)
 		}
 	} else if filePath != "" {
 		rc, err := openStream(filePath)
 		if err != nil {
-			return nil, xerrors.Errorf("failed to open stream: %w", err)
+			return nil, fmt.Errorf("failed to open stream: %w", err)
 		}
 
-		files, err = analyzer.AnalyzeFromFile(ctx, rc)
+		files, err = analyzer.AnalyzeFromFile(ctx, rc, filterFunc)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		return nil, xerrors.New("image name or image file must be specified")
+		return nil, types.ErrSetImageOrFile
 	}
 
 	assessments = assessor.GetAssessments(files)
 	return assessments, nil
+}
+
+func createPathPermissionFilterFunc(filenames []string, permissions []os.FileMode) deckodertypes.FilterFunc {
+	requiredDirNames := []string{}
+	requiredFileNames := []string{}
+	for _, filename := range filenames {
+		if filename[len(filename)-1] == '/' {
+			// if filename end "/", it is directory and requiredDirNames removes last "/"
+			requiredDirNames = append(requiredDirNames, filepath.Clean(filename))
+		} else {
+			requiredFileNames = append(requiredFileNames, filename)
+		}
+	}
+
+	return func(h *tar.Header) (bool, error) {
+		filePath := filepath.Clean(h.Name)
+		fileName := filepath.Base(filePath)
+		if utils.StringInSlice(filePath, requiredFileNames) || utils.StringInSlice(fileName, requiredFileNames) {
+			return true, nil
+		}
+
+		fileDir := filepath.Dir(filePath)
+		fileDirBase := filepath.Base(fileDir)
+		if utils.StringInSlice(fileDir, requiredDirNames) || utils.StringInSlice(fileDirBase, requiredDirNames) {
+			return true, nil
+		}
+
+		fi := h.FileInfo()
+		fileMode := fi.Mode()
+		for _, p := range permissions {
+			if fileMode&p != 0 {
+				return true, nil
+			}
+		}
+		return false, nil
+	}
 }
 
 func openStream(path string) (*os.File, error) {

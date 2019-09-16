@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/goodwithtech/deckoder/extractor"
 	"github.com/goodwithtech/dockle/pkg/types"
-	"github.com/knqyf263/fanal/extractor"
 )
 
 type PrivilegeAssessor struct{}

@@ -253,6 +253,7 @@ $ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 || [Dockle Checkpoints for Linux](CHECKPOINT.md#dockerdockle-checkpoints-for-linux) |
 | [DKL-LI-0001](CHECKPOINT.md#dkl-li-0001-avoid-empty-password) | Avoid empty password | FATAL
 | [DKL-LI-0002](CHECKPOINT.md#dkl-li-0002-be-unique-uidgroups) | Be unique UID/GROUPs | FATAL
+| [DKL-LI-0003](CHECKPOINT.md#dkl-li-0003-only-put-necessary-files) | Only put necessary files | INFO
 
 ## Level
 

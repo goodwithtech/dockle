@@ -3,6 +3,7 @@ package main
 import (
 	l "log"
 	"os"
+	"time"
 
 	"github.com/goodwithtech/dockle/pkg"
 	"github.com/goodwithtech/dockle/pkg/log"
@@ -39,12 +40,11 @@ OPTIONS:
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "input",
-			Value: "",
 			Usage: "input file path instead of image name",
 		},
 		cli.StringSliceFlag{
 			Name:  "ignore, i",
-			Usage: "A checkpoint to ignore. You can use .dockleignore too.",
+			Usage: "checkpoints to ignore. You can use .dockleignore too.",
 		},
 		cli.StringFlag{
 			Name:  "format, f",
@@ -57,7 +57,7 @@ OPTIONS:
 		},
 		cli.IntFlag{
 			Name:  "exit-code, c",
-			Usage: "Exit code when alert were found",
+			Usage: "exit code when alert were found",
 			Value: 0,
 		},
 		cli.StringFlag{
@@ -69,6 +69,34 @@ OPTIONS:
 			Name:  "debug, d",
 			Usage: "debug mode",
 		},
+
+		// Registry flag
+		cli.DurationFlag{
+			Name:  "timeout, t",
+			Value: time.Second * 90,
+			Usage: "docker timeout. e.g) 5s, 5m...",
+		},
+		cli.StringFlag{
+			Name:  "authurl",
+			Usage: "registry authenticate url",
+		},
+		cli.StringFlag{
+			Name:  "username",
+			Usage: "registry login username",
+		},
+		cli.StringFlag{
+			Name:  "password",
+			Usage: "registry login password. Using --password via CLI is insecure.",
+		},
+		cli.BoolFlag{
+			Name:  "insecure",
+			Usage: "registry connect insecure",
+		},
+		cli.BoolTFlag{
+			Name:  "nonssl",
+			Usage: "registry connect without ssl",
+		},
+
 		cli.StringFlag{
 			Name:  "cache-dir",
 			Usage: "cache directory",

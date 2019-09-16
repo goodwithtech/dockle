@@ -11,7 +11,7 @@ import (
 
 	"github.com/goodwithtech/dockle/pkg/types"
 
-	"github.com/knqyf263/fanal/extractor"
+	"github.com/goodwithtech/deckoder/extractor"
 )
 
 type PasswdAssessor struct{}
