@@ -48,7 +48,7 @@ func (a CacheAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, e
 				&types.Assessment{
 					Type:     types.InfoDeletableFiles,
 					Filename: dirName,
-					Desc:     fmt.Sprintf("Suspitcious directory : %s ", dirName),
+					Desc:     fmt.Sprintf("Suspicious directory : %s ", dirName),
 				})
 
 		}
