@@ -239,7 +239,7 @@ $ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 | [CIS-DI-0005](CHECKPOINT.md#cis-di-0005-enable-content-trust-for-docker) | Enable Content trust for Docker | FATAL
 | [CIS-DI-0006](CHECKPOINT.md#cis-di-0006-add-healthcheck-instruction-to-the-container-image) | Add `HEALTHCHECK` instruction to the container image | WARN
 | [CIS-DI-0007](CHECKPOINT.md#cis-di-0007-do-not-use-update-instructions-alone-in-the-dockerfile) | Do not use `update` instructions alone in the Dockerfile | FATAL
-| [CIS-DI-0008](CHECKPOINT.md#cis-di-0008-remove-setuid-and-setgid-permissions-in-the-images) | Remove `setuid` and `setgid` permissions in the images | INFO
+| [CIS-DI-0008](CHECKPOINT.md#cis-di-0008-comfirm-safety-of-setuid-setgid-files) | Confirm safety of `setuid` and `setgid` files | INFO
 | [CIS-DI-0009](CHECKPOINT.md#cis-di-0009-use-copy-instead-of-add-in-dockerfile) | Use `COPY` instead of `ADD` in Dockerfile | FATAL
 | [CIS-DI-0010](CHECKPOINT.md#cis-di-0010-do-not-store-secrets-in-dockerfiles) | Do not store secrets in Dockerfiles | FATAL
 | [CIS-DI-0011](CHECKPOINT.md#cis-di-0011-install-verified-packages-only) | Install verified packages only | INFO

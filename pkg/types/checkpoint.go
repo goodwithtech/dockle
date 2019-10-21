@@ -9,7 +9,7 @@ const (
 	AddHealthcheck
 	UseAptGetUpdateNoCache
 
-	RemoveSetuidSetgid
+	CheckSuidGuid
 	UseCOPY
 	AvoidEnvKeySecret
 	AvoidCredentialFile
@@ -71,11 +71,12 @@ var AlertDetails = map[int]AlertDetail{
 		Code:         "CIS-DI-0007",
 	},
 
-	RemoveSetuidSetgid: {
+	CheckSuidGuid: {
 		DefaultLevel: InfoLevel,
-		Title:        "Remove setuid and setgid permissions in the images",
+		Title:        "Confirm safety of setuid/setgid files",
 		Code:         "CIS-DI-0008",
 	},
+
 	UseCOPY: {
 		DefaultLevel: FatalLevel,
 		Title:        "Use COPY instead of ADD in Dockerfile",

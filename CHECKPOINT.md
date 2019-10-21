@@ -73,7 +73,7 @@ HEALTHCHECK --interval=5m --timeout=3s \
 RUN apt-get update && apt-get install -y package-a
 ```
 
-### CIS-DI-0008: Remove `setuid` and `setgid` permissions in the images
+### CIS-DI-0008: Confirm safety of `setuid` and `setgid` files
 
 > Removing `setuid` and `setgid` permissions in the images would prevent privilege escalation attacks in the containers.<br/>
 > `setuid` and `setgid` permissions could be used for elevating privileges.
