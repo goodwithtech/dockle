@@ -8,6 +8,8 @@ import (
 	"github.com/goodwithtech/dockle/pkg/types"
 )
 
+var HostEnvironmentFileName = "ENVIRONMENT variable on HOST OS"
+
 type ContentTrustAssessor struct{}
 
 func (a ContentTrustAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
@@ -17,7 +19,7 @@ func (a ContentTrustAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assess
 		return []*types.Assessment{
 			{
 				Type:     types.UseContentTrust,
-				Filename: "ENVIRONMENT variable",
+				Filename: HostEnvironmentFileName,
 				Desc:     "export DOCKER_CONTENT_TRUST=1 before docker pull/build",
 			},
 		}, nil

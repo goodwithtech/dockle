@@ -80,8 +80,8 @@ github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5y
 github.com/golang/protobuf v1.3.1 h1:YF8+flBXS5eO826T4nzqPrxfhQThhXl0YzfuUPu4SBg=
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
-github.com/goodwithtech/deckoder v0.0.0-20190914200440-2d3347be7dd3 h1:fHsxZkhj9PBDtNwo/6x+uOGe0TZajp/nVLFn7RgbVag=
-github.com/goodwithtech/deckoder v0.0.0-20190914200440-2d3347be7dd3/go.mod h1:+OL/nA/BaFd697EYdEP111Opjo26rf2a6CUtO671V8s=
+github.com/goodwithtech/deckoder v0.0.0-20191103063217-e4d89094c19d h1:T1racnAujPtKvGaE6HR2zHilu9P0/DkI34JAtZXgPcE=
+github.com/goodwithtech/deckoder v0.0.0-20191103063217-e4d89094c19d/go.mod h1:+OL/nA/BaFd697EYdEP111Opjo26rf2a6CUtO671V8s=
 github.com/google/btree v0.0.0-20180813153112-4030bb1f1f0c/go.mod h1:lNA+9X1NB3Zf8V7Ke586lFgjr2dZNuvo3lPJSGZ5JPQ=
 github.com/google/go-cmp v0.2.0 h1:+dTQ8DZQJz0Mb/HjFlkptS1FeQ4cWSnN941F8aEG4SQ=
 github.com/google/go-cmp v0.2.0/go.mod h1:oXzfMopK8JAjlY9xF4vHSVASa0yLyX7SntLO5aqRK0M=
