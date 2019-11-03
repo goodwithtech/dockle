@@ -5,6 +5,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/goodwithtech/dockle/pkg/assessor/contentTrust"
+
+	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
+
 	"github.com/google/go-cmp/cmp/cmpopts"
 
 	deckodertypes "github.com/goodwithtech/deckoder/types"
@@ -24,19 +28,26 @@ func TestScanImage(t *testing.T) {
 		wantErr   error
 		expected  []*types.Assessment
 	}{
-		"test-image": {
-			fileName:  "",
-			imageName: "goodwithtech/test-image:v1",
+		"Dockerfile.base": {
+			fileName: "",
+			// testdata/Dockerfile.base
+			imageName: "goodwithtech/dockle-test:base-test",
 			option:    deckodertypes.DockerOption{Timeout: time.Minute},
 			expected: []*types.Assessment{
-				{Type: types.AvoidEmptyPassword},
-				{Type: types.AvoidRootDefault},
-				{Type: types.AvoidCredentialFile},
-				{Type: types.UseCOPY},
-				{Type: types.AddHealthcheck},
-				{Type: types.MinimizeAptGet},
-				{Type: types.AvoidEnvKeySecret},
-				{Type: types.UseContentTrust},
+				{Type: types.AvoidEmptyPassword, Filename: "etc/shadow"},
+				{Type: types.AvoidRootDefault, Filename: manifest.ConfigFileName},
+				{Type: types.AvoidCredentialFile, Filename: "app/credentials.json"},
+				{Type: types.CheckSuidGuid, Filename: "app/gid.txt"},
+				{Type: types.CheckSuidGuid, Filename: "app/suid.txt"},
+				{Type: types.CheckSuidGuid, Filename: "bin/mount"},
+				{Type: types.CheckSuidGuid, Filename: "bin/su"},
+				{Type: types.CheckSuidGuid, Filename: "bin/umount"},
+				{Type: types.CheckSuidGuid, Filename: "usr/lib/openssh/ssh-keysign"},
+				{Type: types.UseCOPY, Filename: manifest.ConfigFileName},
+				{Type: types.AddHealthcheck, Filename: manifest.ConfigFileName},
+				{Type: types.MinimizeAptGet, Filename: manifest.ConfigFileName},
+				{Type: types.AvoidEnvKeySecret, Filename: manifest.ConfigFileName},
+				{Type: types.UseContentTrust, Filename: contentTrust.HostEnvironmentFileName},
 			},
 		},
 		"emptyArg": {
@@ -50,8 +61,13 @@ func TestScanImage(t *testing.T) {
 		}
 
 		cmpopts := []cmp.Option{
-			cmpopts.SortSlices(func(x, y *types.Assessment) bool { return x.Type < y.Type }),
-			cmpopts.IgnoreTypes(""),
+			cmpopts.SortSlices(func(x, y *types.Assessment) bool {
+				if x.Type == y.Type {
+					return x.Filename < y.Filename
+				}
+				return x.Type < y.Type
+			}),
+			cmpopts.IgnoreFields(types.Assessment{}, "Desc"),
 		}
 		if diff := cmp.Diff(assesses, v.expected, cmpopts...); diff != "" {
 			t.Errorf("%s : tasks diff %v", name, diff)

@@ -16,9 +16,12 @@ import (
 
 type ManifestAssessor struct{}
 
-var sensitiveDirs = map[string]struct{}{"/sys": {}, "/dev": {}, "/proc": {}}
-var suspiciousEnvKey = []string{"PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS"}
-var acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
+var ConfigFileName = "metadata"
+var (
+	sensitiveDirs    = map[string]struct{}{"/sys": {}, "/dev": {}, "/proc": {}}
+	suspiciousEnvKey = []string{"PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS"}
+	acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
+)
 
 func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []*types.Assessment, err error) {
 	log.Logger.Debug("Scan start : config file")
@@ -41,7 +44,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 	if img.Config.User == "" || img.Config.User == "root" {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.AvoidRootDefault,
-			Filename: "docker config",
+			Filename: ConfigFileName,
 			Desc:     "Last user should not be root",
 		})
 	}
@@ -56,7 +59,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 				}
 				assesses = append(assesses, &types.Assessment{
 					Type:     types.AvoidEnvKeySecret,
-					Filename: "docker config",
+					Filename: ConfigFileName,
 					Desc:     fmt.Sprintf("Suspicious ENV key found : %s", envKey),
 				})
 			}
@@ -66,7 +69,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 	if img.Config.Healthcheck == nil {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.AddHealthcheck,
-			Filename: "docker config",
+			Filename: ConfigFileName,
 			Desc:     "not found HEALTHCHECK statement",
 		})
 	}
@@ -92,7 +95,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 		if _, ok := sensitiveDirs[volume]; ok {
 			assesses = append(assesses, &types.Assessment{
 				Type:     types.AvoidSensitiveDirectoryMounting,
-				Filename: "docker config",
+				Filename: ConfigFileName,
 				Desc:     fmt.Sprintf("Avoid mounting sensitive dirs : %s", volume),
 			})
 		}
@@ -125,7 +128,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 	if reducableApkAdd(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.UseApkAddNoCache,
-			Filename: "docker config",
+			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Use --no-cache option if use 'apk add': %s", cmd.CreatedBy),
 		})
 	}
@@ -133,7 +136,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 	if reducableAptGetInstall(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.MinimizeAptGet,
-			Filename: "docker config",
+			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Use 'rm -rf /var/lib/apt/lists' after 'apt-get install' : %s", cmd.CreatedBy),
 		})
 	}
@@ -141,7 +144,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 	if reducableAptGetUpdate(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.UseAptGetUpdateNoCache,
-			Filename: "docker config",
+			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Always combine 'apt-get update' with 'apt-get install' : %s", cmd.CreatedBy),
 		})
 	}
@@ -149,7 +152,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 	if index != 0 && useADDstatement(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.UseCOPY,
-			Filename: "docker config",
+			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Use COPY : %s", cmd.CreatedBy),
 		})
 	}
@@ -157,14 +160,14 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 	if useDistUpgrade(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.AvoidDistUpgrade,
-			Filename: "docker config",
+			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Avoid upgrade in container : %s", cmd.CreatedBy),
 		})
 	}
 	if useSudo(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Type:     types.AvoidSudo,
-			Filename: "docker config",
+			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Avoid sudo in container : %s", cmd.CreatedBy),
 		})
 	}

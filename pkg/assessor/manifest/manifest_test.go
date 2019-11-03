@@ -21,11 +21,11 @@ func TestAssess(t *testing.T) {
 			assesses: []*types.Assessment{
 				{
 					Type:     types.AvoidRootDefault,
-					Filename: "docker config",
+					Filename: ConfigFileName,
 				},
 				{
 					Type:     types.AddHealthcheck,
-					Filename: "docker config",
+					Filename: ConfigFileName,
 				},
 			},
 		},
@@ -35,19 +35,19 @@ func TestAssess(t *testing.T) {
 			assesses: []*types.Assessment{
 				{
 					Type:     types.AvoidRootDefault,
-					Filename: "docker config",
+					Filename: ConfigFileName,
 				},
 				{
 					Type:     types.UseApkAddNoCache,
-					Filename: "docker config",
+					Filename: ConfigFileName,
 				},
 				{
 					Type:     types.AddHealthcheck,
-					Filename: "docker config",
+					Filename: ConfigFileName,
 				},
 				{
 					Type:     types.UseCOPY,
-					Filename: "docker config",
+					Filename: ConfigFileName,
 				},
 			},
 		},
