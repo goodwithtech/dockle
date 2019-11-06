@@ -14,6 +14,7 @@
     - Checkpoints includes [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
 
 ```bash
+$ brew untap goodwithtech/dockle # who use 0.1.16 or older version
 $ brew install goodwithtech/r/dockle
 $ dockle [YOUR_IMAGE_NAME]
 ```
@@ -93,7 +94,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
 You can use Homebrew on [Mac OS X](https://brew.sh/) or [Linux and WSL (Windows Subsystem for Linux)](https://docs.brew.sh/Homebrew-on-Linux).
 
 ```bash
-$ brew install goodwithtech/dockle/dockle
+$ brew install goodwithtech/r/dockle
 ```
 
 ## RHEL/CentOS
