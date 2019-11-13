@@ -29,15 +29,19 @@ type JsonDetail struct {
 	Alerts []string `json:"alerts"`
 }
 
-func (jw JsonWriter) Write(assessments AssessmentSlice) (bool, error) {
-	abend := AssessmentSlice{}
+func (jw JsonWriter) Write(assessMap types.AssessmentMap) (bool, error) {
+	abend := types.AssessmentSlice{}
 	abendAssessments := &abend
 	jsonSummary := JsonSummary{}
 	jsonDetails := []*JsonDetail{}
-	targetType := types.MinTypeNumber
-	for targetType <= types.MaxTypeNumber {
-		filtered := assessments.FilteredByTargetCode(targetType)
-		level, detail := jsonDetail(targetType, filtered)
+	codeOrderLevel := getCodeOrder()
+	for _, ass := range codeOrderLevel {
+		assesses, ok := assessMap[ass.Code]
+		if !ok {
+			jsonSummary.Pass++
+			continue
+		}
+		level, detail := jsonDetail(ass.Code, assesses)
 		if detail != nil {
 			jsonDetails = append(jsonDetails, detail)
 		}
@@ -50,14 +54,7 @@ func (jw JsonWriter) Write(assessments AssessmentSlice) (bool, error) {
 			jsonSummary.Warn++
 		case types.InfoLevel:
 			jsonSummary.Info++
-		default:
-			jsonSummary.Pass++
 		}
-
-		for _, assessment := range filtered {
-			abendAssessments.AddAbend(assessment)
-		}
-		targetType++
 	}
 	result := JsonOutputFormat{
 		Summary: jsonSummary,
@@ -73,27 +70,17 @@ func (jw JsonWriter) Write(assessments AssessmentSlice) (bool, error) {
 	}
 	return len(*abendAssessments) > 0, nil
 }
-func jsonDetail(assessmentType int, assessments []*types.Assessment) (level int, jsonInfo *JsonDetail) {
+func jsonDetail(code string, assessments []*types.Assessment) (level int, jsonInfo *JsonDetail) {
 	if len(assessments) == 0 {
 		return types.PassLevel, nil
 	}
-	if assessments[0].Level == types.SkipLevel {
-		return types.SkipLevel, nil
-	}
-
-	detail := types.AlertDetails[assessmentType]
-	level = detail.DefaultLevel
-	if assessments[0].Level == types.IgnoreLevel {
-		level = types.IgnoreLevel
-	}
-
 	alerts := []string{}
 	for _, assessment := range assessments {
 		alerts = append(alerts, assessment.Desc)
 	}
 	jsonInfo = &JsonDetail{
-		Code:   detail.Code,
-		Title:  detail.Title,
+		Code:   code,
+		Title:  types.TitleMap[code],
 		Level:  AlertLabels[level],
 		Alerts: alerts,
 	}

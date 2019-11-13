@@ -40,7 +40,7 @@ func (a GroupAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, e
 				assesses = append(
 					assesses,
 					&types.Assessment{
-						Type:     types.AvoidDuplicateGroup,
+						Code:     types.AvoidDuplicateUserGroup,
 						Filename: filename,
 						Desc:     fmt.Sprintf("duplicate GroupID %s : username %s", gid, gname),
 					})
@@ -49,7 +49,7 @@ func (a GroupAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, e
 		}
 	}
 	if !existFile {
-		assesses = []*types.Assessment{{Type: types.AvoidDuplicateGroup, Level: types.SkipLevel}}
+		assesses = []*types.Assessment{{Code: types.AvoidDuplicateUserGroup, Level: types.SkipLevel}}
 	}
 
 	return assesses, nil

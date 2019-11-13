@@ -43,7 +43,7 @@ func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []*types.A
 func checkAssessments(img types.Image) (assesses []*types.Assessment, err error) {
 	if img.Config.User == "" || img.Config.User == "root" {
 		assesses = append(assesses, &types.Assessment{
-			Type:     types.AvoidRootDefault,
+			Code:     types.AvoidRootDefault,
 			Filename: ConfigFileName,
 			Desc:     "Last user should not be root",
 		})
@@ -58,7 +58,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 					continue
 				}
 				assesses = append(assesses, &types.Assessment{
-					Type:     types.AvoidEnvKeySecret,
+					Code:     types.AvoidCredential,
 					Filename: ConfigFileName,
 					Desc:     fmt.Sprintf("Suspicious ENV key found : %s", envKey),
 				})
@@ -68,7 +68,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 
 	if img.Config.Healthcheck == nil {
 		assesses = append(assesses, &types.Assessment{
-			Type:     types.AddHealthcheck,
+			Code:     types.AddHealthcheck,
 			Filename: ConfigFileName,
 			Desc:     "not found HEALTHCHECK statement",
 		})
@@ -94,7 +94,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 	for volume := range img.Config.Volumes {
 		if _, ok := sensitiveDirs[volume]; ok {
 			assesses = append(assesses, &types.Assessment{
-				Type:     types.AvoidSensitiveDirectoryMounting,
+				Code:     types.AvoidSensitiveDirectoryMounting,
 				Filename: ConfigFileName,
 				Desc:     fmt.Sprintf("Avoid mounting sensitive dirs : %s", volume),
 			})
@@ -127,7 +127,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 	cmdSlices := splitByCommands(cmd.CreatedBy)
 	if reducableApkAdd(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
-			Type:     types.UseApkAddNoCache,
+			Code:     types.UseApkAddNoCache,
 			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Use --no-cache option if use 'apk add': %s", cmd.CreatedBy),
 		})
@@ -135,7 +135,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 
 	if reducableAptGetInstall(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
-			Type:     types.MinimizeAptGet,
+			Code:     types.MinimizeAptGet,
 			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Use 'rm -rf /var/lib/apt/lists' after 'apt-get install' : %s", cmd.CreatedBy),
 		})
@@ -143,7 +143,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 
 	if reducableAptGetUpdate(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
-			Type:     types.UseAptGetUpdateNoCache,
+			Code:     types.UseAptGetUpdateNoCache,
 			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Always combine 'apt-get update' with 'apt-get install' : %s", cmd.CreatedBy),
 		})
@@ -151,7 +151,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 
 	if index != 0 && useADDstatement(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
-			Type:     types.UseCOPY,
+			Code:     types.UseCOPY,
 			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Use COPY : %s", cmd.CreatedBy),
 		})
@@ -159,14 +159,14 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 
 	if useDistUpgrade(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
-			Type:     types.AvoidDistUpgrade,
+			Code:     types.AvoidDistUpgrade,
 			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Avoid upgrade in container : %s", cmd.CreatedBy),
 		})
 	}
 	if useSudo(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
-			Type:     types.AvoidSudo,
+			Code:     types.AvoidSudo,
 			Filename: ConfigFileName,
 			Desc:     fmt.Sprintf("Avoid sudo in container : %s", cmd.CreatedBy),
 		})
