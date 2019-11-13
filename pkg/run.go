@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	l "log"
@@ -27,6 +28,7 @@ var (
 )
 
 func Run(c *cli.Context) (err error) {
+	ctx := context.Background()
 	debug := c.Bool("debug")
 	if err = log.InitLogger(debug); err != nil {
 		l.Fatal(err)
@@ -82,7 +84,7 @@ func Run(c *cli.Context) (err error) {
 	}
 	log.Logger.Debug("Start assessments...")
 
-	assessments, err := scanner.ScanImage(imageName, filePath, dockerOption)
+	assessments, err := scanner.ScanImage(ctx, imageName, filePath, dockerOption)
 	if err != nil {
 		return err
 	}

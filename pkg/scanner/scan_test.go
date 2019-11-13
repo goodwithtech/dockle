@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"context"
 	"errors"
 	"testing"
 	"time"
@@ -55,7 +56,8 @@ func TestScanImage(t *testing.T) {
 		},
 	}
 	for name, v := range testcases {
-		assesses, err := ScanImage(v.imageName, v.fileName, v.option)
+		ctx := context.Background()
+		assesses, err := ScanImage(ctx, v.imageName, v.fileName, v.option)
 		if !errors.Is(v.wantErr, err) {
 			t.Errorf("%s: error got %v, want %v", name, err, v.wantErr)
 		}
