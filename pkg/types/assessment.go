@@ -6,24 +6,38 @@ type Assessment struct {
 	Filename string
 	Desc     string
 }
+type AssessmentSlice []*Assessment
+type CodeInfo struct {
+	Code        string
+	Level       int
+	Assessments AssessmentSlice
+}
+type AssessmentMap map[string]CodeInfo
 
-type AssessmentMap map[string][]*Assessment
-
-func CreateAssessmentMap(as AssessmentSlice) AssessmentMap {
+func CreateAssessmentMap(as AssessmentSlice, ignoreMap map[string]struct{}) AssessmentMap {
 	asMap := AssessmentMap{}
 	for _, a := range as {
+		level := DefaultLevelMap[a.Code]
+		if _, ok := ignoreMap[a.Code]; ok {
+			level = IgnoreLevel
+		}
 		if _, ok := asMap[a.Code]; !ok {
-			asMap[a.Code] = []*Assessment{
-				a,
+			asMap[a.Code] = CodeInfo{
+				Code:        a.Code,
+				Level:       level,
+				Assessments: []*Assessment{a},
 			}
 		} else {
-			asMap[a.Code] = append(asMap[a.Code], a)
+			asMap[a.Code] = CodeInfo{
+				Code:        a.Code,
+				Level:       level,
+				Assessments: append(asMap[a.Code].Assessments, a),
+			}
 		}
 	}
 	return asMap
 }
 
-type AssessmentSlice []*Assessment
 type ByLevel []Assessment
 
 func (a ByLevel) Len() int { return len(a) }

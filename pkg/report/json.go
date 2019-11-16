@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/goodwithtech/dockle/config"
+
 	"github.com/goodwithtech/dockle/pkg/types"
 )
 
@@ -29,18 +31,16 @@ type JsonDetail struct {
 	Alerts []string `json:"alerts"`
 }
 
-func (jw JsonWriter) Write(assessMap types.AssessmentMap) (bool, error) {
-	abend := types.AssessmentSlice{}
-	abendAssessments := &abend
+func (jw JsonWriter) Write(assessMap types.AssessmentMap) (abend bool, err error) {
 	jsonSummary := JsonSummary{}
 	jsonDetails := []*JsonDetail{}
 	codeOrderLevel := getCodeOrder()
 	for _, ass := range codeOrderLevel {
-		assesses, ok := assessMap[ass.Code]
-		if !ok {
+		if _, ok := assessMap[ass.Code]; !ok {
 			jsonSummary.Pass++
 			continue
 		}
+		assesses := assessMap[ass.Code].Assessments
 		detail := jsonDetail(ass.Code, ass.Level, assesses)
 		if detail != nil {
 			jsonDetails = append(jsonDetails, detail)
@@ -55,6 +55,9 @@ func (jw JsonWriter) Write(assessMap types.AssessmentMap) (bool, error) {
 		case types.InfoLevel:
 			jsonSummary.Info++
 		}
+		if ass.Level >= config.Conf.ExitLevel {
+			abend = true
+		}
 	}
 	result := JsonOutputFormat{
 		Summary: jsonSummary,
@@ -68,7 +71,7 @@ func (jw JsonWriter) Write(assessMap types.AssessmentMap) (bool, error) {
 	if _, err = fmt.Fprint(jw.Output, string(output)); err != nil {
 		return false, fmt.Errorf("failed to write json: %w", err)
 	}
-	return len(*abendAssessments) > 0, nil
+	return abend, nil
 }
 func jsonDetail(code string, level int, assessments []*types.Assessment) (jsonInfo *JsonDetail) {
 	if len(assessments) == 0 {

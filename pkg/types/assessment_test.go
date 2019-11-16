@@ -10,9 +10,9 @@ import (
 func TestCreateAssessmentMap(t *testing.T) {
 	testcases := map[string]struct {
 		as       AssessmentSlice
+		ig       map[string]struct{}
 		expected AssessmentMap
 	}{
-
 		"OK": {
 			as: AssessmentSlice{
 				{Code: "a", Filename: "a"},
@@ -20,21 +20,57 @@ func TestCreateAssessmentMap(t *testing.T) {
 				{Code: "a", Filename: "c"},
 				{Code: "a", Filename: "b"},
 			},
-			expected: map[string][]*Assessment{
+			ig: map[string]struct{}{},
+			expected: map[string]CodeInfo{
 				"a": {
-					{Code: "a", Filename: "a"},
-					{Code: "a", Filename: "c"},
-					{Code: "a", Filename: "b"},
+					Code:  "a",
+					Level: 0,
+					Assessments: []*Assessment{
+						{Code: "a", Filename: "a"},
+						{Code: "a", Filename: "c"},
+						{Code: "a", Filename: "b"},
+					},
 				},
 				"b": {
-					{Code: "b", Filename: "b"},
+					Code:  "b",
+					Level: 0,
+					Assessments: []*Assessment{
+						{Code: "b", Filename: "b"},
+					},
+				},
+			},
+		},
+		"IgnoreB": {
+			as: AssessmentSlice{
+				{Code: "a", Filename: "a"},
+				{Code: "b", Filename: "b"},
+				{Code: "a", Filename: "c"},
+				{Code: "a", Filename: "b"},
+			},
+			ig: map[string]struct{}{"b": {}},
+			expected: map[string]CodeInfo{
+				"a": {
+					Code:  "a",
+					Level: 0,
+					Assessments: []*Assessment{
+						{Code: "a", Filename: "a"},
+						{Code: "a", Filename: "c"},
+						{Code: "a", Filename: "b"},
+					},
+				},
+				"b": {
+					Code:  "b",
+					Level: IgnoreLevel,
+					Assessments: []*Assessment{
+						{Code: "b", Filename: "b"},
+					},
 				},
 			},
 		},
 	}
 
 	for name, v := range testcases {
-		actual := CreateAssessmentMap(v.as)
+		actual := CreateAssessmentMap(v.as, v.ig)
 		cmpopts := []cmp.Option{
 			cmpopts.SortSlices(func(x, y Assessment) bool {
 				if x.Code == y.Code {

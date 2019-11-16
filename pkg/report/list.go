@@ -31,22 +31,19 @@ type ListWriter struct {
 	Output io.Writer
 }
 
-func (lw ListWriter) Write(assessMap types.AssessmentMap) (bool, error) {
-	abend := types.AssessmentSlice{}
-	abendAssessments := &abend
-
+func (lw ListWriter) Write(assessMap types.AssessmentMap) (abend bool, err error) {
 	codeOrderLevel := getCodeOrder()
 	for _, ass := range codeOrderLevel {
-		assesses, ok := assessMap[ass.Code]
-		if !ok {
+		if _, ok := assessMap[ass.Code]; !ok {
 			continue
 		}
+		assesses := assessMap[ass.Code].Assessments
 		showTargetResult(ass.Code, ass.Level, assesses)
-		for _, assessment := range assesses {
-			abendAssessments.AddAbend(assessment, config.Conf.ExitLevel)
+		if ass.Level >= config.Conf.ExitLevel {
+			abend = true
 		}
 	}
-	return len(*abendAssessments) > 0, nil
+	return abend, nil
 }
 
 func showTargetResult(code string, level int, assessments []*types.Assessment) {
