@@ -23,10 +23,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-var (
-	ignoreCheckpointMap map[string]struct{}
-)
-
 func Run(c *cli.Context) (err error) {
 	ctx := context.Background()
 	debug := c.Bool("debug")

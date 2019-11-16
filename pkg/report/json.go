@@ -41,13 +41,13 @@ func (jw JsonWriter) Write(assessMap types.AssessmentMap) (bool, error) {
 			jsonSummary.Pass++
 			continue
 		}
-		level, detail := jsonDetail(ass.Code, assesses)
+		detail := jsonDetail(ass.Code, ass.Level, assesses)
 		if detail != nil {
 			jsonDetails = append(jsonDetails, detail)
 		}
 
 		// increment summary
-		switch level {
+		switch ass.Level {
 		case types.FatalLevel:
 			jsonSummary.Fatal++
 		case types.WarnLevel:
@@ -70,9 +70,9 @@ func (jw JsonWriter) Write(assessMap types.AssessmentMap) (bool, error) {
 	}
 	return len(*abendAssessments) > 0, nil
 }
-func jsonDetail(code string, assessments []*types.Assessment) (level int, jsonInfo *JsonDetail) {
+func jsonDetail(code string, level int, assessments []*types.Assessment) (jsonInfo *JsonDetail) {
 	if len(assessments) == 0 {
-		return types.PassLevel, nil
+		return nil
 	}
 	alerts := []string{}
 	for _, assessment := range assessments {
@@ -84,5 +84,5 @@ func jsonDetail(code string, assessments []*types.Assessment) (level int, jsonIn
 		Level:  AlertLabels[level],
 		Alerts: alerts,
 	}
-	return level, jsonInfo
+	return jsonInfo
 }
