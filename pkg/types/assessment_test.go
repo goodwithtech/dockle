@@ -20,11 +20,11 @@ func TestCreateAssessmentMap(t *testing.T) {
 				{Code: "a", Filename: "c"},
 				{Code: "a", Filename: "b"},
 			},
-			expected: map[string][]Assessment{
+			expected: map[string][]*Assessment{
 				"a": {
 					{Code: "a", Filename: "a"},
-					{Code: "a", Filename: "b"},
 					{Code: "a", Filename: "c"},
+					{Code: "a", Filename: "b"},
 				},
 				"b": {
 					{Code: "b", Filename: "b"},
