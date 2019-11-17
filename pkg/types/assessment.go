@@ -48,15 +48,3 @@ func (a ByLevel) Less(i, j int) bool {
 	return a[i].Level > a[j].Level
 }
 func (a ByLevel) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-
-// AddAbend add assessment to AssessmentSlice pointer if abend level
-func (as AssessmentSlice) AddAbend(assessment *Assessment, exitLevel int) {
-	level := assessment.Level
-	if level == 0 {
-		level = DefaultLevelMap[assessment.Code]
-	}
-	if level < exitLevel {
-		return
-	}
-	as = append(as, assessment)
-}
