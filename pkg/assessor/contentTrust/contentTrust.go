@@ -18,7 +18,7 @@ func (a ContentTrustAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assess
 	if os.Getenv("DOCKER_CONTENT_TRUST") != "1" {
 		return []*types.Assessment{
 			{
-				Type:     types.UseContentTrust,
+				Code:     types.UseContentTrust,
 				Filename: HostEnvironmentFileName,
 				Desc:     "export DOCKER_CONTENT_TRUST=1 before docker pull/build",
 			},

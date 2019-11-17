@@ -36,7 +36,7 @@ func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, 
 				assesses = append(
 					assesses,
 					&types.Assessment{
-						Type:     types.AvoidEmptyPassword,
+						Code:     types.AvoidEmptyPassword,
 						Filename: filename,
 						Desc:     fmt.Sprintf("No password user found! username : %s", passData[0]),
 					})
@@ -44,7 +44,7 @@ func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, 
 		}
 	}
 	if !existFile {
-		assesses = []*types.Assessment{{Type: types.AvoidEmptyPassword, Level: types.SkipLevel}}
+		assesses = []*types.Assessment{{Code: types.AvoidEmptyPassword, Level: types.SkipLevel}}
 	}
 	return assesses, nil
 }

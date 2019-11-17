@@ -20,8 +20,7 @@ $ dockle [YOUR_IMAGE_NAME]
 ```
 See [Installation](#installation) and [Common Examples](#common-examples)
 
-<img src="imgs/usage_pass_light.png" width="800">
-<img src="imgs/usage_fail_light.png" width="800">
+<img src="imgs/dockle.gif" width="800">
 
 # Checkpoints Comparison
 
@@ -182,27 +181,39 @@ $ dockle [YOUR_IMAGE_NAME]
 <summary>Result</summary>
 
 ```
+FATAL   - CIS-DI-0009: Use COPY instead of ADD in Dockerfile
+        * Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
+FATAL   - CIS-DI-0010: Do not store credential in ENVIRONMENT vars/files
+        * Suspicious filename found : app/credentials.json
+FATAL   - DKL-DI-0005: Clear apt-get caches
+        * Use 'rm -rf /var/lib/apt/lists' after 'apt-get install' : /bin/sh -c apt-get update && apt-get install -y git
+FATAL   - DKL-LI-0001: Avoid empty password
+        * No password user found! username : nopasswd
 WARN    - CIS-DI-0001: Create a user for the container
         * Last user should not be root
 INFO    - CIS-DI-0005: Enable Content trust for Docker
         * export DOCKER_CONTENT_TRUST=1 before docker pull/build
-WARN    - CIS-DI-0006: Add HEALTHCHECK instruction to the container image
-        * not found HEALTHCHECK statement
-PASS    - CIS-DI-0007: Do not use update instructions alone in the Dockerfile
-PASS    - CIS-DI-0008: Remove setuid and setgid permissions in the images
-PASS    - CIS-DI-0009: Use COPY instead of ADD in Dockerfile
-PASS    - CIS-DI-0010: Do not store secrets in ENVIRONMENT variables
-PASS    - CIS-DI-0010: Do not store secret files
-PASS    - DKL-DI-0001: Avoid sudo command
-PASS    - DKL-DI-0002: Avoid sensitive directory mounting
-PASS    - DKL-DI-0003: Avoid apt-get/apk/dist-upgrade
-PASS    - DKL-DI-0004: Use apk add with --no-cache
-PASS    - DKL-DI-0005: Clear apt-get caches
-WARN    - DKL-DI-0006: Avoid latest tag
-        * Avoid 'latest' tag
-PASS    - DKL-LI-0001: Avoid empty password
-PASS    - DKL-LI-0002: Be unique UID
-PASS    - DKL-LI-0002: Be unique GROUP
+INFO    - CIS-DI-0008: Confirm safety of setuid/setgid files
+        * setuid file: app/suid.txt urw-r--r--
+        * setgid file: app/gid.txt grw-r--r--
+        * setuid file: usr/bin/gpasswd urwxr-xr-x
+        * setgid file: usr/bin/wall grwxr-xr-x
+        * setuid file: bin/su urwxr-xr-x
+        * setuid file: bin/umount urwxr-xr-x
+        * setuid file: bin/mount urwxr-xr-x
+        * setgid file: usr/bin/ssh-agent grwxr-xr-x
+        * setuid file: etc/shadow urw-r-----
+        * setuid file: usr/bin/chsh urwxr-xr-x
+        * setuid file: usr/bin/chfn urwxr-xr-x
+        * setuid file: usr/lib/openssh/ssh-keysign urwxr-xr-x
+        * setgid file: etc/passwd grw-r--r--
+        * setgid file: sbin/unix_chkpwd grwxr-xr-x
+        * setgid file: usr/bin/chage grwxr-xr-x
+        * setuid file: usr/bin/passwd urwxr-xr-x
+        * setgid file: usr/bin/expiry grwxr-xr-x
+        * setuid file: usr/bin/newgrp urwxr-xr-x
+IGNORE  - CIS-DI-0006: Add HEALTHCHECK instruction to the container image
+
 ```
 
 </details>
@@ -237,7 +248,7 @@ $ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 | [CIS-DI-0002](CHECKPOINT.md#cis-di-0002-use-trusted-base-images-for-containers) | Use trusted base images for containers | FATAL
 | [CIS-DI-0003](CHECKPOINT.md#cis-di-0003-do-not-install-unnecessary-packages-in-the-container) | Do not install unnecessary packages in the container | FATAL
 | [CIS-DI-0004](CHECKPOINT.md#cis-di-0004-scan-and-rebuild-the-images-to-include-security-patches) | Scan and rebuild the images to include security patches | FATAL
-| [CIS-DI-0005](CHECKPOINT.md#cis-di-0005-enable-content-trust-for-docker) | Enable Content trust for Docker | FATAL
+| [CIS-DI-0005](CHECKPOINT.md#cis-di-0005-enable-content-trust-for-docker) | Enable Content trust for Docker | INFO
 | [CIS-DI-0006](CHECKPOINT.md#cis-di-0006-add-healthcheck-instruction-to-the-container-image) | Add `HEALTHCHECK` instruction to the container image | WARN
 | [CIS-DI-0007](CHECKPOINT.md#cis-di-0007-do-not-use-update-instructions-alone-in-the-dockerfile) | Do not use `update` instructions alone in the Dockerfile | FATAL
 | [CIS-DI-0008](CHECKPOINT.md#cis-di-0008-comfirm-safety-of-setuid-setgid-files) | Confirm safety of `setuid` and `setgid` files | INFO

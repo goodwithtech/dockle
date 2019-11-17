@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/goodwithtech/dockle/config"
+
 	"github.com/goodwithtech/dockle/pkg/types"
 )
 
@@ -29,35 +31,33 @@ type JsonDetail struct {
 	Alerts []string `json:"alerts"`
 }
 
-func (jw JsonWriter) Write(assessments AssessmentSlice) (bool, error) {
-	abend := AssessmentSlice{}
-	abendAssessments := &abend
+func (jw JsonWriter) Write(assessMap types.AssessmentMap) (abend bool, err error) {
 	jsonSummary := JsonSummary{}
 	jsonDetails := []*JsonDetail{}
-	targetType := types.MinTypeNumber
-	for targetType <= types.MaxTypeNumber {
-		filtered := assessments.FilteredByTargetCode(targetType)
-		level, detail := jsonDetail(targetType, filtered)
+	codeOrderLevel := getCodeOrder()
+	for _, ass := range codeOrderLevel {
+		if _, ok := assessMap[ass.Code]; !ok {
+			jsonSummary.Pass++
+			continue
+		}
+		assesses := assessMap[ass.Code].Assessments
+		detail := jsonDetail(ass.Code, ass.Level, assesses)
 		if detail != nil {
 			jsonDetails = append(jsonDetails, detail)
 		}
 
 		// increment summary
-		switch level {
+		switch ass.Level {
 		case types.FatalLevel:
 			jsonSummary.Fatal++
 		case types.WarnLevel:
 			jsonSummary.Warn++
 		case types.InfoLevel:
 			jsonSummary.Info++
-		default:
-			jsonSummary.Pass++
 		}
-
-		for _, assessment := range filtered {
-			abendAssessments.AddAbend(assessment)
+		if ass.Level >= config.Conf.ExitLevel {
+			abend = true
 		}
-		targetType++
 	}
 	result := JsonOutputFormat{
 		Summary: jsonSummary,
@@ -71,31 +71,21 @@ func (jw JsonWriter) Write(assessments AssessmentSlice) (bool, error) {
 	if _, err = fmt.Fprint(jw.Output, string(output)); err != nil {
 		return false, fmt.Errorf("failed to write json: %w", err)
 	}
-	return len(*abendAssessments) > 0, nil
+	return abend, nil
 }
-func jsonDetail(assessmentType int, assessments []*types.Assessment) (level int, jsonInfo *JsonDetail) {
+func jsonDetail(code string, level int, assessments []*types.Assessment) (jsonInfo *JsonDetail) {
 	if len(assessments) == 0 {
-		return types.PassLevel, nil
+		return nil
 	}
-	if assessments[0].Level == types.SkipLevel {
-		return types.SkipLevel, nil
-	}
-
-	detail := types.AlertDetails[assessmentType]
-	level = detail.DefaultLevel
-	if assessments[0].Level == types.IgnoreLevel {
-		level = types.IgnoreLevel
-	}
-
 	alerts := []string{}
 	for _, assessment := range assessments {
 		alerts = append(alerts, assessment.Desc)
 	}
 	jsonInfo = &JsonDetail{
-		Code:   detail.Code,
-		Title:  detail.Title,
+		Code:   code,
+		Title:  types.TitleMap[code],
 		Level:  AlertLabels[level],
 		Alerts: alerts,
 	}
-	return level, jsonInfo
+	return jsonInfo
 }

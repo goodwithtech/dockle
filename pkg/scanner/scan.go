@@ -21,8 +21,7 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-func ScanImage(imageName, filePath string, dockerOption deckodertypes.DockerOption) (assessments []*types.Assessment, err error) {
-	ctx := context.Background()
+func ScanImage(ctx context.Context, imageName, filePath string, dockerOption deckodertypes.DockerOption) (assessments []*types.Assessment, err error) {
 	var files extractor.FileMap
 	filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredPermissions())
 	if imageName != "" {

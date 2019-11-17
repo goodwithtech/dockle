@@ -20,11 +20,11 @@ func TestAssess(t *testing.T) {
 			path: "./testdata/root_default.json",
 			assesses: []*types.Assessment{
 				{
-					Type:     types.AvoidRootDefault,
+					Code:     types.AvoidRootDefault,
 					Filename: ConfigFileName,
 				},
 				{
-					Type:     types.AddHealthcheck,
+					Code:     types.AddHealthcheck,
 					Filename: ConfigFileName,
 				},
 			},
@@ -34,19 +34,19 @@ func TestAssess(t *testing.T) {
 
 			assesses: []*types.Assessment{
 				{
-					Type:     types.AvoidRootDefault,
+					Code:     types.AvoidRootDefault,
 					Filename: ConfigFileName,
 				},
 				{
-					Type:     types.UseApkAddNoCache,
+					Code:     types.UseApkAddNoCache,
 					Filename: ConfigFileName,
 				},
 				{
-					Type:     types.AddHealthcheck,
+					Code:     types.AddHealthcheck,
 					Filename: ConfigFileName,
 				},
 				{
-					Type:     types.UseCOPY,
+					Code:     types.UseCOPY,
 					Filename: ConfigFileName,
 				},
 			},
@@ -386,10 +386,10 @@ func loadImageFromFile(path string) (config types.Image, err error) {
 
 func sortByType(assesses []*types.Assessment) []*types.Assessment {
 	sort.Slice(assesses, func(i, j int) bool {
-		if assesses[i].Type != assesses[j].Type {
-			return assesses[i].Type < assesses[j].Type
+		if assesses[i].Code != assesses[j].Code {
+			return assesses[i].Code < assesses[j].Code
 		}
-		return assesses[i].Type < assesses[j].Type
+		return assesses[i].Code < assesses[j].Code
 	})
 	return assesses
 }

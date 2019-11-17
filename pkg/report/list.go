@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/goodwithtech/dockle/config"
+
 	"github.com/goodwithtech/dockle/pkg/color"
 	"github.com/goodwithtech/dockle/pkg/types"
 )
@@ -29,38 +31,23 @@ type ListWriter struct {
 	Output io.Writer
 }
 
-func (lw ListWriter) Write(assessments AssessmentSlice) (bool, error) {
-	abend := AssessmentSlice{}
-	abendAssessments := &abend
-	targetType := types.MinTypeNumber
-	for targetType <= types.MaxTypeNumber {
-		filtered := assessments.FilteredByTargetCode(targetType)
-		showTargetResult(targetType, filtered)
-
-		for _, assessment := range filtered {
-			abendAssessments.AddAbend(assessment)
+func (lw ListWriter) Write(assessMap types.AssessmentMap) (abend bool, err error) {
+	codeOrderLevel := getCodeOrder()
+	for _, ass := range codeOrderLevel {
+		if _, ok := assessMap[ass.Code]; !ok {
+			continue
 		}
-		targetType++
+		assesses := assessMap[ass.Code].Assessments
+		showTargetResult(ass.Code, ass.Level, assesses)
+		if ass.Level >= config.Conf.ExitLevel {
+			abend = true
+		}
 	}
-	return len(*abendAssessments) > 0, nil
+	return abend, nil
 }
 
-func showTargetResult(assessmentType int, assessments []*types.Assessment) {
-	if len(assessments) == 0 {
-		showTitleLine(assessmentType, types.PassLevel)
-		return
-	}
-
-	if assessments[0].Level == types.SkipLevel {
-		showTitleLine(assessmentType, types.SkipLevel)
-		return
-	}
-	detail := types.AlertDetails[assessmentType]
-	level := detail.DefaultLevel
-	if assessments[0].Level == types.IgnoreLevel {
-		level = types.IgnoreLevel
-	}
-	showTitleLine(assessmentType, level)
+func showTargetResult(code string, level int, assessments []*types.Assessment) {
+	showTitleLine(code, level)
 	if level != types.IgnoreLevel {
 		for _, assessment := range assessments {
 			showDescription(assessment)
@@ -68,10 +55,9 @@ func showTargetResult(assessmentType int, assessments []*types.Assessment) {
 	}
 }
 
-func showTitleLine(assessmentType int, level int) {
+func showTitleLine(code string, level int) {
 	cyan := color.Cyan
-	detail := types.AlertDetails[assessmentType]
-	fmt.Print(colorizeAlert(level), TAB, "-", SPACE, cyan.Add(detail.Code), COLON, SPACE, detail.Title, NEWLINE)
+	fmt.Print(colorizeAlert(level), TAB, "-", SPACE, cyan.Add(code), COLON, SPACE, types.TitleMap[code], NEWLINE)
 }
 
 func showDescription(assessment *types.Assessment) {

@@ -18,7 +18,7 @@ func (a PrivilegeAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessmen
 			assesses = append(
 				assesses,
 				&types.Assessment{
-					Type:     types.CheckSuidGuid,
+					Code:     types.CheckSuidGuid,
 					Filename: filename,
 					Desc:     fmt.Sprintf("setuid file: %s %s", filename, filedata.FileMode),
 				})
@@ -27,7 +27,7 @@ func (a PrivilegeAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessmen
 			assesses = append(
 				assesses,
 				&types.Assessment{
-					Type:     types.CheckSuidGuid,
+					Code:     types.CheckSuidGuid,
 					Filename: filename,
 					Desc:     fmt.Sprintf("setgid file: %s %s", filename, filedata.FileMode),
 				})

@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"context"
 	"errors"
 	"testing"
 	"time"
@@ -34,20 +35,20 @@ func TestScanImage(t *testing.T) {
 			imageName: "goodwithtech/dockle-test:base-test",
 			option:    deckodertypes.DockerOption{Timeout: time.Minute},
 			expected: []*types.Assessment{
-				{Type: types.AvoidEmptyPassword, Filename: "etc/shadow"},
-				{Type: types.AvoidRootDefault, Filename: manifest.ConfigFileName},
-				{Type: types.AvoidCredentialFile, Filename: "app/credentials.json"},
-				{Type: types.CheckSuidGuid, Filename: "app/gid.txt"},
-				{Type: types.CheckSuidGuid, Filename: "app/suid.txt"},
-				{Type: types.CheckSuidGuid, Filename: "bin/mount"},
-				{Type: types.CheckSuidGuid, Filename: "bin/su"},
-				{Type: types.CheckSuidGuid, Filename: "bin/umount"},
-				{Type: types.CheckSuidGuid, Filename: "usr/lib/openssh/ssh-keysign"},
-				{Type: types.UseCOPY, Filename: manifest.ConfigFileName},
-				{Type: types.AddHealthcheck, Filename: manifest.ConfigFileName},
-				{Type: types.MinimizeAptGet, Filename: manifest.ConfigFileName},
-				{Type: types.AvoidEnvKeySecret, Filename: manifest.ConfigFileName},
-				{Type: types.UseContentTrust, Filename: contentTrust.HostEnvironmentFileName},
+				{Code: types.AvoidEmptyPassword, Filename: "etc/shadow"},
+				{Code: types.AvoidRootDefault, Filename: manifest.ConfigFileName},
+				{Code: types.AvoidCredential, Filename: "app/credentials.json"},
+				{Code: types.CheckSuidGuid, Filename: "app/gid.txt"},
+				{Code: types.CheckSuidGuid, Filename: "app/suid.txt"},
+				{Code: types.CheckSuidGuid, Filename: "bin/mount"},
+				{Code: types.CheckSuidGuid, Filename: "bin/su"},
+				{Code: types.CheckSuidGuid, Filename: "bin/umount"},
+				{Code: types.CheckSuidGuid, Filename: "usr/lib/openssh/ssh-keysign"},
+				{Code: types.UseCOPY, Filename: manifest.ConfigFileName},
+				{Code: types.AddHealthcheck, Filename: manifest.ConfigFileName},
+				{Code: types.MinimizeAptGet, Filename: manifest.ConfigFileName},
+				{Code: types.AvoidCredential, Filename: manifest.ConfigFileName},
+				{Code: types.UseContentTrust, Filename: contentTrust.HostEnvironmentFileName},
 			},
 		},
 		"emptyArg": {
@@ -55,17 +56,18 @@ func TestScanImage(t *testing.T) {
 		},
 	}
 	for name, v := range testcases {
-		assesses, err := ScanImage(v.imageName, v.fileName, v.option)
+		ctx := context.Background()
+		assesses, err := ScanImage(ctx, v.imageName, v.fileName, v.option)
 		if !errors.Is(v.wantErr, err) {
 			t.Errorf("%s: error got %v, want %v", name, err, v.wantErr)
 		}
 
 		cmpopts := []cmp.Option{
 			cmpopts.SortSlices(func(x, y *types.Assessment) bool {
-				if x.Type == y.Type {
+				if x.Code == y.Code {
 					return x.Filename < y.Filename
 				}
-				return x.Type < y.Type
+				return x.Code < y.Code
 			}),
 			cmpopts.IgnoreFields(types.Assessment{}, "Desc"),
 		}

@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	l "log"
@@ -22,11 +23,8 @@ import (
 	"github.com/urfave/cli"
 )
 
-var (
-	ignoreCheckpointMap map[string]struct{}
-)
-
 func Run(c *cli.Context) (err error) {
+	ctx := context.Background()
 	debug := c.Bool("debug")
 	if err = log.InitLogger(debug); err != nil {
 		l.Fatal(err)
@@ -82,13 +80,13 @@ func Run(c *cli.Context) (err error) {
 	}
 	log.Logger.Debug("Start assessments...")
 
-	assessments, err := scanner.ScanImage(imageName, filePath, dockerOption)
+	assessments, err := scanner.ScanImage(ctx, imageName, filePath, dockerOption)
 	if err != nil {
 		return err
 	}
 	if useLatestTag {
 		assessments = append(assessments, &types.Assessment{
-			Type:     types.AvoidLatestTag,
+			Code:     types.AvoidLatestTag,
 			Filename: "image tag",
 			Desc:     "Avoid 'latest' tag",
 		})
@@ -96,6 +94,7 @@ func Run(c *cli.Context) (err error) {
 
 	log.Logger.Debug("End assessments...")
 
+	assessmentMap := types.CreateAssessmentMap(assessments, config.Conf.IgnoreMap)
 	// Store ignore checkpoint code
 	o := c.String("output")
 	output := os.Stdout
@@ -113,7 +112,7 @@ func Run(c *cli.Context) (err error) {
 		writer = &report.ListWriter{Output: output}
 	}
 
-	abend, err := writer.Write(assessments)
+	abend, err := writer.Write(assessmentMap)
 	if err != nil {
 		return fmt.Errorf("failed to write results: %w", err)
 	}
