@@ -6,16 +6,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/goodwithtech/dockle/pkg/assessor/contentTrust"
-
-	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
-
 	"github.com/google/go-cmp/cmp/cmpopts"
 
 	deckodertypes "github.com/goodwithtech/deckoder/types"
 
 	"github.com/google/go-cmp/cmp"
 
+	"github.com/goodwithtech/dockle/pkg/assessor/contentTrust"
+	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
 	"github.com/goodwithtech/dockle/pkg/log"
 	"github.com/goodwithtech/dockle/pkg/types"
 )
@@ -30,7 +28,7 @@ func TestScanImage(t *testing.T) {
 		expected  []*types.Assessment
 	}{
 		"Dockerfile.base": {
-			fileName: "",
+			// TODO : too large to use github / fileName:  "base.tar",
 			// testdata/Dockerfile.base
 			imageName: "goodwithtech/dockle-test:base-test",
 			option:    deckodertypes.DockerOption{Timeout: time.Minute},
@@ -49,6 +47,17 @@ func TestScanImage(t *testing.T) {
 				{Code: types.MinimizeAptGet, Filename: manifest.ConfigFileName},
 				{Code: types.AvoidCredential, Filename: manifest.ConfigFileName},
 				{Code: types.UseContentTrust, Filename: contentTrust.HostEnvironmentFileName},
+			},
+		},
+		"Dockerfile.scratch": {
+			fileName: "./testdata/scratch.tar",
+			expected: []*types.Assessment{
+				{Code: types.AvoidCredential, Filename: "credentials.json"},
+				{Code: types.AddHealthcheck, Filename: manifest.ConfigFileName},
+				{Code: types.UseContentTrust, Filename: contentTrust.HostEnvironmentFileName},
+				{Code: types.AvoidEmptyPassword, Level: types.SkipLevel},
+				{Code: types.AvoidDuplicateUserGroup, Level: types.SkipLevel},
+				{Code: types.AvoidDuplicateUserGroup, Level: types.SkipLevel},
 			},
 		},
 		"emptyArg": {
