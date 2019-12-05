@@ -47,7 +47,11 @@ func (a UserAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, er
 		}
 	}
 	if !existFile {
-		assesses = []*types.Assessment{{Code: types.AvoidDuplicateUserGroup, Level: types.SkipLevel}}
+		assesses = []*types.Assessment{{
+			Code:  types.AvoidDuplicateUserGroup,
+			Level: types.SkipLevel,
+			Desc:  fmt.Sprintf("failed to detect %s", strings.Join(a.RequiredFiles(), ",")),
+		}}
 	}
 
 	return assesses, nil
