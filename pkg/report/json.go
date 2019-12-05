@@ -22,6 +22,7 @@ type JsonSummary struct {
 	Fatal int `json:"fatal"`
 	Warn  int `json:"warn"`
 	Info  int `json:"info"`
+	Skip  int `json:"skip"`
 	Pass  int `json:"pass"`
 }
 type JsonDetail struct {
@@ -40,22 +41,24 @@ func (jw JsonWriter) Write(assessMap types.AssessmentMap) (abend bool, err error
 			jsonSummary.Pass++
 			continue
 		}
-		assesses := assessMap[ass.Code].Assessments
-		detail := jsonDetail(ass.Code, ass.Level, assesses)
+		assess := assessMap[ass.Code]
+		detail := jsonDetail(assess.Code, assess.Level, assess.Assessments)
 		if detail != nil {
 			jsonDetails = append(jsonDetails, detail)
 		}
 
 		// increment summary
-		switch ass.Level {
+		switch assess.Level {
 		case types.FatalLevel:
 			jsonSummary.Fatal++
 		case types.WarnLevel:
 			jsonSummary.Warn++
 		case types.InfoLevel:
 			jsonSummary.Info++
+		case types.SkipLevel:
+			jsonSummary.Skip++
 		}
-		if ass.Level >= config.Conf.ExitLevel {
+		if assess.Level >= config.Conf.ExitLevel {
 			abend = true
 		}
 	}

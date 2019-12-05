@@ -17,7 +17,10 @@ type AssessmentMap map[string]CodeInfo
 func CreateAssessmentMap(as AssessmentSlice, ignoreMap map[string]struct{}) AssessmentMap {
 	asMap := AssessmentMap{}
 	for _, a := range as {
-		level := DefaultLevelMap[a.Code]
+		level := a.Level
+		if level == 0 {
+			level = DefaultLevelMap[a.Code]
+		}
 		if _, ok := ignoreMap[a.Code]; ok {
 			level = IgnoreLevel
 		}

@@ -37,9 +37,9 @@ func (lw ListWriter) Write(assessMap types.AssessmentMap) (abend bool, err error
 		if _, ok := assessMap[ass.Code]; !ok {
 			continue
 		}
-		assesses := assessMap[ass.Code].Assessments
-		showTargetResult(ass.Code, ass.Level, assesses)
-		if ass.Level >= config.Conf.ExitLevel {
+		assess := assessMap[ass.Code]
+		showTargetResult(assess.Code, assess.Level, assess.Assessments)
+		if assess.Level >= config.Conf.ExitLevel {
 			abend = true
 		}
 	}
@@ -48,7 +48,7 @@ func (lw ListWriter) Write(assessMap types.AssessmentMap) (abend bool, err error
 
 func showTargetResult(code string, level int, assessments []*types.Assessment) {
 	showTitleLine(code, level)
-	if level != types.IgnoreLevel {
+	if level > types.IgnoreLevel {
 		for _, assessment := range assessments {
 			showDescription(assessment)
 		}

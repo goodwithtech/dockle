@@ -44,7 +44,13 @@ func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, 
 		}
 	}
 	if !existFile {
-		assesses = []*types.Assessment{{Code: types.AvoidEmptyPassword, Level: types.SkipLevel}}
+		assesses = []*types.Assessment{
+			{
+				Code:  types.AvoidEmptyPassword,
+				Level: types.SkipLevel,
+				Desc:  fmt.Sprintf("failed to detect %s", strings.Join(a.RequiredFiles(), ",")),
+			},
+		}
 	}
 	return assesses, nil
 }
