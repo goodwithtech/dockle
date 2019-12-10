@@ -244,28 +244,28 @@ $ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 | CODE | DESCRIPTION | LEVEL[※](#level) |
 |---|---|:---:|
 | | [CIS's Docker Image Checkpoints](CHECKPOINT.md#docker-image-checkpoints) | |
-| [CIS-DI-0001](CHECKPOINT.md#cis-di-0001-create-a-user-for-the-container) | Create a user for the container | WARN |
-| [CIS-DI-0002](CHECKPOINT.md#cis-di-0002-use-trusted-base-images-for-containers) | Use trusted base images for containers | FATAL
-| [CIS-DI-0003](CHECKPOINT.md#cis-di-0003-do-not-install-unnecessary-packages-in-the-container) | Do not install unnecessary packages in the container | FATAL
-| [CIS-DI-0004](CHECKPOINT.md#cis-di-0004-scan-and-rebuild-the-images-to-include-security-patches) | Scan and rebuild the images to include security patches | FATAL
-| [CIS-DI-0005](CHECKPOINT.md#cis-di-0005-enable-content-trust-for-docker) | Enable Content trust for Docker | INFO
-| [CIS-DI-0006](CHECKPOINT.md#cis-di-0006-add-healthcheck-instruction-to-the-container-image) | Add `HEALTHCHECK` instruction to the container image | WARN
-| [CIS-DI-0007](CHECKPOINT.md#cis-di-0007-do-not-use-update-instructions-alone-in-the-dockerfile) | Do not use `update` instructions alone in the Dockerfile | FATAL
-| [CIS-DI-0008](CHECKPOINT.md#cis-di-0008-comfirm-safety-of-setuid-setgid-files) | Confirm safety of `setuid` and `setgid` files | INFO
-| [CIS-DI-0009](CHECKPOINT.md#cis-di-0009-use-copy-instead-of-add-in-dockerfile) | Use `COPY` instead of `ADD` in Dockerfile | FATAL
-| [CIS-DI-0010](CHECKPOINT.md#cis-di-0010-do-not-store-secrets-in-dockerfiles) | Do not store secrets in Dockerfiles | FATAL
-| [CIS-DI-0011](CHECKPOINT.md#cis-di-0011-install-verified-packages-only) | Install verified packages only | INFO
+| [CIS-DI-0001](CHECKPOINT.md#cis-di-0001) | Create a user for the container | WARN |
+| [CIS-DI-0002](CHECKPOINT.md#cis-di-0002) | Use trusted base images for containers | FATAL
+| [CIS-DI-0003](CHECKPOINT.md#cis-di-0003) | Do not install unnecessary packages in the container | FATAL
+| [CIS-DI-0004](CHECKPOINT.md#cis-di-0004) | Scan and rebuild the images to include security patches | FATAL
+| [CIS-DI-0005](CHECKPOINT.md#cis-di-0005) | Enable Content trust for Docker | INFO
+| [CIS-DI-0006](CHECKPOINT.md#cis-di-0006) | Add `HEALTHCHECK` instruction to the container image | WARN
+| [CIS-DI-0007](CHECKPOINT.md#cis-di-0007) | Do not use `update` instructions alone in the Dockerfile | FATAL
+| [CIS-DI-0008](CHECKPOINT.md#cis-di-0008) | Confirm safety of `setuid` and `setgid` files | INFO
+| [CIS-DI-0009](CHECKPOINT.md#cis-di-0009) | Use `COPY` instead of `ADD` in Dockerfile | FATAL
+| [CIS-DI-0010](CHECKPOINT.md#cis-di-0010) | Do not store secrets in Dockerfiles | FATAL
+| [CIS-DI-0011](CHECKPOINT.md#cis-di-0011) | Install verified packages only | INFO
 || [Dockle Checkpoints for Docker](CHECKPOINT.md#dockle-checkpoints-for-docker) |
-| [DKL-DI-0001](CHECKPOINT.md#dkl-di-0001-avoid-sudo-command) | Avoid `sudo` command | FATAL
-| [DKL-DI-0002](CHECKPOINT.md#dkl-di-0002-avoid-sensitive-directory-mounting) | Avoid sensitive directory mounting | FATAL
-| [DKL-DI-0003](CHECKPOINT.md#dkl-di-0003-avoid-apt-get-upgrade-apk-upgrade-dist-upgrade) | Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade` | FATAL
-| [DKL-DI-0004](CHECKPOINT.md#dkl-di-0004-use-apk-add-with---no-cache) | Use `apk add` with `--no-cache` | FATAL
-| [DKL-DI-0005](CHECKPOINT.md#dkl-di-0005-clear-apt-get-caches) | Clear `apt-get` caches | FATAL
-| [DKL-DI-0006](CHECKPOINT.md#dkl-di-0006-avoid-latest-tag) | Avoid `latest` tag | WARN
+| [DKL-DI-0001](CHECKPOINT.md#dkl-di-0001) | Avoid `sudo` command | FATAL
+| [DKL-DI-0002](CHECKPOINT.md#dkl-di-0002) | Avoid sensitive directory mounting | FATAL
+| [DKL-DI-0003](CHECKPOINT.md#dkl-di-0003) | Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade` | FATAL
+| [DKL-DI-0004](CHECKPOINT.md#dkl-di-0004) | Use `apk add` with `--no-cache` | FATAL
+| [DKL-DI-0005](CHECKPOINT.md#dkl-di-0005) | Clear `apt-get` caches | FATAL
+| [DKL-DI-0006](CHECKPOINT.md#dkl-di-0006) | Avoid `latest` tag | WARN
 || [Dockle Checkpoints for Linux](CHECKPOINT.md#dockerdockle-checkpoints-for-linux) |
-| [DKL-LI-0001](CHECKPOINT.md#dkl-li-0001-avoid-empty-password) | Avoid empty password | FATAL
-| [DKL-LI-0002](CHECKPOINT.md#dkl-li-0002-be-unique-uidgroups) | Be unique UID/GROUPs | FATAL
-| [DKL-LI-0003](CHECKPOINT.md#dkl-li-0003-only-put-necessary-files) | Only put necessary files | INFO
+| [DKL-LI-0001](CHECKPOINT.md#dkl-li-0001) | Avoid empty password | FATAL
+| [DKL-LI-0002](CHECKPOINT.md#dkl-li-0002) | Be unique UID/GROUPs | FATAL
+| [DKL-LI-0003](CHECKPOINT.md#dkl-li-0003) | Only put necessary files | INFO
 
 ## Level
 
