@@ -8,7 +8,7 @@ require (
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/genuinetools/reg v0.16.0
-	github.com/goodwithtech/deckoder v0.0.0-20191103113425-04a81e6f4d7b
+	github.com/goodwithtech/deckoder v0.0.0-20191216084025-aaa798fbb259
 	github.com/google/go-cmp v0.3.0
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/parnurzeal/gorequest v0.2.15
