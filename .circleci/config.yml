@@ -20,6 +20,7 @@ jobs:
     <<: *defaults
     steps:
     - checkout
+    - pkg-config devmapper
     - run: go test ./...
   release:
     <<: *defaults
