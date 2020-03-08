@@ -3,6 +3,8 @@ package assessor
 import (
 	"os"
 
+	deckodertypes "github.com/goodwithtech/deckoder/types"
+
 	"github.com/goodwithtech/dockle/pkg/assessor/cache"
 	"github.com/goodwithtech/dockle/pkg/assessor/privilege"
 
@@ -15,7 +17,6 @@ import (
 	"github.com/goodwithtech/dockle/pkg/assessor/passwd"
 	"github.com/goodwithtech/dockle/pkg/assessor/user"
 
-	"github.com/goodwithtech/deckoder/extractor"
 	"github.com/goodwithtech/dockle/pkg/log"
 	"github.com/goodwithtech/dockle/pkg/types"
 )
@@ -23,7 +24,7 @@ import (
 var assessors []Assessor
 
 type Assessor interface {
-	Assess(extractor.FileMap) ([]*types.Assessment, error)
+	Assess(deckodertypes.FileMap) ([]*types.Assessment, error)
 	RequiredFiles() []string
 	RequiredPermissions() []os.FileMode
 }
@@ -40,7 +41,7 @@ func init() {
 	RegisterAssessor(cache.CacheAssessor{})
 }
 
-func GetAssessments(files extractor.FileMap) (assessments []*types.Assessment) {
+func GetAssessments(files deckodertypes.FileMap) (assessments []*types.Assessment) {
 	for _, assessor := range assessors {
 		results, err := assessor.Assess(files)
 		if err != nil {
