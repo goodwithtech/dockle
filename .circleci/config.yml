@@ -19,12 +19,12 @@ jobs:
   test:
     <<: *defaults
     steps:
-    - checkout
-    - run:
-      name: testing
-      command: |
-        pkg-config devmapper
-        go test ./...
+      - checkout
+      - run:
+          name: testing
+          command: |
+            pkg-config devmapper
+            go test ./...
 
   release:
     <<: *defaults
