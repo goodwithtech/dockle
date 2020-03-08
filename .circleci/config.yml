@@ -1,20 +1,14 @@
+version: 2.1
+
 defaults: &defaults
   working_directory: /go/src/github.com/goodwithtech/dockle
   docker:
     - image: circleci/golang:1.13
       environment:
-        GO111MODULE: "on"
-  steps:
-    - restore_cache:
-      name: Restore go modules cache
-      keys:
-        - go-mod-v1-{{ checksum "go.sum" }}
-    - save_cache:
-      key: go-mod-v1-{{ checksum "go.sum" }}
-      paths:
-        - "/go/pkg/mod"
+  environment:
+    GO111MODULE: "on"
+    CGO_ENABLED: "0"
 
-version: 2
 jobs:
   test:
     <<: *defaults
@@ -29,8 +23,8 @@ jobs:
   release:
     <<: *defaults
     steps:
-    - checkout
-    - run: sudo apt-get install -y rpm && curl -sL https://git.io/goreleaser | bash
+      - checkout
+      - run: sudo apt-get install -y rpm && curl -sL https://git.io/goreleaser | bash
 
 
 workflows:
