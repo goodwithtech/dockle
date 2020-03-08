@@ -4,10 +4,12 @@ import (
 	"archive/tar"
 	"context"
 	"flag"
-	"fmt"
 	"os"
 	"path/filepath"
 
+	"github.com/goodwithtech/deckoder/analyzer"
+	"github.com/goodwithtech/deckoder/extractor"
+	"github.com/goodwithtech/deckoder/extractor/docker"
 	"github.com/goodwithtech/deckoder/utils"
 
 	deckodertypes "github.com/goodwithtech/deckoder/types"
@@ -16,31 +18,31 @@ import (
 
 	"github.com/goodwithtech/dockle/pkg/assessor"
 
-	"github.com/goodwithtech/deckoder/analyzer"
-	"github.com/goodwithtech/deckoder/extractor"
 	"golang.org/x/crypto/ssh/terminal"
 )
 
 func ScanImage(ctx context.Context, imageName, filePath string, dockerOption deckodertypes.DockerOption) (assessments []*types.Assessment, err error) {
-	var files extractor.FileMap
+	var files deckodertypes.FileMap
 	filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredPermissions())
+	var ext extractor.Extractor
+	var cleanup func()
 	if imageName != "" {
-		files, err = analyzer.Analyze(ctx, imageName, filterFunc, dockerOption)
+		ext, cleanup, err = docker.NewDockerExtractor(ctx, imageName, dockerOption)
 		if err != nil {
-			return nil, fmt.Errorf("failed to analyze image: %w", err)
+			return nil, err
 		}
 	} else if filePath != "" {
-		rc, err := openStream(filePath)
-		if err != nil {
-			return nil, fmt.Errorf("failed to open stream: %w", err)
-		}
-
-		files, err = analyzer.AnalyzeFromFile(ctx, rc, filterFunc)
+		ext, cleanup, err = docker.NewDockerArchiveExtractor(ctx, filePath, dockerOption)
 		if err != nil {
 			return nil, err
 		}
 	} else {
 		return nil, types.ErrSetImageOrFile
+	}
+	defer cleanup()
+	ac := analyzer.New(ext)
+	if files, err = ac.Analyze(ctx, filterFunc); err != nil {
+		return nil, err
 	}
 
 	assessments = assessor.GetAssessments(files)
