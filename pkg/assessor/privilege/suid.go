@@ -21,7 +21,7 @@ func (a PrivilegeAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Asses
 				&types.Assessment{
 					Code:     types.CheckSuidGuid,
 					Filename: filename,
-					Desc:     fmt.Sprintf("setuid file: %s %s", filename, filedata.FileMode),
+					Desc:     fmt.Sprintf("setuid file: %s %s", filedata.FileMode, filename),
 				})
 		}
 		if filedata.FileMode&os.ModeSetgid != 0 {
@@ -30,7 +30,7 @@ func (a PrivilegeAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Asses
 				&types.Assessment{
 					Code:     types.CheckSuidGuid,
 					Filename: filename,
-					Desc:     fmt.Sprintf("setgid file: %s %s", filename, filedata.FileMode),
+					Desc:     fmt.Sprintf("setgid file: %s %s", filedata.FileMode, filename),
 				})
 		}
 
