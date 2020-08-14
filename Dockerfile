@@ -1,4 +1,4 @@
-FROM golang:1.12-alpine AS builder
+FROM golang:1.14-alpine AS builder
 COPY go.mod go.sum /app/
 WORKDIR /app/
 RUN apk --no-cache add git
@@ -12,7 +12,7 @@ RUN chmod +x /usr/local/bin/dockle
 RUN apk --no-cache add ca-certificates shadow
 
 # for use docker daemon via mounted /var/run/docker.sock
-RUN addgroup -S docker && adduser -S -G docker dockle && usermod -aG root dockle
-USER dockle
+#RUN addgroup -S docker && adduser -S -G docker dockle && usermod -aG root dockle
+#USER dockle
 
 ENTRYPOINT ["dockle"]
