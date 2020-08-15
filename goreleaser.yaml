@@ -12,8 +12,6 @@ builds:
   - darwin
   - linux
   - windows
-  - freebsd
-  - openbsd
   goarch:
   - amd64
   - 386
@@ -32,7 +30,7 @@ nfpms:
     maintainer: "Tomoya Amachi <tomoya.amachi@gmail.com>"
     description: "A Security and Dockerfile checker for Containers"
     license: "AGPL"
-    name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
+    file_name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
     replacements:
       amd64: 64bit
       386: 32bit
