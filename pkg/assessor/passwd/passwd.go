@@ -7,16 +7,16 @@ import (
 	"os"
 	"strings"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/goodwithtech/dockle/pkg/log"
 
 	"github.com/goodwithtech/dockle/pkg/types"
+
+	"github.com/goodwithtech/deckoder/extractor"
 )
 
 type PasswdAssessor struct{}
 
-func (a PasswdAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a PasswdAssessor) Assess(fileMap extractor.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : password files")
 
 	var existFile bool

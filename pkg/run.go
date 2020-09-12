@@ -2,12 +2,11 @@ package pkg
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	l "log"
 	"os"
-	"strings"
 
-	"github.com/containers/image/v5/transports/alltransports"
 	deckodertypes "github.com/goodwithtech/deckoder/types"
 
 	"github.com/goodwithtech/dockle/config"
@@ -15,12 +14,13 @@ import (
 
 	"github.com/goodwithtech/dockle/pkg/report"
 
+	"github.com/genuinetools/reg/registry"
+	"github.com/goodwithtech/deckoder/cache"
 	"github.com/goodwithtech/dockle/pkg/scanner"
-
-	"github.com/urfave/cli"
 
 	"github.com/goodwithtech/dockle/pkg/log"
 	"github.com/goodwithtech/dockle/pkg/types"
+	"github.com/urfave/cli"
 )
 
 func Run(c *cli.Context) (err error) {
@@ -40,6 +40,10 @@ func Run(c *cli.Context) (err error) {
 		log.Logger.Warnf("A new version %s is now available! You have %s.", latestVersion, cliVersion)
 	}
 
+	// delete image cache each time
+	if err = cache.Clear(); err != nil {
+		return errors.New("failed to remove image layer cache")
+	}
 	args := c.Args()
 	filePath := c.String("input")
 	if filePath == "" && len(args) == 0 {
@@ -47,13 +51,7 @@ func Run(c *cli.Context) (err error) {
 		cli.ShowAppHelpAndExit(c, 1)
 		return
 	}
-	// set docker option
-	dockerOption := deckodertypes.DockerOption{
-		Timeout:  c.Duration("timeout"),
-		UserName: c.String("username"),
-		Password: c.String("password"),
-		SkipPing: true,
-	}
+
 	var imageName string
 	if filePath == "" {
 		imageName = args[0]
@@ -62,9 +60,23 @@ func Run(c *cli.Context) (err error) {
 	var useLatestTag bool
 	// Check whether 'latest' tag is used
 	if imageName != "" {
-		if useLatestTag, err = useLatest(imageName); err != nil {
+		image, err := registry.ParseImage(imageName)
+		if err != nil {
 			return fmt.Errorf("invalid image: %w", err)
 		}
+		if image.Tag == "latest" {
+			useLatestTag = true
+		}
+	}
+
+	// set docker option
+	dockerOption := deckodertypes.DockerOption{
+		Timeout:  c.Duration("timeout"),
+		AuthURL:  c.String("authurl"),
+		UserName: c.String("username"),
+		Password: c.String("password"),
+		Insecure: c.BoolT("insecure"),
+		NonSSL:   c.BoolT("nonssl"),
 	}
 	log.Logger.Debug("Start assessments...")
 
@@ -110,13 +122,4 @@ func Run(c *cli.Context) (err error) {
 	}
 
 	return nil
-}
-
-func useLatest(imageName string) (bool, error) {
-	ref, err := alltransports.ParseImageName("docker://" + imageName)
-	if err != nil {
-		return false, err
-
-	}
-	return strings.HasSuffix(ref.DockerReference().String(), ":latest"), nil
 }

@@ -8,10 +8,9 @@ import (
 	"strings"
 	"time"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/goodwithtech/dockle/pkg/log"
 
+	"github.com/goodwithtech/deckoder/extractor"
 	"github.com/goodwithtech/dockle/pkg/types"
 )
 
@@ -24,7 +23,7 @@ var (
 	acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
 )
 
-func (a ManifestAssessor) Assess(fileMap deckodertypes.FileMap) (assesses []*types.Assessment, err error) {
+func (a ManifestAssessor) Assess(fileMap extractor.FileMap) (assesses []*types.Assessment, err error) {
 	log.Logger.Debug("Scan start : config file")
 	file, ok := fileMap["/config"]
 	if !ok {
