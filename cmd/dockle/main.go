@@ -103,7 +103,7 @@ OPTIONS:
 		},
 	}
 
-	app.Action = pkg.Run
+	app.Action = pkg.RunFromCli
 	err := app.Run(os.Args)
 
 	if err != nil {

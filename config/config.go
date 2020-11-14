@@ -4,10 +4,11 @@ import (
 	"bufio"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/goodwithtech/dockle/pkg/types"
 
-	"github.com/goodwithtech/dockle/pkg/log"
+	"log"
 	"github.com/urfave/cli"
 )
 
@@ -15,7 +16,7 @@ const (
 	dockleIgnore = ".dockleignore"
 )
 
-var exitLevelMap = map[string]int{
+var ExitLevelMap = map[string]int{
 	"info":  types.InfoLevel,
 	"INFO":  types.InfoLevel,
 	"warn":  types.WarnLevel,
@@ -25,6 +26,17 @@ var exitLevelMap = map[string]int{
 }
 
 type Config struct {
+	Debug     bool
+	Timeout   time.Duration
+	AuthURL   string
+	Username  string
+	Password  string
+	Insecure  bool
+	NonSSL    bool
+	ImageName string
+	FilePath  string
+	Output    string
+	Format    string
 	IgnoreMap map[string]struct{}
 	ExitCode  int
 	ExitLevel int
@@ -33,23 +45,41 @@ type Config struct {
 var Conf Config
 
 func CreateFromCli(c *cli.Context) {
-	ignoreRules := c.StringSlice("ignore")
-	Conf = Config{
-		IgnoreMap: getIgnoreCheckpointMap(ignoreRules),
-		ExitCode:  c.Int("exit-code"),
-		ExitLevel: getExitLevel(c.String("exit-level")),
+	Conf = Config{}
+	args := c.Args()
+
+	Conf.FilePath = c.String("input")
+	if Conf.FilePath == "" && len(args) == 0 {
+		log.Printf(`"dockle" requires at least 1 argument or --input option.`)
+		cli.ShowAppHelpAndExit(c, 1)
+		return
 	}
+	if Conf.FilePath == "" {
+		Conf.ImageName = args[0]
+	}
+	Conf.IgnoreMap = GetIgnoreCheckpointMap(c.StringSlice("ignore"))
+	Conf.Debug = c.Bool("debug")
+	Conf.Timeout = c.Duration("timeout")
+	Conf.AuthURL = c.String("authurl")
+	Conf.Username = c.String("username")
+	Conf.Password = c.String("password")
+	Conf.Insecure = c.Bool("insecure")
+	Conf.NonSSL = c.Bool("nonssl")
+	Conf.Output = c.String("output")
+	Conf.Format = c.String("format")
+	Conf.ExitCode = c.Int("exit-code")
+	Conf.ExitLevel = getExitLevel(c.String("exit-level"))
 }
 
 func getExitLevel(param string) (exitLevel int) {
-	exitLevel, ok := exitLevelMap[param]
+	exitLevel, ok := ExitLevelMap[param]
 	if !ok {
 		return types.WarnLevel
 	}
 	return exitLevel
 }
 
-func getIgnoreCheckpointMap(ignoreRules []string) map[string]struct{} {
+func GetIgnoreCheckpointMap(ignoreRules []string) map[string]struct{} {
 	ignoreCheckpointMap := map[string]struct{}{}
 	// from cli command
 	for _, rule := range ignoreRules {
@@ -59,7 +89,7 @@ func getIgnoreCheckpointMap(ignoreRules []string) map[string]struct{} {
 	// from ignore file
 	f, err := os.Open(dockleIgnore)
 	if err != nil {
-		log.Logger.Debug("There is no .dockleignore file")
+		log.Printf("There is no .dockleignore file")
 		// dockle must work even if there isn't ignore file
 		return ignoreCheckpointMap
 	}
@@ -70,7 +100,7 @@ func getIgnoreCheckpointMap(ignoreRules []string) map[string]struct{} {
 		if strings.HasPrefix(line, "#") || line == "" {
 			continue
 		}
-		log.Logger.Debugf("Add new ignore code: %s", line)
+		log.Printf("Add new ignore code: %s", line)
 		ignoreCheckpointMap[line] = struct{}{}
 	}
 	return ignoreCheckpointMap
