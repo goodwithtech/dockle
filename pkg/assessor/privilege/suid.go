@@ -6,7 +6,7 @@ import (
 
 	deckodertypes "github.com/goodwithtech/deckoder/types"
 
-	"github.com/goodwithtech/dockle/pkg/types"
+	"github.com/Portshift/dockle/pkg/types"
 )
 
 type PrivilegeAssessor struct{}

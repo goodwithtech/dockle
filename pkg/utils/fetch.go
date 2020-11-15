@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/goodwithtech/dockle/pkg/log"
+	"github.com/Portshift/dockle/pkg/log"
 
 	"github.com/parnurzeal/gorequest"
 )

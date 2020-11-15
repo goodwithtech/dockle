@@ -10,16 +10,16 @@ import (
 	"github.com/containers/image/v5/transports/alltransports"
 	deckodertypes "github.com/goodwithtech/deckoder/types"
 
-	"github.com/goodwithtech/dockle/config"
+	"github.com/Portshift/dockle/config"
 
-	"github.com/goodwithtech/dockle/pkg/report"
+	"github.com/Portshift/dockle/pkg/report"
 
-	"github.com/goodwithtech/dockle/pkg/scanner"
+	"github.com/Portshift/dockle/pkg/scanner"
 
 	"github.com/urfave/cli"
 
-	"github.com/goodwithtech/dockle/pkg/log"
-	"github.com/goodwithtech/dockle/pkg/types"
+	"github.com/Portshift/dockle/pkg/log"
+	"github.com/Portshift/dockle/pkg/types"
 )
 
 func RunFromCli(c *cli.Context) (err error) {

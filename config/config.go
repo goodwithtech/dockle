@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/goodwithtech/dockle/pkg/types"
+	"github.com/Portshift/dockle/pkg/types"
 
 	"log"
 	"github.com/urfave/cli"

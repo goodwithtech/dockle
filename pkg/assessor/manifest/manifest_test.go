@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/d4l3k/messagediff"
-	"github.com/goodwithtech/dockle/pkg/types"
+	"github.com/Portshift/dockle/pkg/types"
 )
 
 func TestAssess(t *testing.T) {

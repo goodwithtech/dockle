@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/goodwithtech/dockle/config"
+	"github.com/Portshift/dockle/config"
 
-	"github.com/goodwithtech/dockle/pkg/types"
+	"github.com/Portshift/dockle/pkg/types"
 )
 
 type JsonWriter struct {
