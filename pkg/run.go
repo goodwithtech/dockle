@@ -10,67 +10,62 @@ import (
 	"github.com/containers/image/v5/transports/alltransports"
 	deckodertypes "github.com/goodwithtech/deckoder/types"
 
-	"github.com/goodwithtech/dockle/config"
-	"github.com/goodwithtech/dockle/pkg/utils"
+	"github.com/Portshift/dockle/config"
 
-	"github.com/goodwithtech/dockle/pkg/report"
+	"github.com/Portshift/dockle/pkg/report"
 
-	"github.com/goodwithtech/dockle/pkg/scanner"
+	"github.com/Portshift/dockle/pkg/scanner"
 
 	"github.com/urfave/cli"
 
-	"github.com/goodwithtech/dockle/pkg/log"
-	"github.com/goodwithtech/dockle/pkg/types"
+	"github.com/Portshift/dockle/pkg/log"
+	"github.com/Portshift/dockle/pkg/types"
 )
 
-func Run(c *cli.Context) (err error) {
+func RunFromCli(c *cli.Context) (err error) {
+	if err = log.InitLogger(c.Bool("debug")); err != nil {
+		l.Fatal(err)
+	}
+	config.CreateFromCli(c)
+	_, err = run()
+
+	return err
+}
+
+func RunFromConfig(conf *config.Config) (types.AssessmentMap, error) {
+	config.Conf = *conf
+
+	return run()
+}
+
+func run() (ret types.AssessmentMap, err error) {
 	ctx := context.Background()
-	debug := c.Bool("debug")
-	if err = log.InitLogger(debug); err != nil {
+	if err = log.InitLogger(config.Conf.Debug); err != nil {
 		l.Fatal(err)
 	}
 
-	config.CreateFromCli(c)
+	// TODO: Check latest version
 
-	cliVersion := "v" + c.App.Version
-	latestVersion, err := utils.FetchLatestVersion()
-
-	// check latest version
-	if err == nil && cliVersion != latestVersion && c.App.Version != "dev" {
-		log.Logger.Warnf("A new version %s is now available! You have %s.", latestVersion, cliVersion)
-	}
-
-	args := c.Args()
-	filePath := c.String("input")
-	if filePath == "" && len(args) == 0 {
-		log.Logger.Info(`"dockle" requires at least 1 argument or --input option.`)
-		cli.ShowAppHelpAndExit(c, 1)
-		return
-	}
 	// set docker option
 	dockerOption := deckodertypes.DockerOption{
-		Timeout:  c.Duration("timeout"),
-		UserName: c.String("username"),
-		Password: c.String("password"),
+		Timeout:  config.Conf.Timeout,
+		UserName: config.Conf.Username,
+		Password: config.Conf.Password,
 		SkipPing: true,
-	}
-	var imageName string
-	if filePath == "" {
-		imageName = args[0]
 	}
 
 	var useLatestTag bool
 	// Check whether 'latest' tag is used
-	if imageName != "" {
-		if useLatestTag, err = useLatest(imageName); err != nil {
-			return fmt.Errorf("invalid image: %w", err)
+	if config.Conf.ImageName != "" {
+		if useLatestTag, err = useLatest(config.Conf.ImageName); err != nil {
+			return nil, fmt.Errorf("invalid image: %w", err)
 		}
 	}
 	log.Logger.Debug("Start assessments...")
 
-	assessments, err := scanner.ScanImage(ctx, imageName, filePath, dockerOption)
+	assessments, err := scanner.ScanImage(ctx, config.Conf.ImageName, config.Conf.FilePath, dockerOption)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if useLatestTag {
 		assessments = append(assessments, &types.Assessment{
@@ -84,16 +79,16 @@ func Run(c *cli.Context) (err error) {
 
 	assessmentMap := types.CreateAssessmentMap(assessments, config.Conf.IgnoreMap)
 	// Store ignore checkpoint code
-	o := c.String("output")
+	o := config.Conf.Output
 	output := os.Stdout
 	if o != "" {
 		if output, err = os.Create(o); err != nil {
-			return fmt.Errorf("failed to create an output file: %w", err)
+			return nil, fmt.Errorf("failed to create an output file: %w", err)
 		}
 	}
 
 	var writer report.Writer
-	switch format := c.String("format"); format {
+	switch format := config.Conf.Format; format {
 	case "json":
 		writer = &report.JsonWriter{Output: output}
 	default:
@@ -102,14 +97,14 @@ func Run(c *cli.Context) (err error) {
 
 	abend, err := writer.Write(assessmentMap)
 	if err != nil {
-		return fmt.Errorf("failed to write results: %w", err)
+		return nil, fmt.Errorf("failed to write results: %w", err)
 	}
 
 	if config.Conf.ExitCode != 0 && abend {
 		os.Exit(config.Conf.ExitCode)
 	}
 
-	return nil
+	return assessmentMap, nil
 }
 
 func useLatest(imageName string) (bool, error) {

@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/goodwithtech/dockle/pkg"
-	"github.com/goodwithtech/dockle/pkg/log"
+	"github.com/Portshift/dockle/pkg"
+	"github.com/Portshift/dockle/pkg/log"
 	"github.com/urfave/cli"
 )
 
@@ -103,7 +103,7 @@ OPTIONS:
 		},
 	}
 
-	app.Action = pkg.Run
+	app.Action = pkg.RunFromCli
 	err := app.Run(os.Args)
 
 	if err != nil {

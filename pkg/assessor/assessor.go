@@ -5,20 +5,20 @@ import (
 
 	deckodertypes "github.com/goodwithtech/deckoder/types"
 
-	"github.com/goodwithtech/dockle/pkg/assessor/cache"
-	"github.com/goodwithtech/dockle/pkg/assessor/privilege"
+	"github.com/Portshift/dockle/pkg/assessor/cache"
+	"github.com/Portshift/dockle/pkg/assessor/privilege"
 
-	"github.com/goodwithtech/dockle/pkg/assessor/contentTrust"
-	"github.com/goodwithtech/dockle/pkg/assessor/credential"
-	"github.com/goodwithtech/dockle/pkg/assessor/hosts"
+	"github.com/Portshift/dockle/pkg/assessor/contentTrust"
+	"github.com/Portshift/dockle/pkg/assessor/credential"
+	"github.com/Portshift/dockle/pkg/assessor/hosts"
 
-	"github.com/goodwithtech/dockle/pkg/assessor/group"
-	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
-	"github.com/goodwithtech/dockle/pkg/assessor/passwd"
-	"github.com/goodwithtech/dockle/pkg/assessor/user"
+	"github.com/Portshift/dockle/pkg/assessor/group"
+	"github.com/Portshift/dockle/pkg/assessor/manifest"
+	"github.com/Portshift/dockle/pkg/assessor/passwd"
+	"github.com/Portshift/dockle/pkg/assessor/user"
 
-	"github.com/goodwithtech/dockle/pkg/log"
-	"github.com/goodwithtech/dockle/pkg/types"
+	"github.com/Portshift/dockle/pkg/log"
+	"github.com/Portshift/dockle/pkg/types"
 )
 
 var assessors []Assessor

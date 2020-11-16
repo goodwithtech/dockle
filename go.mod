@@ -1,4 +1,4 @@
-module github.com/goodwithtech/dockle
+module github.com/Portshift/dockle
 
 go 1.13
 

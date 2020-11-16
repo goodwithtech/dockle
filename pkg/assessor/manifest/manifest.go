@@ -10,9 +10,9 @@ import (
 
 	deckodertypes "github.com/goodwithtech/deckoder/types"
 
-	"github.com/goodwithtech/dockle/pkg/log"
+	"github.com/Portshift/dockle/pkg/log"
 
-	"github.com/goodwithtech/dockle/pkg/types"
+	"github.com/Portshift/dockle/pkg/types"
 )
 
 type ManifestAssessor struct{}

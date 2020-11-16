@@ -7,12 +7,21 @@ type Assessment struct {
 	Desc     string
 }
 type AssessmentSlice []*Assessment
+
 type CodeInfo struct {
 	Code        string
 	Level       int
 	Assessments AssessmentSlice
 }
 type AssessmentMap map[string]CodeInfo
+
+type ImageAssessment struct {
+	Assessment      AssessmentMap          `json:"assessment"`
+	Image           string                 `json:"image"`
+	Success         bool                   `json:"success"`
+	ScanUUID        string                 `json:"scanuuid"`
+	ScanErrMsg      string                 `json:"scanErrMsg"`
+}
 
 func CreateAssessmentMap(as AssessmentSlice, ignoreMap map[string]struct{}) AssessmentMap {
 	asMap := AssessmentMap{}

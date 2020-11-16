@@ -3,7 +3,7 @@ package utils
 import (
 	"testing"
 
-	"github.com/goodwithtech/dockle/pkg/log"
+	"github.com/Portshift/dockle/pkg/log"
 )
 
 func TestFetchVersion(t *testing.T) {
