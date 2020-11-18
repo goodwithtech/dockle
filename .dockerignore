@@ -5,5 +5,5 @@ imgs
 .goreleaser.yaml
 .gitignore
 Dockerfile
-LICENSE
 README.md
+

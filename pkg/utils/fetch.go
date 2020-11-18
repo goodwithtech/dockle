@@ -15,7 +15,7 @@ var versionPattern = regexp.MustCompile(`v[0-9]+\.[0-9]+\.[0-9]+`)
 func fetchURL(url string, cookie *http.Cookie) ([]byte, error) {
 	resp, body, err := gorequest.New().AddCookie(cookie).Get(url).Type("text").EndBytes()
 	if err != nil {
-		return nil, fmt.Errorf("fail to fetch : %w", err)
+		return nil, fmt.Errorf("fail to fetch : %v", err)
 	}
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP error code : %d, url : %s", resp.StatusCode, url)
