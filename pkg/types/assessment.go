@@ -16,11 +16,11 @@ type CodeInfo struct {
 type AssessmentMap map[string]CodeInfo
 
 type ImageAssessment struct {
-	Assessment      AssessmentMap          `json:"assessment"`
-	Image           string                 `json:"image"`
-	Success         bool                   `json:"success"`
-	ScanUUID        string                 `json:"scanuuid"`
-	ScanErrMsg      string                 `json:"scanErrMsg"`
+	Assessment AssessmentMap `json:"assessment"`
+	Image      string        `json:"image"`
+	Success    bool          `json:"success"`
+	ScanUUID   string        `json:"scanuuid"`
+	ScanErr    *ScanError    `json:"scanError"`
 }
 
 func CreateAssessmentMap(as AssessmentSlice, ignoreMap map[string]struct{}) AssessmentMap {

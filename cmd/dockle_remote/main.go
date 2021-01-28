@@ -99,9 +99,9 @@ func run(imageName string) {
 
 	assessmentMap, err := dockle_run.RunFromConfig(createDockleConfig(scanConfig, adjustedImageName))
 	if err != nil {
-		errMsg := fmt.Sprintf("Failed to run dockle: %v", err)
-		log.Logger.Errorf(errMsg)
-		scanResults.ScanErrMsg = errMsg
+		errMsg := fmt.Errorf("failed to run dockle: %w", err)
+		log.Logger.Error(errMsg)
+		scanResults.ScanErr = dockle_types.ConvertError(errMsg)
 		scanResults.Success = false
 	} else {
 		scanResults.Success = true

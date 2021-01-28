@@ -4,6 +4,7 @@ import (
 	"archive/tar"
 	"context"
 	"flag"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -29,12 +30,12 @@ func ScanImage(ctx context.Context, imageName, filePath string, dockerOption dec
 	if imageName != "" {
 		ext, cleanup, err = docker.NewDockerExtractor(ctx, imageName, dockerOption)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%v. %w", err, types.ErrorCreateDockerExtractor)
 		}
 	} else if filePath != "" {
 		ext, cleanup, err = docker.NewDockerArchiveExtractor(ctx, filePath, dockerOption)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%v. %w", err, types.ErrorCreateDockerExtractor)
 		}
 	} else {
 		return nil, types.ErrSetImageOrFile
@@ -42,7 +43,7 @@ func ScanImage(ctx context.Context, imageName, filePath string, dockerOption dec
 	defer cleanup()
 	ac := analyzer.New(ext)
 	if files, err = ac.Analyze(ctx, filterFunc); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%v. %w", err, types.ErrorAnalyze)
 	}
 
 	assessments = assessor.GetAssessments(files)
