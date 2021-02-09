@@ -1,6 +1,6 @@
 SOURCE := ./cmd/dockle_remote/
 BINARY := dockle_remote
-DOCKER_REGISTRY ?= gcr.io/development-infra-208909
+DOCKER_REGISTRY ?= gcr.io/eticloud/k8sec
 VERSION ?= $(shell git rev-parse HEAD)
 IMAGE_NAME ?= $(DOCKER_REGISTRY)/dockle:$(VERSION)
 TARGET_OS ?= linux

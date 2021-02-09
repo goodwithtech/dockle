@@ -23,40 +23,30 @@ jobs:
 
   build_and_push:
     docker:
-      - image: gcr.io/development-infra-208909/docker-18-git-go-1.13.5-builder
-    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    - image: gcr.io/gcp-etigcp-nprd-12855/pipelines/docker-18-git-go-1.14.10-builder:v12
+      auth:
+        username: _json_key
+        password: $GCR_K8SEC_DEV_REGISTRY_SERVICE_ACCOUNT
+    working_directory: /home/ubuntu/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
     steps:
       - checkout
       - setup_remote_docker
-      - run: docker login -u _json_key -p "${GCR_REGISTRY_SERVICE_ACCOUNT}" http://gcr.io
+      - run: docker login -u _json_key -p "${GCR_ETI_CLOUD_REGISTRY_SERVICE_ACCOUNT}" http://gcr.io
       - run: echo ${CIRCLE_SHA1}
       - run: echo ${CIRCLE_TAG}
+      - run: VERSION=${CIRCLE_SHA1} make docker.push
       - run: >
-          if [ "${CIRCLE_TAG}" != "" ];
-          then
+           if [ "${CIRCLE_TAG}" != "" ];
+           then
             VERSION=${CIRCLE_TAG} make docker.push
-            VERSION=${CIRCLE_SHA1} make docker.push
-            #docker login -u unused scan.connect.redhat.com -p $DOCKLE_REDHAT_REGISTRY_KEY}
-            #export REDHAT_REGISTRY=scan.connect.redhat.com/${DOCKLE_REDHAT_PROJECT_ID}
-            #VERSION=${CIRCLE_SHA1} DOCKER_REGISTRY=${REDHAT_REGISTRY} make docker.push
-            #export DOCKLE_REDHAT_IMAGE_NAME_AND_TAG="${REDHAT_REGISTRY}/dockle:${CIRCLE_SHA1}"
-            #export DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${DOCKLE_REDHAT_IMAGE_NAME_AND_TAG} | grep -o sha256:.*)
-            #until wget  --header "accept: */*" --header "Authorization: Bearer ${REDHAT_API_KEY}" --header "Content-Type: application/json" --post-data "{}" https://connect.redhat.com/api/v2/projects/${DOCKLE_REDHAT_PROJECT_ID}/containers/${DIGEST}/tags/${CIRCLE_SHA1}/publish; do echo "failed"; sleep 1; done
-          else
-            make build
-          fi
+           fi
+
 
 workflows:
   test_build_and_push:
     jobs:
-      - test:
-          filters:
-            tags:
-              only: /^[0-9]+(\.[0-9]+)*$/
+      - test
       - build_and_push:
           requires:
             - test
-          context: REG_CREDS
-          filters:
-            tags:
-              only: /^[0-9]+(\.[0-9]+)*$/
+          context: CISCO_REG_CREDS
