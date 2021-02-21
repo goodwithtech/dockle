@@ -72,8 +72,51 @@ brews:
     tap:
       owner: goodwithtech
       name: homebrew-r
-    folder: Formula
     homepage: "https://github.com/goodwithtech/dockle"
     description: "Simple security auditing, helping build the Best Docker Images"
     test: |
       system "#{bin}/program --version"
+
+dockers:
+  - image_templates:
+      - 'goodwithtech/dockle:{{ .Tag }}-amd64'
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-amd64'
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/amd64"
+  - image_templates:
+      - 'goodwithtech/dockle:{{ .Tag }}-arm64'
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-arm64'
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/arm64"
+    goarch: arm64
+docker_manifests:
+  - name_template: 'goodwithtech/dockle:{{ .Tag }}'
+    image_templates:
+      - 'goodwithtech/dockle:{{ .Tag }}-amd64'
+      - 'goodwithtech/dockle:{{ .Tag }}-arm64'
+  - name_template: 'ghcr.io/goodwithtech/dockle:{{ .Tag }}'
+    image_templates:
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-amd64'
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-arm64'
+  - name_template: 'goodwithtech/dockle:latest'
+    image_templates:
+      - 'goodwithtech/dockle:{{ .Tag }}-amd64'
+      - 'goodwithtech/dockle:{{ .Tag }}-arm64'
+  - name_template: 'ghcr.io/goodwithtech/dockle:latest'
+    image_templates:
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-amd64'
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-arm64'
