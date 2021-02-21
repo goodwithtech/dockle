@@ -90,6 +90,10 @@ dockers:
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source={{.GitURL}}"
       - "--platform=linux/amd64"
+    goarch: amd64
+    extra_files:
+      - go.mod
+      - go.sum
   - image_templates:
       - 'goodwithtech/dockle:{{ .Tag }}-arm64'
       - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-arm64'
@@ -103,6 +107,9 @@ dockers:
       - "--label=org.opencontainers.image.source={{.GitURL}}"
       - "--platform=linux/arm64"
     goarch: arm64
+    extra_files:
+      - go.mod
+      - go.sum
 docker_manifests:
   - name_template: 'goodwithtech/dockle:{{ .Tag }}'
     image_templates:
