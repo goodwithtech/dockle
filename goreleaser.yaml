@@ -69,7 +69,7 @@ archives:
 
 brews:
   -
-    github:
+    tap:
       owner: goodwithtech
       name: homebrew-r
     folder: Formula
