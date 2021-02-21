@@ -91,7 +91,6 @@ dockers:
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source={{.GitURL}}"
       - "--platform=linux/amd64"
-    goarch: amd64
   - image_templates:
       - 'goodwithtech/dockle:{{ .Tag }}-arm64'
       - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-arm64'
