@@ -1,12 +1,8 @@
-version: 2.1
-
 defaults: &defaults
   working_directory: /go/src/github.com/goodwithtech/dockle
   docker:
-    - image: circleci/golang:1.13
-      environment:
+    - image: circleci/golang:1.14
   environment:
-    GO111MODULE: "on"
     CGO_ENABLED: "0"
 
 jobs:
@@ -23,8 +19,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - run: sudo apt-get install -y rpm && curl -sL https://git.io/goreleaser | bash
-
+      - run: sudo apt -y update && sudo apt install -y rpm && curl -sL https://git.io/goreleaser | bash
 
 workflows:
   version: 2
