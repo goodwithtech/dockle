@@ -1,4 +1,3 @@
 FROM alpine:3.13
-COPY dockle_*.apk /tmp/
-RUN apk add --allow-untrusted /tmp/dockle_*.apk
-ENTRYPOINT ["dockle"]
+COPY dockle /usr/bin/dockle
+ENTRYPOINT ["/usr/bin/dockle"]
