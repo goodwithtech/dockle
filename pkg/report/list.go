@@ -38,7 +38,7 @@ func (lw ListWriter) Write(assessMap types.AssessmentMap) (abend bool, err error
 			continue
 		}
 		assess := assessMap[ass.Code]
-		showTargetResult(assess.Code, assess.Level, assess.Assessments)
+		lw.showTargetResult(assess.Code, assess.Level, assess.Assessments)
 		if assess.Level >= config.Conf.ExitLevel {
 			abend = true
 		}
@@ -46,22 +46,22 @@ func (lw ListWriter) Write(assessMap types.AssessmentMap) (abend bool, err error
 	return abend, nil
 }
 
-func showTargetResult(code string, level int, assessments []*types.Assessment) {
-	showTitleLine(code, level)
+func (lw ListWriter) showTargetResult(code string, level int, assessments []*types.Assessment) {
+	lw.showTitleLine(code, level)
 	if level > types.IgnoreLevel {
 		for _, assessment := range assessments {
-			showDescription(assessment)
+			lw.showDescription(assessment)
 		}
 	}
 }
 
-func showTitleLine(code string, level int) {
+func (lw ListWriter) showTitleLine(code string, level int) {
 	cyan := color.Cyan
-	fmt.Print(colorizeAlert(level), TAB, "-", SPACE, cyan.Add(code), COLON, SPACE, types.TitleMap[code], NEWLINE)
+	fmt.Fprint(lw.Output, colorizeAlert(level), TAB, "-", SPACE, cyan.Add(code), COLON, SPACE, types.TitleMap[code], NEWLINE)
 }
 
-func showDescription(assessment *types.Assessment) {
-	fmt.Print(TAB, LISTMARK, SPACE, assessment.Desc, NEWLINE)
+func (lw ListWriter) showDescription(assessment *types.Assessment) {
+	fmt.Fprint(lw.Output, TAB, LISTMARK, SPACE, assessment.Desc, NEWLINE)
 }
 
 func colorizeAlert(alertLevel int) string {
