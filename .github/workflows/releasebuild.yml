@@ -26,6 +26,8 @@ jobs:
             ${{ runner.os }}-go-
       - run: |
           go test ./...
+        env:
+          CGO_ENABLED: 0
       -
         name: Docker Login
         if: success() && startsWith(github.ref, 'refs/tags/v')
