@@ -4,6 +4,7 @@ WORKDIR /app/
 RUN apk --no-cache add git
 RUN go mod download
 COPY . /app/
+RUN pwd
 RUN ls -la
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o /dockle cmd/dockle/main.go
 
