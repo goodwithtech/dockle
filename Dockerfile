@@ -6,7 +6,7 @@ RUN go mod download
 COPY . /app/
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o /dockle cmd/dockle/main.go
 
-FROM alpine:3.12
+FROM alpine:3.13
 COPY --from=builder /dockle /usr/local/bin/dockle
 RUN chmod +x /usr/local/bin/dockle
 RUN apk --no-cache add ca-certificates shadow

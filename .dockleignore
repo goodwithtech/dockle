@@ -1,2 +1,4 @@
 # doesn't need HEALTHCHECK for onetime CLI tool
 CIS-DI-0006
+# dockle sometimes mounts and uses docker.sock
+CIS-DI-0001
