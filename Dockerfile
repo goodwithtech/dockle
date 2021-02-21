@@ -1,10 +1,10 @@
-FROM golang:1.14-alpine AS builder
-COPY go.mod go.sum /app/
-WORKDIR /app/
+FROM golang:1.16-alpine AS builder
+ARG TARGET_DIR="github.com/goodwithtech/dockle"
+
+WORKDIR /go/src/${TARGET_DIR}
 RUN apk --no-cache add git
-RUN go mod download
-COPY . /app/
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o /dockle cmd/dockle/main.go
+COPY . .
+RUN CGO_ENABLED=0 go build -a -o /dockle ${PWD}/cmd/dockle
 
 FROM alpine:3.13
 COPY --from=builder /dockle /usr/local/bin/dockle
