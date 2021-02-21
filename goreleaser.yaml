@@ -23,6 +23,7 @@ builds:
 nfpms:
   -
     formats:
+      - apk
       - deb
       - rpm
     vendor: "goodwithtech"
