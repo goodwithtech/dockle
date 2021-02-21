@@ -24,7 +24,8 @@ import (
 )
 
 func Run(c *cli.Context) (err error) {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), c.Duration("timeout"))
+	defer cancel()
 	debug := c.Bool("debug")
 	if err = log.InitLogger(debug); err != nil {
 		l.Fatal(err)
@@ -33,10 +34,12 @@ func Run(c *cli.Context) (err error) {
 	config.CreateFromCli(c)
 
 	cliVersion := "v" + c.App.Version
-	latestVersion, err := utils.FetchLatestVersion()
+	latestVersion, err := utils.FetchLatestVersion(ctx)
 
 	// check latest version
-	if err == nil && cliVersion != latestVersion && c.App.Version != "dev" {
+	if err != nil {
+		log.Logger.Infof("Failed to check latest version. %s", err)
+	} else if cliVersion != latestVersion && c.App.Version != "dev" {
 		log.Logger.Warnf("A new version %s is now available! You have %s.", latestVersion, cliVersion)
 	}
 
