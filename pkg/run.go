@@ -52,10 +52,11 @@ func Run(c *cli.Context) (err error) {
 	}
 	// set docker option
 	dockerOption := deckodertypes.DockerOption{
-		Timeout:  c.Duration("timeout"),
-		UserName: c.String("username"),
-		Password: c.String("password"),
-		SkipPing: true,
+		Timeout:               c.Duration("timeout"),
+		UserName:              c.String("username"),
+		Password:              c.String("password"),
+		InsecureSkipTLSVerify: c.Bool("insecure"),
+		SkipPing:              true,
 	}
 	var imageName string
 	if filePath == "" {
