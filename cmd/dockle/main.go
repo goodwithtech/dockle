@@ -92,8 +92,9 @@ OPTIONS:
 			Usage:  "registry login password. Using --password via CLI is insecure.",
 		},
 		cli.BoolFlag{
-			Name:  "insecure",
-			Usage: "registry connect insecure",
+			Name:   "insecure",
+			EnvVar: "DOCKLE_INSECURE",
+			Usage:  "registry connect insecure",
 		},
 		cli.BoolTFlag{
 			Name:   "nonssl",
