@@ -77,24 +77,29 @@ OPTIONS:
 			Usage: "docker timeout. e.g) 5s, 5m...",
 		},
 		cli.StringFlag{
-			Name:  "authurl",
-			Usage: "registry authenticate url",
+			Name:   "authurl",
+			EnvVar: "DOCKLE_AUTH_URL",
+			Usage:  "registry authenticate url",
 		},
 		cli.StringFlag{
-			Name:  "username",
-			Usage: "registry login username",
+			Name:   "username",
+			EnvVar: "DOCKLE_USERNAME",
+			Usage:  "registry login username",
 		},
 		cli.StringFlag{
-			Name:  "password",
-			Usage: "registry login password. Using --password via CLI is insecure.",
+			Name:   "password",
+			EnvVar: "DOCKLE_PASSWORD",
+			Usage:  "registry login password. Using --password via CLI is insecure.",
 		},
 		cli.BoolFlag{
-			Name:  "insecure",
-			Usage: "registry connect insecure",
+			Name:   "insecure",
+			EnvVar: "DOCKLE_INSECURE",
+			Usage:  "registry connect insecure",
 		},
 		cli.BoolTFlag{
-			Name:  "nonssl",
-			Usage: "registry connect without ssl",
+			Name:   "nonssl",
+			EnvVar: "DOCKLE_NON_SSL",
+			Usage:  "registry connect without ssl",
 		},
 
 		cli.StringFlag{
