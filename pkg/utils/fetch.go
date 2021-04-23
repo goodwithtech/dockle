@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -13,7 +14,7 @@ import (
 var versionPattern = regexp.MustCompile(`v[0-9]+\.[0-9]+\.[0-9]+`)
 
 // Dockle just want to check latest version string. No need to readall.
-const enoughLength = 8000
+const enoughLength = 14000
 
 func fetchURL(ctx context.Context, url string, cookie *http.Cookie, dataLen int) ([]byte, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
@@ -47,6 +48,8 @@ func FetchLatestVersion(ctx context.Context) (version string, err error) {
 	if err != nil {
 		return "", err
 	}
-	versionMatched := versionPattern.FindString(string(body))
-	return versionMatched, nil
+	if versionMatched := versionPattern.FindString(string(body)); versionMatched != "" {
+		return versionMatched, nil
+	}
+	return "", errors.New("not found version patterns")
 }
