@@ -258,7 +258,7 @@ $ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 || [Dockle Checkpoints for Docker](CHECKPOINT.md#dockle-checkpoints-for-docker) |
 | [DKL-DI-0001](CHECKPOINT.md#dkl-di-0001) | Avoid `sudo` command | FATAL
 | [DKL-DI-0002](CHECKPOINT.md#dkl-di-0002) | Avoid sensitive directory mounting | FATAL
-| [DKL-DI-0003](CHECKPOINT.md#dkl-di-0003) | Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade` | FATAL
+| [DKL-DI-0003](CHECKPOINT.md#dkl-di-0003) | Avoid `apt-get dist-upgrade` | WARN
 | [DKL-DI-0004](CHECKPOINT.md#dkl-di-0004) | Use `apk add` with `--no-cache` | FATAL
 | [DKL-DI-0005](CHECKPOINT.md#dkl-di-0005) | Clear `apt-get` caches | FATAL
 | [DKL-DI-0006](CHECKPOINT.md#dkl-di-0006) | Avoid `latest` tag | WARN
