@@ -142,11 +142,12 @@ Currently, `Dockle` checks following directories:
 
 
 ### DKL-DI-0003
-**Avoid `apt-get upgrade`, `apk upgrade`, `dist-upgrade`**
+**Avoid `apt-get dist-upgrade`**
 
-- https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
+https://github.com/docker/docker.github.io/pull/12571
 
-    > Avoid `RUN apt-get upgrade` and `dist-upgrade`, as many of the “essential” packages from the parent images cannot upgrade inside an unprivileged container.
+~~https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get~~
+~~Avoid `RUN apt-get upgrade` and `dist-upgrade`, as many of the “essential” packages from the parent images cannot upgrade inside an unprivileged container.~~
 
 ### DKL-DI-0004
 **Use `apk add` with `--no-cache`**

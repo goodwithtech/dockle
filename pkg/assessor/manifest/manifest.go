@@ -191,9 +191,6 @@ func useDistUpgrade(cmdSlices map[int][]string) bool {
 		if containsThreshold(cmdSlice, []string{"apt-get", "apt", "apk", "dist-upgrade"}, 2) {
 			return true
 		}
-		if containsThreshold(cmdSlice, []string{"apt-get", "apt", "apk", "upgrade"}, 2) {
-			return true
-		}
 	}
 	return false
 }
