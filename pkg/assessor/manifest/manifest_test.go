@@ -343,19 +343,31 @@ func TestUseDistUpgrade(t *testing.T) {
 					"apt-get", "upgrade",
 				},
 			},
-			expected: true,
+			expected: false,
 		},
 		"UseAptUpgrade": {
 			cmdSlices: map[int][]string{
 				0: {"apt", "upgrade"},
 				1: {"addgroup", "--system", "--gid", "101", "nginx"},
 			},
+			expected: false,
+		},
+		"UseDistUpgrade": {
+			cmdSlices: map[int][]string{
+				0: {"apt-get", "dist-upgrade"},
+			},
 			expected: true,
 		},
-		"NoAptUpgrade": {
+		"UseAptDistUpgrade": {
 			cmdSlices: map[int][]string{
-				0: {"pip", "install", "--upgrade", "pip", "setuptools"},
-				1: {"pip", "install", "upgrade", "pip", "setuptools"},
+				0: {"apt", "dist-upgrade"},
+			},
+			expected: true,
+		},
+
+		"NoAptDistUpgrade": {
+			cmdSlices: map[int][]string{
+				0: {"somecommand", "dist-upgrade", "pip", "setuptools"},
 			},
 			expected: false,
 		},
