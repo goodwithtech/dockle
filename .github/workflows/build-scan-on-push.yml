@@ -10,3 +10,5 @@ jobs:
     - uses: Azure/container-scan@v0
       with:
         image-name: ${{ github.sha }}
+      env:
+        TRIVY_IGNORE_UNFIXED: true
