@@ -10,6 +10,6 @@ jobs:
     - uses: Azure/container-scan@v0
       with:
         image-name: ${{ github.sha }}
+        severity-threshold: CRITICAL
       env:
         TRIVY_IGNORE_UNFIXED: true
-        TRIVY_SEVERITY: CRITICAL
