@@ -15,6 +15,14 @@ var AlertLabels = map[int]string{
 	types.SkipLevel:   "SKIP",
 	types.IgnoreLevel: "IGNORE",
 }
+var sarifAlertLabels = map[int]string{
+	types.InfoLevel:   "note",
+	types.WarnLevel:   "warn",
+	types.FatalLevel:  "error",
+	types.PassLevel:   "none",
+	types.SkipLevel:   "none",
+	types.IgnoreLevel: "none",
+}
 
 type Writer interface {
 	Write(assessments types.AssessmentMap) (bool, error)
