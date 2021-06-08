@@ -7,7 +7,8 @@ require (
 	github.com/d4l3k/messagediff v1.2.2-0.20180726183240-b9e99b2f9263
 	github.com/docker/go-connections v0.4.0
 	github.com/goodwithtech/deckoder v0.0.0-20200308110342-e44aa2bd81b3
-	github.com/google/go-cmp v0.3.0
+	github.com/google/go-cmp v0.3.1
+	github.com/owenrumney/go-sarif v1.0.10
 	github.com/urfave/cli v1.22.1
 	go.uber.org/atomic v1.4.0 // indirect
 	go.uber.org/multierr v1.1.0 // indirect

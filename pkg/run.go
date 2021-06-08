@@ -103,6 +103,8 @@ func Run(c *cli.Context) (err error) {
 	switch format := c.String("format"); format {
 	case "json":
 		writer = &report.JsonWriter{Output: output, ImageName: imageName}
+	case "sarif":
+		writer = &report.SarifWriter{Output: output}
 	default:
 		writer = &report.ListWriter{Output: output}
 	}
