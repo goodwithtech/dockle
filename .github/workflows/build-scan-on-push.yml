@@ -12,3 +12,4 @@ jobs:
         image-name: ${{ github.sha }}
       env:
         TRIVY_IGNORE_UNFIXED: true
+        TRIVY_SEVERITY: CRITICAL
