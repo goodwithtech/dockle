@@ -69,6 +69,9 @@ func Run(c *cli.Context) (err error) {
 		if useLatestTag, err = useLatest(imageName); err != nil {
 			return fmt.Errorf("invalid image: %w", err)
 		}
+		if useLatestTag {
+			imageName += ":latest"
+		}
 	}
 	log.Logger.Debug("Start assessments...")
 
@@ -99,7 +102,7 @@ func Run(c *cli.Context) (err error) {
 	var writer report.Writer
 	switch format := c.String("format"); format {
 	case "json":
-		writer = &report.JsonWriter{Output: output}
+		writer = &report.JsonWriter{Output: output, ImageName: imageName}
 	default:
 		writer = &report.ListWriter{Output: output}
 	}

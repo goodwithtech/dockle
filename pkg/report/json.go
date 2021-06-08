@@ -11,10 +11,12 @@ import (
 )
 
 type JsonWriter struct {
+	ImageName string
 	Output io.Writer
 }
 
 type JsonOutputFormat struct {
+	ImageName string `json:"image,omitempty"`
 	Summary JsonSummary   `json:"summary"`
 	Details []*JsonDetail `json:"details"`
 }
@@ -63,6 +65,7 @@ func (jw JsonWriter) Write(assessMap types.AssessmentMap) (abend bool, err error
 		}
 	}
 	result := JsonOutputFormat{
+		ImageName: jw.ImageName,
 		Summary: jsonSummary,
 		Details: jsonDetails,
 	}
