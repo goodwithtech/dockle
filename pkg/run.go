@@ -69,9 +69,6 @@ func Run(c *cli.Context) (err error) {
 		if useLatestTag, err = useLatest(imageName); err != nil {
 			return fmt.Errorf("invalid image: %w", err)
 		}
-		if useLatestTag {
-			imageName += ":latest"
-		}
 	}
 	log.Logger.Debug("Start assessments...")
 
