@@ -1,18 +1,18 @@
 module github.com/Portshift/dockle
 
-go 1.13
+go 1.16
 
 require (
 	github.com/Portshift/klar v1.9.10-0.20201118172109-371310ea259d
 	github.com/containers/image/v5 v5.4.4
 	github.com/d4l3k/messagediff v1.2.2-0.20180726183240-b9e99b2f9263
 	github.com/docker/go-connections v0.4.0
-	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
-	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/goodwithtech/deckoder v0.0.0-20200308110342-e44aa2bd81b3
-	github.com/google/go-cmp v0.3.0
+	github.com/goodwithtech/dockle v0.3.15
+	github.com/google/go-cmp v0.3.1
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/optiopay/klar v2.4.0+incompatible // indirect
+	github.com/owenrumney/go-sarif v1.0.10
 	github.com/parnurzeal/gorequest v0.2.15
 	github.com/spf13/viper v1.7.1
 	github.com/urfave/cli v1.22.1

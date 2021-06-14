@@ -9,49 +9,57 @@ import (
 
 	"github.com/containers/image/v5/transports/alltransports"
 	deckodertypes "github.com/goodwithtech/deckoder/types"
-
-	"github.com/Portshift/dockle/config"
-
-	"github.com/Portshift/dockle/pkg/report"
-
-	"github.com/Portshift/dockle/pkg/scanner"
-
 	"github.com/urfave/cli"
 
+	"github.com/Portshift/dockle/config"
 	"github.com/Portshift/dockle/pkg/log"
+	"github.com/Portshift/dockle/pkg/report"
+	"github.com/Portshift/dockle/pkg/scanner"
 	"github.com/Portshift/dockle/pkg/types"
+	"github.com/Portshift/dockle/pkg/utils"
 )
 
 func RunFromCli(c *cli.Context) (err error) {
-	if err = log.InitLogger(c.Bool("debug")); err != nil {
-		l.Fatal(err)
+	ctx, cancel := context.WithTimeout(context.Background(), c.Duration("timeout"))
+	defer cancel()
+
+	cliVersion := "v" + c.App.Version
+	latestVersion, err := utils.FetchLatestVersion(ctx)
+
+	// check latest version
+	if err != nil {
+		log.Logger.Infof("Failed to check latest version. %s", err)
+	} else if cliVersion != latestVersion && c.App.Version != "dev" {
+		log.Logger.Warnf("A new version %s is now available! You have %s.", latestVersion, cliVersion)
 	}
+
 	config.CreateFromCli(c)
-	_, err = run()
+	_, err = run(ctx)
 
 	return err
 }
 
 func RunFromConfig(conf *config.Config) (types.AssessmentMap, error) {
 	config.Conf = *conf
+	ctx, cancel := context.WithTimeout(context.Background(), config.Conf.Timeout)
+	defer cancel()
 
-	return run()
+	return run(ctx)
 }
 
-func run() (ret types.AssessmentMap, err error) {
-	ctx := context.Background()
-	if err = log.InitLogger(config.Conf.Debug); err != nil {
+func run(ctx context.Context) (ret types.AssessmentMap, err error) {
+	debug := config.Conf.Debug
+	if err = log.InitLogger(debug); err != nil {
 		l.Fatal(err)
 	}
 
-	// TODO: Check latest version
-
 	// set docker option
 	dockerOption := deckodertypes.DockerOption{
-		Timeout:  config.Conf.Timeout,
-		UserName: config.Conf.Username,
-		Password: config.Conf.Password,
-		SkipPing: true,
+		Timeout:               config.Conf.Timeout,
+		UserName:              config.Conf.Username,
+		Password:              config.Conf.Password,
+		InsecureSkipTLSVerify: config.Conf.Insecure,
+		SkipPing:              true,
 	}
 
 	var useLatestTag bool
@@ -90,7 +98,9 @@ func run() (ret types.AssessmentMap, err error) {
 	var writer report.Writer
 	switch format := config.Conf.Format; format {
 	case "json":
-		writer = &report.JsonWriter{Output: output}
+		writer = &report.JsonWriter{Output: output, ImageName: config.Conf.ImageName}
+	case "sarif":
+		writer = &report.SarifWriter{Output: output}
 	default:
 		writer = &report.ListWriter{Output: output}
 	}
