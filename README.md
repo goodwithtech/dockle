@@ -99,7 +99,7 @@ $ brew install goodwithtech/r/dockle
 ## RHEL/CentOS
 
 ```bash
-$ VERSION=$(
+VERSION=$(
  curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
@@ -109,7 +109,7 @@ $ VERSION=$(
 ## Debian/Ubuntu
 
 ```bash
-$ VERSION=$(
+VERSION=$(
  curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
@@ -128,7 +128,7 @@ yay -Sy dockle-bin
 ## Windows
 
 ```bash
-$ VERSION=$(
+VERSION=$(
  curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
