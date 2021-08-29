@@ -17,7 +17,7 @@ var AlertLabels = map[int]string{
 }
 var sarifAlertLabels = map[int]string{
 	types.InfoLevel:   "note",
-	types.WarnLevel:   "warn",
+	types.WarnLevel:   "warning",
 	types.FatalLevel:  "error",
 	types.PassLevel:   "none",
 	types.SkipLevel:   "none",
