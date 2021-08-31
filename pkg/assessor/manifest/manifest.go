@@ -138,7 +138,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		assesses = append(assesses, &types.Assessment{
 			Code:     types.MinimizeAptGet,
 			Filename: ConfigFileName,
-			Desc:     fmt.Sprintf("Use 'rm -rf /var/lib/apt/lists' after 'apt-get install' : %s", cmd.CreatedBy),
+			Desc:     fmt.Sprintf("Use 'rm -rf /var/lib/apt/lists' after 'apt-get install|update' : %s", cmd.CreatedBy),
 		})
 	}
 
@@ -146,7 +146,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		assesses = append(assesses, &types.Assessment{
 			Code:     types.UseAptGetUpdateNoCache,
 			Filename: ConfigFileName,
-			Desc:     fmt.Sprintf("Always combine 'apt-get update' with 'apt-get install' : %s", cmd.CreatedBy),
+			Desc:     fmt.Sprintf("Always combine 'apt-get update' with 'apt-get install|upgrade' : %s", cmd.CreatedBy),
 		})
 	}
 
@@ -208,17 +208,17 @@ func reducableAptGetUpdate(cmdSlices map[int][]string) bool {
 	var useAptUpdate bool
 	var useAptInstall bool
 	for _, cmdSlice := range cmdSlices {
-		if !useAptUpdate && containsAll(cmdSlice, []string{"apt-get", "update"}) {
+		if !useAptUpdate && containsThreshold(cmdSlice, []string{"apt-get", "apt", "update"}, 2) {
 			useAptUpdate = true
 		}
-
-		if !useAptInstall && containsAll(cmdSlice, []string{"apt-get", "install"}) {
+		if !useAptInstall && containsThreshold(cmdSlice, []string{"apt-get", "apt", "upgrade", "install"}, 2) {
 			useAptInstall = true
 		}
 		if useAptUpdate && useAptInstall {
 			return false
 		}
 	}
+
 	if useAptUpdate && !useAptInstall {
 		return true
 	}
@@ -229,7 +229,7 @@ func reducableAptGetInstall(cmdSlices map[int][]string) bool {
 	var useAptInstall bool
 	var useRmCache bool
 	for _, cmdSlice := range cmdSlices {
-		if !useAptInstall && containsAll(cmdSlice, []string{"apt-get", "install"}) {
+		if !useAptInstall && containsThreshold(cmdSlice, []string{"apt-get", "apt", "update", "install"}, 2) {
 			useAptInstall = true
 		}
 		if !useRmCache && containsThreshold(

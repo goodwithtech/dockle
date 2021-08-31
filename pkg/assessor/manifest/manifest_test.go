@@ -51,6 +51,24 @@ func TestAssess(t *testing.T) {
 				},
 			},
 		},
+		"AptUpdateUpgrade": {
+			path: "./testdata/apt_update_upgrade.json",
+
+			assesses: []*types.Assessment{
+				{
+					Code:     types.AvoidRootDefault,
+					Filename: ConfigFileName,
+				},
+				{
+					Code:     types.MinimizeAptGet,
+					Filename: ConfigFileName,
+				},
+				{
+					Code:     types.AddHealthcheck,
+					Filename: ConfigFileName,
+				},
+			},
+		},
 	}
 
 	for testname, v := range tests {
@@ -243,12 +261,20 @@ func TestReducableAptGetInstall(t *testing.T) {
 			},
 			expected: true,
 		},
-		"NoInstall": {
+		"OnlyUpdate": {
 			cmdSlices: map[int][]string{
 				0: {
 					"apt-get", "update",
 				},
 				1: {
+					"apt-get", "purge",
+				},
+			},
+			expected: true,
+		},
+		"NoUpdateInstall": {
+			cmdSlices: map[int][]string{
+				0: {
 					"apt-get", "purge",
 				},
 			},
