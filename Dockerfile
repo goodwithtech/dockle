@@ -6,7 +6,7 @@ RUN apk --no-cache add git
 COPY . .
 RUN CGO_ENABLED=0 go build -a -o /dockle ${PWD}/cmd/dockle
 
-FROM alpine:3.13
+FROM alpine:3.14
 COPY --from=builder /dockle /usr/local/bin/dockle
 RUN chmod +x /usr/local/bin/dockle
 RUN apk --no-cache add ca-certificates shadow

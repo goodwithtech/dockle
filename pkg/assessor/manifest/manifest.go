@@ -197,7 +197,7 @@ func useDistUpgrade(cmdSlices map[int][]string) bool {
 
 func useADDstatement(cmdSlices map[int][]string) bool {
 	for _, cmdSlice := range cmdSlices {
-		if containsAll(cmdSlice, []string{"ADD", "in"}) {
+		if containsThreshold(cmdSlice, []string{"ADD", "in", "buildkit"}, 2) {
 			return true
 		}
 	}
