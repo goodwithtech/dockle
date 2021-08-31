@@ -380,6 +380,58 @@ func TestUseDistUpgrade(t *testing.T) {
 	}
 }
 
+func TestContainsThreshold(t *testing.T) {
+	var tests = map[string]struct {
+		heystack  []string
+		needles   []string
+		threshold int
+		expected  bool
+	}{
+		"SimpleSuccess2": {
+			heystack:  []string{"a", "b", "c", "d"},
+			needles:   []string{"a", "b", "x", "z"},
+			threshold: 2,
+			expected:  true,
+		},
+		"SimpleFail2": {
+			heystack:  []string{"a", "b", "c", "d"},
+			needles:   []string{"a", "x", "y", "z"},
+			threshold: 3,
+			expected:  false,
+		},
+		"SimpleSuccess3": {
+			heystack:  []string{"a", "b", "c", "d"},
+			needles:   []string{"a", "b", "c", "z"},
+			threshold: 3,
+			expected:  true,
+		},
+		"SimpleFail3": {
+			heystack:  []string{"a", "b", "d", "f"},
+			needles:   []string{"a", "b", "c", "z"},
+			threshold: 3,
+			expected:  false,
+		},
+		"DuplicateHeystackSuccess": {
+			heystack:  []string{"a", "a", "b", "c"},
+			needles:   []string{"a", "a", "y", "z"},
+			threshold: 2,
+			expected:  false,
+		},
+		"DuplicateHeystackFail": {
+			heystack:  []string{"a", "a", "b", "c"},
+			needles:   []string{"a", "x", "y", "z"},
+			threshold: 2,
+			expected:  false,
+		},
+	}
+	for testname, v := range tests {
+		actual := containsThreshold(v.heystack, v.needles, v.threshold)
+		if actual != v.expected {
+			t.Errorf("%s want: %t, got %t", testname, v.expected, actual)
+		}
+	}
+}
+
 func loadImageFromFile(path string) (config types.Image, err error) {
 	read, err := os.Open(path)
 	if err != nil {
