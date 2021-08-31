@@ -1,0 +1,78 @@
+{
+  "architecture": "arm64",
+  "config": {
+    "Hostname": "",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "AttachStderr": false,
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    ],
+    "Cmd": [
+      "bash"
+    ],
+    "Image": "sha256:37fe96a532d30f99df9d33b2e5568f7340eb412679250731e1446cf429a6eb9e",
+    "Volumes": null,
+    "WorkingDir": "",
+    "Entrypoint": null,
+    "OnBuild": null,
+    "Labels": null
+  },
+  "container": "2f74aee84e66a15a4fd8938e8e77913dcb84e23fa401bb09fef1f6754199a036",
+  "container_config": {
+    "Hostname": "",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "AttachStderr": false,
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    ],
+    "Cmd": [
+      "/bin/sh",
+      "-c",
+      "apt-get update -y && apt-get upgrade -y && echo \"hello\""
+    ],
+    "Image": "sha256:37fe96a532d30f99df9d33b2e5568f7340eb412679250731e1446cf429a6eb9e",
+    "Volumes": null,
+    "WorkingDir": "",
+    "Entrypoint": null,
+    "OnBuild": null,
+    "Labels": null
+  },
+  "created": "2021-08-31T01:39:59.963242465Z",
+  "docker_version": "20.10.8",
+  "history": [
+    {
+      "created": "2021-08-17T01:45:48.451416155Z",
+      "created_by": "/bin/sh -c #(nop) ADD file:1e52a0aa8f37622b3d0d73bddae98dd854cdd0b001fffe704eb833b2659413ec in / "
+    },
+    {
+      "created": "2021-08-17T01:45:49.041321963Z",
+      "created_by": "/bin/sh -c #(nop)  CMD [\"bash\"]",
+      "empty_layer": true
+    },
+    {
+      "created": "2021-08-31T01:39:59.963242465Z",
+      "created_by": "/bin/sh -c apt-get update -y && apt-get upgrade -y && echo \"hello\""
+    }
+  ],
+  "os": "linux",
+  "rootfs": {
+    "type": "layers",
+    "diff_ids": [
+      "sha256:9d93ee5b513b12ff60d69072e4ff0dbdca71652c489b9750a96a85bec726a17e",
+      "sha256:a50611151d42ef5da2ce47cc17e366b8214a937ee875573b99e11ab678c54cd2"
+    ]
+  },
+  "variant": "v8"
+}
