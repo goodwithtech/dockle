@@ -27,7 +27,8 @@ func Run(c *cli.Context) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.Duration("timeout"))
 	defer cancel()
 	debug := c.Bool("debug")
-	if err = log.InitLogger(debug); err != nil {
+	quiet := c.Bool("quiet")
+	if err = log.InitLogger(debug, quiet); err != nil {
 		l.Fatal(err)
 	}
 

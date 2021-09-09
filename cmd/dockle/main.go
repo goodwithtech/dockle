@@ -69,6 +69,10 @@ OPTIONS:
 			Name:  "debug, d",
 			Usage: "debug mode",
 		},
+		cli.BoolFlag{
+			Name:  "quiet, q",
+			Usage: "suppress log output",
+		},
 
 		// Registry flag
 		cli.DurationFlag{

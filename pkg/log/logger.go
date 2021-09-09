@@ -2,9 +2,9 @@ package log
 
 import (
 	"fmt"
-
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"os"
 )
 
 var (
@@ -12,22 +12,31 @@ var (
 	debugOption bool
 )
 
-func InitLogger(debug bool) (err error) {
+func InitLogger(debug, quiet bool) (err error) {
 	debugOption = debug
-	Logger, err = newLogger(debug)
+	Logger, err = newLogger(debug, quiet)
 	if err != nil {
 		return fmt.Errorf("error in new logger: %w", err)
 	}
 	return nil
-
 }
 
-func newLogger(debug bool) (*zap.SugaredLogger, error) {
+func newLogger(debug, quiet bool) (*zap.SugaredLogger, error) {
 	level := zap.NewAtomicLevel()
 	if debug {
 		level.SetLevel(zapcore.DebugLevel)
 	} else {
 		level.SetLevel(zapcore.InfoLevel)
+	}
+
+	stdout := "stdout"
+	stderr := "stderr"
+	if quiet {
+		if _, err := os.Create(os.DevNull); err != nil {
+			return nil, err
+		}
+		stdout = os.DevNull
+		stderr = os.DevNull
 	}
 
 	myConfig := zap.Config{
@@ -48,8 +57,8 @@ func newLogger(debug bool) (*zap.SugaredLogger, error) {
 			EncodeDuration: zapcore.StringDurationEncoder,
 			EncodeCaller:   zapcore.ShortCallerEncoder,
 		},
-		OutputPaths:      []string{"stdout"},
-		ErrorOutputPaths: []string{"stderr"},
+		OutputPaths:      []string{stdout},
+		ErrorOutputPaths: []string{stderr},
 	}
 	logger, err := myConfig.Build()
 	if err != nil {
