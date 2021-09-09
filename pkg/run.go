@@ -104,7 +104,7 @@ func Run(c *cli.Context) (err error) {
 	case "sarif":
 		writer = &report.SarifWriter{Output: output}
 	default:
-		writer = &report.ListWriter{Output: output}
+		writer = &report.ListWriter{Output: output, NoColor: c.Bool("no-color")}
 	}
 
 	abend, err := writer.Write(assessmentMap)

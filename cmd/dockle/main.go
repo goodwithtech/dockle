@@ -73,6 +73,11 @@ OPTIONS:
 			Name:  "quiet, q",
 			Usage: "suppress log output",
 		},
+		cli.BoolFlag{
+			Name:  "no-color",
+			EnvVar: "NO_COLOR",
+			Usage: "suppress log output",
+		},
 
 		// Registry flag
 		cli.DurationFlag{
