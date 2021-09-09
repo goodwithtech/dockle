@@ -19,7 +19,7 @@ import (
 )
 
 func TestScanImage(t *testing.T) {
-	log.InitLogger(false)
+	log.InitLogger(false, false)
 	testcases := map[string]struct {
 		imageName string
 		fileName  string
