@@ -20,7 +20,7 @@ $ dockle [YOUR_IMAGE_NAME]
 ```
 See [Installation](#installation) and [Common Examples](#common-examples)
 
-<img src="imgs/dockle.gif" width="800">
+<img src="imgs/dockle.png" width="800">
 
 # Checkpoints Comparison
 
