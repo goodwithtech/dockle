@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
 	l "log"
 	"os"
 	"strings"
@@ -72,8 +73,9 @@ func Run(c *cli.Context) (err error) {
 			return fmt.Errorf("invalid image: %w", err)
 		}
 	}
-	log.Logger.Debug("Start assessments...")
+	manifest.AddAcceptanceKeys(c.StringSlice("accept-key"))
 
+	log.Logger.Debug("Start assessments...")
 	assessments, err := scanner.ScanImage(ctx, imageName, filePath, dockerOption)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {

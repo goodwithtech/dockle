@@ -46,6 +46,11 @@ OPTIONS:
 			Name:  "ignore, i",
 			Usage: "checkpoints to ignore. You can use .dockleignore too.",
 		},
+		cli.StringSliceFlag{
+			Name:  "accept-key, a",
+			EnvVar: "ACCEPT_KEY",
+			Usage: "For CIS-DI-0010. You can add acceptable keywords. e.g) -a GPG_KEY -a KEYCLOAK",
+		},
 		cli.StringFlag{
 			Name:  "format, f",
 			Value: "",
