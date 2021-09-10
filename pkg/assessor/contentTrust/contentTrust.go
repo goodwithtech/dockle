@@ -13,7 +13,7 @@ var HostEnvironmentFileName = "ENVIRONMENT variable on HOST OS"
 
 type ContentTrustAssessor struct{}
 
-func (a ContentTrustAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a ContentTrustAssessor) Assess(_ deckodertypes.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Scan start : DOCKER_CONTENT_TRUST")
 
 	if os.Getenv("DOCKER_CONTENT_TRUST") != "1" {
@@ -29,6 +29,10 @@ func (a ContentTrustAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.As
 }
 
 func (a ContentTrustAssessor) RequiredFiles() []string {
+	return []string{}
+}
+
+func (a ContentTrustAssessor) RequiredExtensions() []string {
 	return []string{}
 }
 

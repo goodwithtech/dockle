@@ -20,6 +20,7 @@ import (
 
 func TestScanImage(t *testing.T) {
 	log.InitLogger(false, false)
+	AddAcceptanceExtensions([]string{"pem"})
 	testcases := map[string]struct {
 		imageName string
 		fileName  string

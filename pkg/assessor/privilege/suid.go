@@ -42,6 +42,10 @@ func (a PrivilegeAssessor) RequiredFiles() []string {
 	return []string{}
 }
 
+func (a PrivilegeAssessor) RequiredExtensions() []string {
+	return []string{}
+}
+
 //const GidMode os.FileMode = 4000
 func (a PrivilegeAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{os.ModeSetgid, os.ModeSetuid}

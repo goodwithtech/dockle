@@ -627,7 +627,14 @@ The `--ignore, -i` option can ignore specified checkpoints.
 $ dockle -i CIS-DI-0001 -i DKL-DI-0006 [IMAGE_NAME]
 ```
 
-Or, use `.dockleignore` file.
+Or, use `DOCKLE_IGNORS`:
+
+```
+export DOCKLE_IGNORES=CIS-DI-0001,DKL-DI-0006
+dockle [IMAGE_NAME]
+```
+
+Or, use `.dockleignore` file:
 
 ```bash
 $ cat .dockleignore
@@ -635,6 +642,22 @@ $ cat .dockleignore
 CIS-DI-0001
 # Use latest tag because to check the image inside only
 DKL-DI-0006
+```
+
+### Accept  suspitious `environment variables` / `files` / `file extensions`
+
+```bash
+# --accept-key value, --ak value             You can add acceptable keywords.
+dockle -ak GPG_KEY -ak KEYCLOAK_VERSION [IMAGE_NAME]
+or DOCKLE_ACCEPT_KEYS=GPG_KEY,KEYCLOAK_VERSION dockle [IMAGE_NAME]
+
+# --accept-file value, --af value            You can add acceptable file names.
+dockle -af id_rsa -af id_dsa [IMAGE_NAME]
+or DOCKLE_ACCEPT_FILES=id_rsa,id_dsa dockle [IMAGE_NAME]
+
+# --accept-file-extension value, --ae value  You can add acceptable file extensions.
+dockle -ae pem -ae log [IMAGE_NAME]
+or DOCKLE_ACCEPT_FILE_EXTENSIONS=pem,log dockle [IMAGE_NAME]
 ```
 
 ## Continuous Integration (CI)

@@ -270,6 +270,10 @@ func (a ManifestAssessor) RequiredFiles() []string {
 	return []string{}
 }
 
+func (a ManifestAssessor) RequiredExtensions() []string {
+	return []string{}
+}
+
 func (a ManifestAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{}
 }
