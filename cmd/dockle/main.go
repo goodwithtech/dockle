@@ -43,18 +43,24 @@ OPTIONS:
 			Usage: "input file path instead of image name",
 		},
 		cli.StringSliceFlag{
-			Name:  "ignore, i",
-			Usage: "checkpoints to ignore. You can use .dockleignore too.",
+			Name:   "ignore, i",
+			EnvVar: "DOCKLE_IGNORES",
+			Usage:  "checkpoints to ignore. You can use .dockleignore too.",
 		},
 		cli.StringSliceFlag{
 			Name:   "accept-key, ak",
-			EnvVar: "ACCEPT_KEY",
+			EnvVar: "DOCKLE_ACCEPT_KEYS",
 			Usage:  "For CIS-DI-0010. You can add acceptable keywords. e.g) -ak GPG_KEY -ak KEYCLOAK",
 		},
 		cli.StringSliceFlag{
 			Name:   "accept-file, af",
-			EnvVar: "ACCEPT_KEY",
+			EnvVar: "DOCKLE_ACCEPT_FILES",
 			Usage:  "For CIS-DI-0010. You can add acceptable file names. e.g) -af id_rsa -af config.json",
+		},
+		cli.StringSliceFlag{
+			Name:   "accept-file-extension, ae",
+			EnvVar: "DOCKLE_ACCEPT_FILE_EXTENSIONS",
+			Usage:  "For CIS-DI-0010. You can add acceptable file extensions. e.g) -ae pem -ae log",
 		},
 		cli.StringFlag{
 			Name:  "format, f",

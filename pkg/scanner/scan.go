@@ -9,8 +9,6 @@ import (
 	"github.com/goodwithtech/deckoder/analyzer"
 	"github.com/goodwithtech/deckoder/extractor"
 	"github.com/goodwithtech/deckoder/extractor/docker"
-	"github.com/goodwithtech/deckoder/utils"
-
 	deckodertypes "github.com/goodwithtech/deckoder/types"
 
 	"github.com/goodwithtech/dockle/pkg/types"
@@ -18,11 +16,21 @@ import (
 	"github.com/goodwithtech/dockle/pkg/assessor"
 )
 
-var acceptanceFiles = map[string]struct{}{}
+var (
+	acceptanceFiles      = map[string]struct{}{}
+	acceptanceExtensions = map[string]struct{}{}
+)
 
 func AddAcceptanceFiles(keys []string) {
 	for _, key := range keys {
 		acceptanceFiles[key] = struct{}{}
+	}
+}
+
+func AddAcceptanceExtensions(keys []string) {
+	for _, key := range keys {
+		// file extension must start with .
+		acceptanceExtensions["."+key] = struct{}{}
 	}
 }
 
@@ -57,6 +65,7 @@ func ScanImage(ctx context.Context, imageName, filePath string, dockerOption dec
 func createPathPermissionFilterFunc(filenames, extensions []string, permissions []os.FileMode) deckodertypes.FilterFunc {
 	requiredDirNames := map[string]struct{}{}
 	requiredFileNames := map[string]struct{}{}
+	requiredExts := map[string]struct{}{}
 	for _, filename := range filenames {
 		if filename[len(filename)-1] == '/' {
 			// if filename end "/", it is directory and requiredDirNames removes last "/"
@@ -65,11 +74,17 @@ func createPathPermissionFilterFunc(filenames, extensions []string, permissions 
 			requiredFileNames[filename] = struct{}{}
 		}
 	}
+	for _, extension := range extensions {
+		requiredExts[extension] = struct{}{}
+	}
 
 	return func(h *tar.Header) (bool, error) {
 		filePath := filepath.Clean(h.Name)
 		fileName := filepath.Base(filePath)
 		// Skip check if acceptance files
+		if _, ok := acceptanceExtensions[filepath.Ext(fileName)]; ok {
+			return false, nil
+		}
 		if _, ok := acceptanceFiles[filePath]; ok {
 			return false, nil
 		}
@@ -86,7 +101,7 @@ func createPathPermissionFilterFunc(filenames, extensions []string, permissions 
 		}
 
 		// Check with file extensions
-		if utils.StringInSlice(filepath.Ext(fileName), extensions) {
+		if _, ok := requiredExts[filepath.Ext(fileName)]; ok {
 			return true, nil
 		}
 

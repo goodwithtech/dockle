@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"unicode/utf8"
 
 	deckodertypes "github.com/goodwithtech/deckoder/types"
 
@@ -22,9 +23,7 @@ func (a CredentialAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Asse
 	for filename := range fileMap {
 		basename := filepath.Base(filename)
 		// check exist target files
-		_, ok1 := fmap[basename]
-		_, ok2 := fexts[filepath.Ext(basename)]
-		if ok1 || ok2 {
+		if _, ok := fmap[basename]; ok {
 			assesses = append(
 				assesses,
 				&types.Assessment{
@@ -32,9 +31,22 @@ func (a CredentialAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Asse
 					Filename: filename,
 					Desc:     fmt.Sprintf("Suspicious filename found : %s (You can suppress it with \"-af %s\")", filename, basename),
 				})
+		} else if _, ok := fexts[filepath.Ext(basename)]; ok {
+			assesses = append(
+				assesses,
+				&types.Assessment{
+					Code:     types.AvoidCredential,
+					Filename: filename,
+					Desc:     fmt.Sprintf("Suspicious file extension found : %s (You can suppress it with \"-ae %s\")", filename, trimFirstRune(filepath.Ext(basename))),
+				})
 		}
 	}
 	return assesses, nil
+}
+
+func trimFirstRune(s string) string {
+	_, i := utf8.DecodeRuneInString(s)
+	return s[i:]
 }
 
 func makeMaps(keys []string) map[string]struct{} {
@@ -57,11 +69,41 @@ func (a CredentialAssessor) RequiredFiles() []string {
 		"id_dsa",
 		"id_ecdsa",
 		"id_ed25519",
+		"secret_token.rb",
+		"carrierwave.rb",
+		"omniauth.rb",
+		"settings.py",
+		"database.yml",
+		"credentials.xml",
 	}
 }
 
 func (a CredentialAssessor) RequiredExtensions() []string {
-	return []string{".key", ".secret"}
+	// reference: https://github.com/eth0izzle/shhgit/blob/master/config.yaml
+	return []string{
+		".key",
+		".secret",
+		".pem",
+		".p12",
+		".pkcs12",
+		".pfx",
+		".asc",
+		".ovpn",
+		".private_key",
+		".cscfg",
+		".rdp",
+		".mdf",
+		".sdf",
+		".bek",
+		".tpm",
+		".fve",
+		".jks",
+		".psafe3",
+		".agilekeychain",
+		".keychain",
+		".pcap",
+		".gnucache",
+	}
 }
 
 func (a CredentialAssessor) RequiredPermissions() []os.FileMode {
