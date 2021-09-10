@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	l "log"
 	"os"
@@ -75,6 +76,9 @@ func Run(c *cli.Context) (err error) {
 
 	assessments, err := scanner.ScanImage(ctx, imageName, filePath, dockerOption)
 	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return fmt.Errorf("Pull it with \"docker pull %s\" or \"dockle --timeout 600s\" to increase the timeout\n%w", imageName, err)
+		}
 		return err
 	}
 	if useLatestTag {

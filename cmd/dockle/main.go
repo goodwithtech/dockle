@@ -83,6 +83,7 @@ OPTIONS:
 		cli.DurationFlag{
 			Name:  "timeout, t",
 			Value: time.Second * 90,
+			EnvVar: "DOCKLE_TIMEOUT",
 			Usage: "docker timeout. e.g) 5s, 5m...",
 		},
 		cli.StringFlag{
