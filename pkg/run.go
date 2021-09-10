@@ -91,7 +91,7 @@ func Run(c *cli.Context) (err error) {
 
 	log.Logger.Debug("End assessments...")
 
-	assessmentMap := types.CreateAssessmentMap(assessments, config.Conf.IgnoreMap)
+	assessmentMap := types.CreateAssessmentMap(assessments, config.Conf.IgnoreMap, debug)
 	// Store ignore checkpoint code
 	o := c.String("output")
 	output := os.Stdout

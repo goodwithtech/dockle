@@ -14,7 +14,7 @@ type CodeInfo struct {
 }
 type AssessmentMap map[string]CodeInfo
 
-func CreateAssessmentMap(as AssessmentSlice, ignoreMap map[string]struct{}) AssessmentMap {
+func CreateAssessmentMap(as AssessmentSlice, ignoreMap map[string]struct{}, debug bool) AssessmentMap {
 	asMap := AssessmentMap{}
 	for _, a := range as {
 		level := a.Level
@@ -22,6 +22,10 @@ func CreateAssessmentMap(as AssessmentSlice, ignoreMap map[string]struct{}) Asse
 			level = DefaultLevelMap[a.Code]
 		}
 		if _, ok := ignoreMap[a.Code]; ok {
+			// ignore level only shows DEBUG mode
+			if !debug {
+				continue
+			}
 			level = IgnoreLevel
 		}
 		if _, ok := asMap[a.Code]; !ok {
