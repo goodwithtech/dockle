@@ -65,6 +65,10 @@ func (a GroupAssessor) RequiredFiles() []string {
 	return []string{"etc/group"}
 }
 
+func (a GroupAssessor) RequiredExtensions() []string {
+	return []string{}
+}
+
 func (a GroupAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{}
 }

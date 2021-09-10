@@ -3,7 +3,6 @@ package scanner
 import (
 	"archive/tar"
 	"context"
-	"flag"
 	"os"
 	"path/filepath"
 
@@ -17,13 +16,17 @@ import (
 	"github.com/goodwithtech/dockle/pkg/types"
 
 	"github.com/goodwithtech/dockle/pkg/assessor"
-
-	"golang.org/x/crypto/ssh/terminal"
 )
 
+var acceptanceFiles = map[string]struct{}{}
+
+func AddAcceptanceFiles(keys []string) {
+	for _, key := range keys {
+		acceptanceFiles[key] = struct{}{}
+	}
+}
+
 func ScanImage(ctx context.Context, imageName, filePath string, dockerOption deckodertypes.DockerOption) (assessments []*types.Assessment, err error) {
-	var files deckodertypes.FileMap
-	filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredPermissions())
 	var ext extractor.Extractor
 	var cleanup func()
 	if imageName != "" {
@@ -41,6 +44,8 @@ func ScanImage(ctx context.Context, imageName, filePath string, dockerOption dec
 	}
 	defer cleanup()
 	ac := analyzer.New(ext)
+	var files deckodertypes.FileMap
+	filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredExtensions(), assessor.LoadRequiredPermissions())
 	if files, err = ac.Analyze(ctx, filterFunc); err != nil {
 		return nil, err
 	}
@@ -49,28 +54,49 @@ func ScanImage(ctx context.Context, imageName, filePath string, dockerOption dec
 	return assessments, nil
 }
 
-func createPathPermissionFilterFunc(filenames []string, permissions []os.FileMode) deckodertypes.FilterFunc {
-	requiredDirNames := []string{}
-	requiredFileNames := []string{}
+func createPathPermissionFilterFunc(filenames, extensions []string, permissions []os.FileMode) deckodertypes.FilterFunc {
+	requiredDirNames := map[string]struct{}{}
+	requiredFileNames := map[string]struct{}{}
 	for _, filename := range filenames {
 		if filename[len(filename)-1] == '/' {
 			// if filename end "/", it is directory and requiredDirNames removes last "/"
-			requiredDirNames = append(requiredDirNames, filepath.Clean(filename))
+			requiredDirNames[filepath.Clean(filename)] = struct{}{}
 		} else {
-			requiredFileNames = append(requiredFileNames, filename)
+			requiredFileNames[filename] = struct{}{}
 		}
 	}
 
 	return func(h *tar.Header) (bool, error) {
 		filePath := filepath.Clean(h.Name)
 		fileName := filepath.Base(filePath)
-		if utils.StringInSlice(filePath, requiredFileNames) || utils.StringInSlice(fileName, requiredFileNames) {
+		// Skip check if acceptance files
+		if _, ok := acceptanceFiles[filePath]; ok {
+			return false, nil
+		}
+		if _, ok := acceptanceFiles[fileName]; ok {
+			return false, nil
+		}
+
+		// Check with file names
+		if _, ok := requiredFileNames[filePath]; ok {
+			return true, nil
+		}
+		if _, ok := requiredFileNames[fileName]; ok {
 			return true, nil
 		}
 
+		// Check with file extensions
+		if utils.StringInSlice(filepath.Ext(fileName), extensions) {
+			return true, nil
+		}
+
+		// Check with file directory name
 		fileDir := filepath.Dir(filePath)
+		if _, ok := requiredDirNames[fileDir]; ok {
+			return true, nil
+		}
 		fileDirBase := filepath.Base(fileDir)
-		if utils.StringInSlice(fileDir, requiredDirNames) || utils.StringInSlice(fileDirBase, requiredDirNames) {
+		if _, ok := requiredDirNames[fileDirBase]; ok {
 			return true, nil
 		}
 
@@ -83,16 +109,4 @@ func createPathPermissionFilterFunc(filenames []string, permissions []os.FileMod
 		}
 		return false, nil
 	}
-}
-
-func openStream(path string) (*os.File, error) {
-	if path == "-" {
-		if terminal.IsTerminal(0) {
-			flag.Usage()
-			os.Exit(64)
-		} else {
-			return os.Stdin, nil
-		}
-	}
-	return os.Open(path)
 }

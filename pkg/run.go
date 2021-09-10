@@ -74,7 +74,7 @@ func Run(c *cli.Context) (err error) {
 		}
 	}
 	manifest.AddAcceptanceKeys(c.StringSlice("accept-key"))
-
+	scanner.AddAcceptanceFiles(c.StringSlice("accept-file"))
 	log.Logger.Debug("Start assessments...")
 	assessments, err := scanner.ScanImage(ctx, imageName, filePath, dockerOption)
 	if err != nil {

@@ -47,9 +47,14 @@ OPTIONS:
 			Usage: "checkpoints to ignore. You can use .dockleignore too.",
 		},
 		cli.StringSliceFlag{
-			Name:  "accept-key, a",
+			Name:   "accept-key, ak",
 			EnvVar: "ACCEPT_KEY",
-			Usage: "For CIS-DI-0010. You can add acceptable keywords. e.g) -a GPG_KEY -a KEYCLOAK",
+			Usage:  "For CIS-DI-0010. You can add acceptable keywords. e.g) -ak GPG_KEY -ak KEYCLOAK",
+		},
+		cli.StringSliceFlag{
+			Name:   "accept-file, af",
+			EnvVar: "ACCEPT_KEY",
+			Usage:  "For CIS-DI-0010. You can add acceptable file names. e.g) -af id_rsa -af config.json",
 		},
 		cli.StringFlag{
 			Name:  "format, f",
@@ -79,17 +84,17 @@ OPTIONS:
 			Usage: "suppress log output",
 		},
 		cli.BoolFlag{
-			Name:  "no-color",
+			Name:   "no-color",
 			EnvVar: "NO_COLOR",
-			Usage: "suppress log output",
+			Usage:  "suppress log output",
 		},
 
 		// Registry flag
 		cli.DurationFlag{
-			Name:  "timeout, t",
-			Value: time.Second * 90,
+			Name:   "timeout, t",
+			Value:  time.Second * 90,
 			EnvVar: "DOCKLE_TIMEOUT",
-			Usage: "docker timeout. e.g) 5s, 5m...",
+			Usage:  "docker timeout. e.g) 5s, 5m...",
 		},
 		cli.StringFlag{
 			Name:   "authurl",
