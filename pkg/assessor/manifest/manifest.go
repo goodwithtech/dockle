@@ -41,6 +41,12 @@ func (a ManifestAssessor) Assess(fileMap deckodertypes.FileMap) (assesses []*typ
 	return checkAssessments(d)
 }
 
+func AddAcceptanceKeys(keys []string) {
+	for _, key := range keys {
+		acceptanceEnvKey[key] = struct{}{}
+	}
+}
+
 func checkAssessments(img types.Image) (assesses []*types.Assessment, err error) {
 	if img.Config.User == "" || img.Config.User == "root" {
 		assesses = append(assesses, &types.Assessment{
@@ -61,7 +67,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 				assesses = append(assesses, &types.Assessment{
 					Code:     types.AvoidCredential,
 					Filename: ConfigFileName,
-					Desc:     fmt.Sprintf("Suspicious ENV key found : %s", envKey),
+					Desc:     fmt.Sprintf("Suspicious ENV key found : %s (You can suppress it with --accept-key)", envKey),
 				})
 			}
 		}
