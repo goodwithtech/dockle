@@ -236,6 +236,51 @@ func TestReducableAptGetUpdate(t *testing.T) {
 			},
 			expected: false,
 		},
+		"CheckAptCommand": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apt", "update",
+				},
+				1: {
+					"apt", "-y", "--no-install-recommends", "install",
+				},
+			},
+			expected: false,
+		},
+		"AptUpdateAfterInstall": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apt", "-y", "--no-install-recommends", "install",
+
+				},
+				1: {
+					"apt", "update",
+				},
+			},
+			expected: true,
+		},
+		"LongInvalidCommand": {
+			// https://github.com/docker-library/golang/blob/3f2c52653043f067156ce4f41182c2a758c4c857/1.17/alpine3.14/Dockerfile#L20-L107
+			// Issue: https://github.com/goodwithtech/dockle/issues/151
+			cmdSlices: map[int][]string{
+				0: {
+					"/bin/sh", "-c", "set", "-eux;", "apk", "add", "--no-cache", "--virtual", ".fetch-deps", "gnupg;", "arch=$(apk", "--print-arch);", "url=;",
+					"case", "$arch", "in", "'x86_64')", "export", "GOARCH='amd64'", "GOOS='linux';", ";;", "'armhf')", "export", "GOARCH='arm'", "GOARM='6'", "GOOS='linux';", ";;", "'armv7')",
+					"export", "GOARCH='arm'", "GOARM='7'", "GOOS='linux';", ";;", "'aarch64')", "export", "GOARCH='arm64'", "GOOS='linux';", ";;", "'x86')", "export", "GO386='softfloat'", "GOARCH='386'",
+					"GOOS='linux';", ";;", "'ppc64le')", "export", "GOARCH='ppc64le'", "GOOS='linux';", ";;", "'s390x')", "export", "GOARCH='s390x'", "GOOS='linux';", ";;", "*)", "echo", ">&2", "error:",
+					"unsupported", "architecture", "'$arch'", "(likely", "packaging", "update", "needed);", "exit", "1", ";;", "esac;", "build=;", "if", "[", "-z", "$url", "];", "then", "build=1;",
+					"url='https://dl.google.com/go/go1.17.1.src.tar.gz';", "sha256='49dc08339770acd5613312db8c141eaf61779995577b89d93b541ef83067e5b1';", "fi;", "wget", "-O", "go.tgz.asc", "$url.asc;", "wget",
+					"-O", "go.tgz", "$url;", "echo", "$sha256", "*go.tgz", "|", "sha256sum", "-c", "-;", "GNUPGHOME=$(mktemp", "-d);", "export", "GNUPGHOME;", "gpg", "--batch", "--keyserver", "keyserver.ubuntu.com",
+					"--recv-keys", "'EB4C", "1BFD", "4F04", "2F6D", "DDCC", "EC91", "7721", "F63B", "D38B", "4796';", "gpg", "--batch", "--verify", "go.tgz.asc", "go.tgz;", "gpgconf", "--kill", "all;", "rm", "-rf", "$GNUPGHOME",
+					"go.tgz.asc;", "tar", "-C", "/usr/local", "-xzf", "go.tgz;", "rm", "go.tgz;", "if", "[", "-n", "$build", "];", "then", "apk", "add", "--no-cache", "--virtual", ".build-deps", "bash", "gcc", "go", "musl-dev",
+					";", "(", "cd", "/usr/local/go/src;", "export", "GOROOT_BOOTSTRAP=$(go", "env", "GOROOT)", "GOHOSTOS=$GOOS", "GOHOSTARCH=$GOARCH;", "./make.bash;", ");", "apk", "del", "--no-network", ".build-deps;", "go", "install",
+					"std;", "rm", "-rf", "/usr/local/go/pkg/*/cmd", "/usr/local/go/pkg/bootstrap", "/usr/local/go/pkg/obj", "/usr/local/go/pkg/tool/*/api", "/usr/local/go/pkg/tool/*/go_bootstrap",
+					"/usr/local/go/src/cmd/dist/dist", ";", "fi;", "apk", "del", "--no-network", ".fetch-deps;", "go", "version",
+				},
+			},
+			expected: false,
+		},
+
 	}
 	for testname, v := range tests {
 		actual := reducableAptGetUpdate(v.cmdSlices)
