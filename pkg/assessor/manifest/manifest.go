@@ -210,45 +210,64 @@ func useADDstatement(cmdSlices map[int][]string) bool {
 	return false
 }
 
+func checkAptCommand(target []string, command string) bool {
+	if containsThreshold(target, []string{"apt-get", "apt", command}, 2) {
+		return true
+	}
+	return false
+}
+
+func checkAptLibraryDirChanged(target []string) bool {
+	if checkAptCommand(target, "update") || checkAptCommand(target, "install") {
+		return true
+	}
+	return false
+}
+
 func reducableAptGetUpdate(cmdSlices map[int][]string) bool {
 	var useAptUpdate bool
-	var useAptInstall bool
+	var useAptInstallOrUpgrade bool
 	for _, cmdSlice := range cmdSlices {
-		if !useAptUpdate && containsThreshold(cmdSlice, []string{"apt-get", "apt", "update"}, 2) {
+		if !useAptUpdate && checkAptCommand(cmdSlice, "update") {
 			useAptUpdate = true
 		}
-		if !useAptInstall && containsThreshold(cmdSlice, []string{"apt-get", "apt", "upgrade", "install"}, 2) {
-			useAptInstall = true
+		// TODO: apt install/upgrade must be run after library updated
+		if !useAptInstallOrUpgrade {
+			if checkAptCommand(cmdSlice, "install") || checkAptCommand(cmdSlice, "upgrade") {
+				useAptInstallOrUpgrade = true
+			}
 		}
-		if useAptUpdate && useAptInstall {
+		if useAptUpdate && useAptInstallOrUpgrade {
 			return false
 		}
 	}
 
-	if useAptUpdate && !useAptInstall {
+	if useAptUpdate && !useAptInstallOrUpgrade {
 		return true
 	}
 	return false
 }
 
 func reducableAptGetInstall(cmdSlices map[int][]string) bool {
-	var useAptInstall bool
+	var useAptLibrary bool
 	var useRmCache bool
 	for _, cmdSlice := range cmdSlices {
-		if !useAptInstall && containsThreshold(cmdSlice, []string{"apt-get", "apt", "update", "install"}, 2) {
-			useAptInstall = true
+		if !useAptLibrary && checkAptLibraryDirChanged(cmdSlice) {
+			useAptLibrary = true
 		}
+
+		// TODO: remove cache must be run after apt library directory changed
 		if !useRmCache && containsThreshold(
 			cmdSlice,
 			[]string{"rm", "-rf", "-fr", "-r", "-fR", "/var/lib/apt/lists", "/var/lib/apt/lists/*", "/var/lib/apt/lists/*;"}, 3) {
 			useRmCache = true
 		}
 
-		if useAptInstall && useRmCache {
+		if useAptLibrary && useRmCache {
 			return false
 		}
 	}
-	if useAptInstall && !useRmCache {
+	if useAptLibrary && !useRmCache {
 		return true
 	}
 	return false
