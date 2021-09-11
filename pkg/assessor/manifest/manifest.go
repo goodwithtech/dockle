@@ -194,7 +194,7 @@ func useSudo(cmdSlices map[int][]string) bool {
 
 func useDistUpgrade(cmdSlices map[int][]string) bool {
 	for _, cmdSlice := range cmdSlices {
-		if containsThreshold(cmdSlice, []string{"apt-get", "apt", "dist-upgrade"}, 2) {
+		if checkAptCommand(cmdSlice, "dist-upgrade") {
 			return true
 		}
 	}
@@ -203,7 +203,7 @@ func useDistUpgrade(cmdSlices map[int][]string) bool {
 
 func useADDstatement(cmdSlices map[int][]string) bool {
 	for _, cmdSlice := range cmdSlices {
-		if containsThreshold(cmdSlice, []string{"ADD", "in", "buildkit"}, 2) {
+		if containsAll(cmdSlice, []string{"ADD", "in"}) || containsAll(cmdSlice, []string{"ADD", "buildkit"}) {
 			return true
 		}
 	}
@@ -226,51 +226,38 @@ func checkAptLibraryDirChanged(target []string) bool {
 
 func reducableAptGetUpdate(cmdSlices map[int][]string) bool {
 	var useAptUpdate bool
-	var useAptInstallOrUpgrade bool
-	for _, cmdSlice := range cmdSlices {
+	// map order must be sorted
+	for i := 0; i < len(cmdSlices); i++ {
+		cmdSlice := cmdSlices[i]
 		if !useAptUpdate && checkAptCommand(cmdSlice, "update") {
 			useAptUpdate = true
 		}
-		// TODO: apt install/upgrade must be run after library updated
-		if !useAptInstallOrUpgrade {
+		if useAptUpdate {
+			// apt install/upgrade must be run after library updated
 			if checkAptCommand(cmdSlice, "install") || checkAptCommand(cmdSlice, "upgrade") {
-				useAptInstallOrUpgrade = true
+				return false
 			}
 		}
-		if useAptUpdate && useAptInstallOrUpgrade {
-			return false
-		}
 	}
-
-	if useAptUpdate && !useAptInstallOrUpgrade {
-		return true
-	}
-	return false
+	return useAptUpdate
 }
+
+var removeAptLibCmds = []string{"rm", "-rf", "-fr", "-r", "-fR", "/var/lib/apt/lists", "/var/lib/apt/lists/*", "/var/lib/apt/lists/*;"}
 
 func reducableAptGetInstall(cmdSlices map[int][]string) bool {
 	var useAptLibrary bool
-	var useRmCache bool
-	for _, cmdSlice := range cmdSlices {
+	// map order must be sorted
+	for i := 0; i < len(cmdSlices); i++ {
+		cmdSlice := cmdSlices[i]
 		if !useAptLibrary && checkAptLibraryDirChanged(cmdSlice) {
 			useAptLibrary = true
 		}
-
-		// TODO: remove cache must be run after apt library directory changed
-		if !useRmCache && containsThreshold(
-			cmdSlice,
-			[]string{"rm", "-rf", "-fr", "-r", "-fR", "/var/lib/apt/lists", "/var/lib/apt/lists/*", "/var/lib/apt/lists/*;"}, 3) {
-			useRmCache = true
-		}
-
-		if useAptLibrary && useRmCache {
+		// remove cache must be run after apt library directory changed
+		if useAptLibrary && containsThreshold(cmdSlice, removeAptLibCmds, 3) {
 			return false
 		}
 	}
-	if useAptLibrary && !useRmCache {
-		return true
-	}
-	return false
+	return useAptLibrary
 }
 
 func reducableApkAdd(cmdSlices map[int][]string) bool {
