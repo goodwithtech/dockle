@@ -231,8 +231,8 @@ func reducableAptGetUpdate(cmdSlices map[int][]string) bool {
 		if !useAptUpdate && checkAptCommand(cmdSlice, "update") {
 			useAptUpdate = true
 		}
-		// apt install/upgrade must be run after library updated
-		if useAptUpdate && !useAptInstallOrUpgrade {
+		// TODO: apt install/upgrade must be run after library updated
+		if !useAptInstallOrUpgrade {
 			if checkAptCommand(cmdSlice, "install") || checkAptCommand(cmdSlice, "upgrade") {
 				useAptInstallOrUpgrade = true
 			}
@@ -255,8 +255,9 @@ func reducableAptGetInstall(cmdSlices map[int][]string) bool {
 		if !useAptLibrary && checkAptLibraryDirChanged(cmdSlice) {
 			useAptLibrary = true
 		}
-		// rm cache must be run after apt library directory changed
-		if useAptLibrary && !useRmCache && containsThreshold(
+
+		// TODO: remove cache must be run after apt library directory changed
+		if !useRmCache && containsThreshold(
 			cmdSlice,
 			[]string{"rm", "-rf", "-fr", "-r", "-fR", "/var/lib/apt/lists", "/var/lib/apt/lists/*", "/var/lib/apt/lists/*;"}, 3) {
 			useRmCache = true

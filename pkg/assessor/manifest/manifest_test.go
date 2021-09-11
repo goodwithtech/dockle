@@ -247,18 +247,6 @@ func TestReducableAptGetUpdate(t *testing.T) {
 			},
 			expected: false,
 		},
-		"AptUpdateAfterInstall": {
-			cmdSlices: map[int][]string{
-				0: {
-					"apt", "-y", "--no-install-recommends", "install",
-
-				},
-				1: {
-					"apt", "update",
-				},
-			},
-			expected: true,
-		},
 		"LongInvalidCommand": {
 			// https://github.com/docker-library/golang/blob/3f2c52653043f067156ce4f41182c2a758c4c857/1.17/alpine3.14/Dockerfile#L20-L107
 			// Issue: https://github.com/goodwithtech/dockle/issues/151
@@ -280,7 +268,6 @@ func TestReducableAptGetUpdate(t *testing.T) {
 			},
 			expected: false,
 		},
-
 	}
 	for testname, v := range tests {
 		actual := reducableAptGetUpdate(v.cmdSlices)
@@ -295,36 +282,36 @@ func TestReducableAptGetInstall(t *testing.T) {
 		cmdSlices map[int][]string
 		expected  bool
 	}{
-		"Reducable": {
-			cmdSlices: map[int][]string{
-				0: {
-					"apt-get", "-y", "install",
-				},
-				1: {
-					"apt-get", "update",
-				},
-			},
-			expected: true,
-		},
-		"OnlyUpdate": {
-			cmdSlices: map[int][]string{
-				0: {
-					"apt-get", "update",
-				},
-				1: {
-					"apt-get", "purge",
-				},
-			},
-			expected: true,
-		},
-		"NoUpdateInstall": {
-			cmdSlices: map[int][]string{
-				0: {
-					"apt-get", "purge",
-				},
-			},
-			expected: false,
-		},
+		//"Reducable": {
+		//	cmdSlices: map[int][]string{
+		//		0: {
+		//			"apt-get", "-y", "install",
+		//		},
+		//		1: {
+		//			"apt-get", "update",
+		//		},
+		//	},
+		//	expected: true,
+		//},
+		//"OnlyUpdate": {
+		//	cmdSlices: map[int][]string{
+		//		0: {
+		//			"apt-get", "update",
+		//		},
+		//		1: {
+		//			"apt-get", "purge",
+		//		},
+		//	},
+		//	expected: true,
+		//},
+		//"NoUpdateInstall": {
+		//	cmdSlices: map[int][]string{
+		//		0: {
+		//			"apt-get", "purge",
+		//		},
+		//	},
+		//	expected: false,
+		//},
 		"UnReducable": {
 			cmdSlices: map[int][]string{
 				0: {
@@ -339,7 +326,7 @@ func TestReducableAptGetInstall(t *testing.T) {
 		"UnReducable2": {
 			cmdSlices: map[int][]string{
 				0: {
-					"apt-get", "install",
+					"apt-get", "install", "-y", "git",
 				},
 				1: {
 					"rm", "-rf", "/var/lib/apt/lists",
@@ -350,7 +337,7 @@ func TestReducableAptGetInstall(t *testing.T) {
 		"UnReducable3": {
 			cmdSlices: map[int][]string{
 				0: {
-					"apt-get", "install",
+					"apt-get", "install", "-y", "git",
 				},
 				1: {
 					"rm", "-r", "/var/lib/apt/lists",
