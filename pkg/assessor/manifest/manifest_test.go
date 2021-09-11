@@ -236,6 +236,17 @@ func TestReducableAptGetUpdate(t *testing.T) {
 			},
 			expected: false,
 		},
+		"UpdateAfterInstalled": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apt-get", "-y", "--no-install-recommends", "install",
+				},
+				1: {
+					"apt-get", "update",
+				},
+			},
+			expected: true,
+		},
 		"CheckAptCommand": {
 			cmdSlices: map[int][]string{
 				0: {
@@ -282,36 +293,36 @@ func TestReducableAptGetInstall(t *testing.T) {
 		cmdSlices map[int][]string
 		expected  bool
 	}{
-		//"Reducable": {
-		//	cmdSlices: map[int][]string{
-		//		0: {
-		//			"apt-get", "-y", "install",
-		//		},
-		//		1: {
-		//			"apt-get", "update",
-		//		},
-		//	},
-		//	expected: true,
-		//},
-		//"OnlyUpdate": {
-		//	cmdSlices: map[int][]string{
-		//		0: {
-		//			"apt-get", "update",
-		//		},
-		//		1: {
-		//			"apt-get", "purge",
-		//		},
-		//	},
-		//	expected: true,
-		//},
-		//"NoUpdateInstall": {
-		//	cmdSlices: map[int][]string{
-		//		0: {
-		//			"apt-get", "purge",
-		//		},
-		//	},
-		//	expected: false,
-		//},
+		"Reducable": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apt-get", "-y", "install",
+				},
+				1: {
+					"apt-get", "update",
+				},
+			},
+			expected: true,
+		},
+		"OnlyUpdate": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apt-get", "update",
+				},
+				1: {
+					"apt-get", "purge",
+				},
+			},
+			expected: true,
+		},
+		"NoUpdateInstall": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apt-get", "purge",
+				},
+			},
+			expected: false,
+		},
 		"UnReducable": {
 			cmdSlices: map[int][]string{
 				0: {
