@@ -30,3 +30,5 @@ LABEL name="dockle" \
       release=${IMAGE_VERSION} \
       summary="CIS Docker benchmark" \
       description="CIS Docker benchmark for images stored in a private or public Docker registries using Dockle"
+
+USER 1000
