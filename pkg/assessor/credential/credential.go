@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"unicode/utf8"
 
 	deckodertypes "github.com/goodwithtech/deckoder/types"
@@ -15,12 +16,30 @@ import (
 
 type CredentialAssessor struct{}
 
+var (
+	pathSeparator = fmt.Sprintf("%c", os.PathSeparator)
+	ignoreDirs    = map[string]struct{}{
+		".git":         {},
+		"node_modules": {},
+		"vendor":       {},
+		"ssl":          {},
+	}
+)
+
 func (a CredentialAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : credential files")
 	assesses := []*types.Assessment{}
 	fmap := makeMaps(a.RequiredFiles())
 	fexts := makeMaps(a.RequiredExtensions())
+
+fileloop:
 	for filename := range fileMap {
+		for _, path := range strings.Split(filename, pathSeparator) {
+			if _, ok := ignoreDirs[path]; ok {
+				continue fileloop
+			}
+		}
+
 		basename := filepath.Base(filename)
 		// check exist target files
 		if _, ok := fmap[basename]; ok {
