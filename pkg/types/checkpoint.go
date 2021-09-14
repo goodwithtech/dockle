@@ -63,7 +63,7 @@ var TitleMap = map[string]string{
 	UseAptGetUpdateNoCache:          "Do not use update instructions alone in the Dockerfile",
 	CheckSuidGuid:                   "Confirm safety of setuid/setgid files",
 	UseCOPY:                         "Use COPY instead of ADD in Dockerfile",
-	AvoidCredential:                 "Do not store credential in ENVIRONMENT vars/files",
+	AvoidCredential:                 "Do not store credential in environment variables/files",
 	AvoidSudo:                       "Avoid sudo command",
 	AvoidSensitiveDirectoryMounting: "Avoid sensitive directory mounting",
 	AvoidDistUpgrade:                `Avoid "apt-get dist-upgrade"`,

@@ -83,7 +83,6 @@ func (a CredentialAssessor) RequiredExtensions() []string {
 	return []string{
 		".key",
 		".secret",
-		".pem",
 		".p12",
 		".pkcs12",
 		".pfx",
