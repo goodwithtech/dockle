@@ -61,7 +61,8 @@ func (a CredentialAssessor) RequiredFiles() []string {
 	return []string{
 		"credentials.json",
 		"credential.json",
-		"config.json",
+		// TODO: Only check .docker/config.json
+		// "config.json",
 		"credentials",
 		"credential",
 		"password.txt",
@@ -79,14 +80,18 @@ func (a CredentialAssessor) RequiredFiles() []string {
 }
 
 func (a CredentialAssessor) RequiredExtensions() []string {
-	// reference: https://github.com/eth0izzle/shhgit/blob/master/config.yaml
 	return []string{
-		".key",
+		// reference: https://github.com/eth0izzle/shhgit/blob/master/config.yaml
+		// TODO: potential sensitive data but they have many false-positives.
+		//       Dockle need to analyze each file.
+		//".pem",
+		//".key",
+		//".p12",
+		//".pkcs12",
+		//".pfx",
+		//".asc",
+
 		".secret",
-		".p12",
-		".pkcs12",
-		".pfx",
-		".asc",
 		".ovpn",
 		".private_key",
 		".cscfg",
