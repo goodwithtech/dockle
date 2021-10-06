@@ -61,7 +61,8 @@ func (a CredentialAssessor) RequiredFiles() []string {
 	return []string{
 		"credentials.json",
 		"credential.json",
-		"config.json", // .docker/config.json
+		// TODO: Only check .docker/config.json
+		// "config.json",
 		"credentials",
 		"credential",
 		"password.txt",
