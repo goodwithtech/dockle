@@ -14,7 +14,11 @@ var (
 	version = "dev"
 )
 
-func main() {
+/*
+NewDockleCli Factory for Dockle CLI creation.
+An Enabler for programmatic usage of Dockle
+*/
+func NewDockleCli() *cli.App {
 	cli.AppHelpTemplate = `NAME:
   {{.Name}}{{if .Usage}} - {{.Usage}}{{end}}
 USAGE:
@@ -135,6 +139,11 @@ OPTIONS:
 	}
 
 	app.Action = pkg.Run
+	return app
+}
+
+func main() {
+	app := NewDockleCli()
 	err := app.Run(os.Args)
 
 	if err != nil {
