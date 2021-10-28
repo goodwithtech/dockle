@@ -38,6 +38,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
   - [Arch Linux](#arch-linux)
   - [Windows](#windows)
   - [Binary](#binary)
+  - [asdf](#asdf)
   - [From source](#from-source)
   - [Use Docker](#use-docker)
 - [Quick Start](#quick-start)
@@ -144,6 +145,27 @@ You can get the latest version binary from [releases page](https://github.com/go
 Download the archive file for your operating system/architecture. Unpack the archive, and put the binary somewhere in your `$PATH` (on UNIX-y systems, `/usr/local/bin` or the like).
 
 - NOTE: Make sure that it's execution bits turned on. (`chmod +x dockle`)
+
+## asdf
+
+You can install dockle with the [asdf version manager](https://asdf-vm.com/) with this [plugin](https://github.com/mathew-fleisch/asdf-dockle), which automates the process of installing (and switching between) various versions of github release binaries. With asdf already installed, run these commands to install dockle:
+
+```bash
+# Add dockle plugin
+asdf plugin add dockle
+
+# Show all installable versions
+asdf list-all dockle
+
+# Install specific version
+asdf install dockle latest
+
+# Set a version globally (on your ~/.tool-versions file)
+asdf global dockle latest
+
+# Now dockle commands are available
+dockle --version
+```
 
 ## From source
 
