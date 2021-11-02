@@ -118,13 +118,11 @@ VERSION=$(
 $ sudo dpkg -i dockle.deb && rm dockle.deb
 ```
 ## Arch Linux
-dockle-bin can be installed from the Arch User Repository. Examples:
+dockle can be installed from the Arch User Repository using `dockle` or `dockle-bin` package.
 ```
-pikaur -Sy dockle-bin
-```
-or
-```
-yay -Sy dockle-bin
+git clone https://aur.archlinux.org/dockle-bin.git
+cd dockle-bin
+makepkg -sri
 ```
 ## Windows
 
