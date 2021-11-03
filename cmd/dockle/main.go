@@ -15,10 +15,10 @@ var (
 )
 
 /*
-NewDockleCli Factory for Dockle CLI creation.
+NewApp Factory for Dockle CLI creation.
 An Enabler for programmatic usage of Dockle
 */
-func NewDockleCli() *cli.App {
+func NewApp() *cli.App {
 	cli.AppHelpTemplate = `NAME:
   {{.Name}}{{if .Usage}} - {{.Usage}}{{end}}
 USAGE:
@@ -143,7 +143,7 @@ OPTIONS:
 }
 
 func main() {
-	app := NewDockleCli()
+	app := NewApp()
 	err := app.Run(os.Args)
 
 	if err != nil {
