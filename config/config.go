@@ -8,8 +8,8 @@ import (
 
 	"github.com/Portshift/dockle/pkg/types"
 
-	"log"
 	"github.com/urfave/cli"
+	"log"
 )
 
 const (
@@ -26,20 +26,25 @@ var ExitLevelMap = map[string]int{
 }
 
 type Config struct {
-	Debug     bool
-	Timeout   time.Duration
-	AuthURL   string
-	Username  string
-	Password  string
-	Insecure  bool
-	NonSSL    bool
-	ImageName string
-	FilePath  string
-	Output    string
-	Format    string
-	IgnoreMap map[string]struct{}
-	ExitCode  int
-	ExitLevel int
+	Debug                bool
+	Quiet                bool
+	Timeout              time.Duration
+	AuthURL              string
+	Username             string
+	Password             string
+	Insecure             bool
+	NonSSL               bool
+	ImageName            string
+	FilePath             string
+	Output               string
+	Format               string
+	IgnoreMap            map[string]struct{}
+	ExitCode             int
+	ExitLevel            int
+	AcceptanceKeys       []string
+	AcceptanceFiles      []string
+	AcceptanceExtensions []string
+	NoColor              bool
 }
 
 var Conf Config
@@ -59,6 +64,7 @@ func CreateFromCli(c *cli.Context) {
 	}
 	Conf.IgnoreMap = GetIgnoreCheckpointMap(c.StringSlice("ignore"))
 	Conf.Debug = c.Bool("debug")
+	Conf.Quiet = c.Bool("quiet")
 	Conf.Timeout = c.Duration("timeout")
 	Conf.AuthURL = c.String("authurl")
 	Conf.Username = c.String("username")
@@ -66,9 +72,13 @@ func CreateFromCli(c *cli.Context) {
 	Conf.Insecure = c.Bool("insecure")
 	Conf.NonSSL = c.Bool("nonssl")
 	Conf.Output = c.String("output")
+	Conf.NoColor = c.Bool("no-color")
 	Conf.Format = c.String("format")
 	Conf.ExitCode = c.Int("exit-code")
 	Conf.ExitLevel = getExitLevel(c.String("exit-level"))
+	Conf.AcceptanceKeys = c.StringSlice("accept-key")
+	Conf.AcceptanceFiles = c.StringSlice("accept-file")
+	Conf.AcceptanceExtensions = c.StringSlice("accept-file-extension")
 }
 
 func getExitLevel(param string) (exitLevel int) {

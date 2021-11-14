@@ -2,33 +2,32 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
-	l "log"
-	"github.com/Portshift/dockle/pkg/log"
-	"github.com/spf13/viper"
-	"github.com/Portshift/klar/docker"
-	"github.com/Portshift/klar/docker/token"
 	dockle_config "github.com/Portshift/dockle/config"
 	dockle_run "github.com/Portshift/dockle/pkg"
+	"github.com/Portshift/dockle/pkg/log"
 	dockle_types "github.com/Portshift/dockle/pkg/types"
+	"github.com/Portshift/klar/docker"
+	"github.com/Portshift/klar/docker/token"
 	"github.com/containers/image/v5/docker/reference"
+	"github.com/spf13/viper"
+	l "log"
 	"net/http"
 	"net/http/httputil"
 	"os"
 	"strconv"
 	"time"
-	"context"
 )
-
 
 func createDockleConfig(scanConfig *dockerfileScanConfig, imageName string) *dockle_config.Config {
 	return &dockle_config.Config{
-		Debug: scanConfig.verbose,
-		Timeout: scanConfig.timeoutSec,
+		Debug:     scanConfig.verbose,
+		Timeout:   scanConfig.timeoutSec,
 		ImageName: imageName,
-		Username: scanConfig.username,
-		Password: scanConfig.password,
+		Username:  scanConfig.username,
+		Password:  scanConfig.password,
 	}
 }
 
@@ -70,7 +69,7 @@ func run(imageName string) {
 	if err != nil {
 		l.Fatalf("Failed to load config: %v", err)
 	}
-	if err = log.InitLogger(scanConfig.verbose); err != nil {
+	if err = log.InitLogger(scanConfig.verbose, false); err != nil {
 		l.Fatal(err)
 	}
 
@@ -91,8 +90,8 @@ func run(imageName string) {
 	}
 
 	scanResults := &dockle_types.ImageAssessment{
-		Image:      imageName,
-		ScanUUID:   scanConfig.scanUUID,
+		Image:    imageName,
+		ScanUUID: scanConfig.scanUUID,
 	}
 
 	log.Logger.Infof("Scanning image %v", ref)
@@ -150,10 +149,10 @@ func sendScanResults(resultServicePath string, scanResults *dockle_types.ImageAs
 }
 
 const (
-	verboseVar = "VERBOSE"
+	verboseVar    = "VERBOSE"
 	timeoutSecVar = "TIMEOUT_SEC"
-	scanUUID = "SCAN_UUID"
-	resultPath = "RESULT_SERVICE_PATH"
+	scanUUID      = "SCAN_UUID"
+	resultPath    = "RESULT_SERVICE_PATH"
 )
 
 func main() {

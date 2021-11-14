@@ -41,6 +41,12 @@ func (a ManifestAssessor) Assess(fileMap deckodertypes.FileMap) (assesses []*typ
 	return checkAssessments(d)
 }
 
+func AddAcceptanceKeys(keys []string) {
+	for _, key := range keys {
+		acceptanceEnvKey[key] = struct{}{}
+	}
+}
+
 func checkAssessments(img types.Image) (assesses []*types.Assessment, err error) {
 	if img.Config.User == "" || img.Config.User == "root" {
 		assesses = append(assesses, &types.Assessment{
@@ -61,7 +67,7 @@ func checkAssessments(img types.Image) (assesses []*types.Assessment, err error)
 				assesses = append(assesses, &types.Assessment{
 					Code:     types.AvoidCredential,
 					Filename: ConfigFileName,
-					Desc:     fmt.Sprintf("Suspicious ENV key found : %s", envKey),
+					Desc:     fmt.Sprintf("Suspicious ENV key found : %s (You can suppress it with --accept-key)", envKey),
 				})
 			}
 		}
@@ -138,7 +144,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		assesses = append(assesses, &types.Assessment{
 			Code:     types.MinimizeAptGet,
 			Filename: ConfigFileName,
-			Desc:     fmt.Sprintf("Use 'rm -rf /var/lib/apt/lists' after 'apt-get install' : %s", cmd.CreatedBy),
+			Desc:     fmt.Sprintf("Use 'rm -rf /var/lib/apt/lists' after 'apt-get install|update' : %s", cmd.CreatedBy),
 		})
 	}
 
@@ -146,7 +152,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		assesses = append(assesses, &types.Assessment{
 			Code:     types.UseAptGetUpdateNoCache,
 			Filename: ConfigFileName,
-			Desc:     fmt.Sprintf("Always combine 'apt-get update' with 'apt-get install' : %s", cmd.CreatedBy),
+			Desc:     fmt.Sprintf("Always combine 'apt-get update' with 'apt-get install|upgrade' : %s", cmd.CreatedBy),
 		})
 	}
 
@@ -188,7 +194,7 @@ func useSudo(cmdSlices map[int][]string) bool {
 
 func useDistUpgrade(cmdSlices map[int][]string) bool {
 	for _, cmdSlice := range cmdSlices {
-		if containsThreshold(cmdSlice, []string{"apt-get", "apt", "dist-upgrade"}, 2) {
+		if checkAptCommand(cmdSlice, "dist-upgrade") {
 			return true
 		}
 	}
@@ -197,55 +203,61 @@ func useDistUpgrade(cmdSlices map[int][]string) bool {
 
 func useADDstatement(cmdSlices map[int][]string) bool {
 	for _, cmdSlice := range cmdSlices {
-		if containsAll(cmdSlice, []string{"ADD", "in"}) {
+		if containsAll(cmdSlice, []string{"ADD", "in"}) || containsAll(cmdSlice, []string{"ADD", "buildkit"}) {
 			return true
 		}
 	}
 	return false
 }
 
-func reducableAptGetUpdate(cmdSlices map[int][]string) bool {
-	var useAptUpdate bool
-	var useAptInstall bool
-	for _, cmdSlice := range cmdSlices {
-		if !useAptUpdate && containsAll(cmdSlice, []string{"apt-get", "update"}) {
-			useAptUpdate = true
-		}
-
-		if !useAptInstall && containsAll(cmdSlice, []string{"apt-get", "install"}) {
-			useAptInstall = true
-		}
-		if useAptUpdate && useAptInstall {
-			return false
-		}
-	}
-	if useAptUpdate && !useAptInstall {
+func checkAptCommand(target []string, command string) bool {
+	if containsThreshold(target, []string{"apt-get", "apt", command}, 2) {
 		return true
 	}
 	return false
 }
 
-func reducableAptGetInstall(cmdSlices map[int][]string) bool {
-	var useAptInstall bool
-	var useRmCache bool
-	for _, cmdSlice := range cmdSlices {
-		if !useAptInstall && containsAll(cmdSlice, []string{"apt-get", "install"}) {
-			useAptInstall = true
-		}
-		if !useRmCache && containsThreshold(
-			cmdSlice,
-			[]string{"rm", "-rf", "-fr", "-r", "-fR", "/var/lib/apt/lists", "/var/lib/apt/lists/*", "/var/lib/apt/lists/*;"}, 3) {
-			useRmCache = true
-		}
-
-		if useAptInstall && useRmCache {
-			return false
-		}
-	}
-	if useAptInstall && !useRmCache {
+func checkAptLibraryDirChanged(target []string) bool {
+	if checkAptCommand(target, "update") || checkAptCommand(target, "install") {
 		return true
 	}
 	return false
+}
+
+func reducableAptGetUpdate(cmdSlices map[int][]string) bool {
+	var useAptUpdate bool
+	// map order must be sorted
+	for i := 0; i < len(cmdSlices); i++ {
+		cmdSlice := cmdSlices[i]
+		if !useAptUpdate && checkAptCommand(cmdSlice, "update") {
+			useAptUpdate = true
+		}
+		if useAptUpdate {
+			// apt install/upgrade must be run after library updated
+			if checkAptCommand(cmdSlice, "install") || checkAptCommand(cmdSlice, "upgrade") {
+				return false
+			}
+		}
+	}
+	return useAptUpdate
+}
+
+var removeAptLibCmds = []string{"rm", "-rf", "-fr", "-r", "-fR", "/var/lib/apt/lists", "/var/lib/apt/lists/*", "/var/lib/apt/lists/*;"}
+
+func reducableAptGetInstall(cmdSlices map[int][]string) bool {
+	var useAptLibrary bool
+	// map order must be sorted
+	for i := 0; i < len(cmdSlices); i++ {
+		cmdSlice := cmdSlices[i]
+		if !useAptLibrary && checkAptLibraryDirChanged(cmdSlice) {
+			useAptLibrary = true
+		}
+		// remove cache must be run after apt library directory changed
+		if useAptLibrary && containsThreshold(cmdSlice, removeAptLibCmds, 3) {
+			return false
+		}
+	}
+	return useAptLibrary
 }
 
 func reducableApkAdd(cmdSlices map[int][]string) bool {
@@ -261,6 +273,10 @@ func reducableApkAdd(cmdSlices map[int][]string) bool {
 
 // manifest contains /config
 func (a ManifestAssessor) RequiredFiles() []string {
+	return []string{}
+}
+
+func (a ManifestAssessor) RequiredExtensions() []string {
 	return []string{}
 }
 

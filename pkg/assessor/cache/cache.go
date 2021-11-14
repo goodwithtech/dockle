@@ -81,6 +81,10 @@ func (a CacheAssessor) RequiredFiles() []string {
 	return append(reqFiles, reqDirs...)
 }
 
+func (a CacheAssessor) RequiredExtensions() []string {
+	return []string{}
+}
+
 func (a CacheAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{}
 }

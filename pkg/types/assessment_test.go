@@ -11,6 +11,7 @@ func TestCreateAssessmentMap(t *testing.T) {
 	testcases := map[string]struct {
 		as       AssessmentSlice
 		ig       map[string]struct{}
+		debug    bool
 		expected AssessmentMap
 	}{
 		"OK": {
@@ -58,6 +59,27 @@ func TestCreateAssessmentMap(t *testing.T) {
 						{Code: "a", Filename: "b"},
 					},
 				},
+			},
+		},
+		"IgnoreBwithDebug": {
+			as: AssessmentSlice{
+				{Code: "a", Filename: "a"},
+				{Code: "b", Filename: "b"},
+				{Code: "a", Filename: "c"},
+				{Code: "a", Filename: "b"},
+			},
+			ig:    map[string]struct{}{"b": {}},
+			debug: true,
+			expected: map[string]CodeInfo{
+				"a": {
+					Code:  "a",
+					Level: 0,
+					Assessments: []*Assessment{
+						{Code: "a", Filename: "a"},
+						{Code: "a", Filename: "c"},
+						{Code: "a", Filename: "b"},
+					},
+				},
 				"b": {
 					Code:  "b",
 					Level: IgnoreLevel,
@@ -70,7 +92,7 @@ func TestCreateAssessmentMap(t *testing.T) {
 	}
 
 	for name, v := range testcases {
-		actual := CreateAssessmentMap(v.as, v.ig)
+		actual := CreateAssessmentMap(v.as, v.ig, v.debug)
 		cmpopts := []cmp.Option{
 			cmpopts.SortSlices(func(x, y Assessment) bool {
 				if x.Code == y.Code {

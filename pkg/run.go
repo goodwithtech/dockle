@@ -2,7 +2,9 @@ package pkg
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
 	l "log"
 	"os"
 	"strings"
@@ -23,6 +25,8 @@ func RunFromCli(c *cli.Context) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.Duration("timeout"))
 	defer cancel()
 
+	config.CreateFromCli(c)
+
 	cliVersion := "v" + c.App.Version
 	latestVersion, err := utils.FetchLatestVersion(ctx)
 
@@ -33,7 +37,6 @@ func RunFromCli(c *cli.Context) (err error) {
 		log.Logger.Warnf("A new version %s is now available! You have %s.", latestVersion, cliVersion)
 	}
 
-	config.CreateFromCli(c)
 	_, err = run(ctx)
 
 	return err
@@ -48,8 +51,9 @@ func RunFromConfig(conf *config.Config) (types.AssessmentMap, error) {
 }
 
 func run(ctx context.Context) (ret types.AssessmentMap, err error) {
+	quiet := config.Conf.Quiet
 	debug := config.Conf.Debug
-	if err = log.InitLogger(debug); err != nil {
+	if err = log.InitLogger(debug, quiet); err != nil {
 		l.Fatal(err)
 	}
 
@@ -69,10 +73,16 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 			return nil, fmt.Errorf("invalid image: %w", err)
 		}
 	}
+	manifest.AddAcceptanceKeys(config.Conf.AcceptanceKeys)
+	scanner.AddAcceptanceFiles(config.Conf.AcceptanceFiles)
+	scanner.AddAcceptanceExtensions(config.Conf.AcceptanceExtensions)
 	log.Logger.Debug("Start assessments...")
 
 	assessments, err := scanner.ScanImage(ctx, config.Conf.ImageName, config.Conf.FilePath, dockerOption)
 	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return nil, fmt.Errorf("Pull it with \"docker pull %s\" or \"dockle --timeout 600s\" to increase the timeout\n%w", config.Conf.ImageName, err)
+		}
 		return nil, err
 	}
 	if useLatestTag {
@@ -85,7 +95,7 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 
 	log.Logger.Debug("End assessments...")
 
-	assessmentMap := types.CreateAssessmentMap(assessments, config.Conf.IgnoreMap)
+	assessmentMap := types.CreateAssessmentMap(assessments, config.Conf.IgnoreMap, debug)
 	// Store ignore checkpoint code
 	o := config.Conf.Output
 	output := os.Stdout
@@ -102,7 +112,7 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 	case "sarif":
 		writer = &report.SarifWriter{Output: output}
 	default:
-		writer = &report.ListWriter{Output: output}
+		writer = &report.ListWriter{Output: output, NoColor: config.Conf.NoColor}
 	}
 
 	abend, err := writer.Write(assessmentMap)
