@@ -73,9 +73,9 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 			return nil, fmt.Errorf("invalid image: %w", err)
 		}
 	}
-	manifest.AddAcceptanceKeys(c.StringSlice("accept-key"))
-	scanner.AddAcceptanceFiles(c.StringSlice("accept-file"))
-	scanner.AddAcceptanceExtensions(c.StringSlice("accept-file-extension"))
+	manifest.AddAcceptanceKeys(config.Conf.AcceptanceKeys)
+	scanner.AddAcceptanceFiles(config.Conf.AcceptanceFiles)
+	scanner.AddAcceptanceExtensions(config.Conf.AcceptanceExtensions)
 	log.Logger.Debug("Start assessments...")
 
 	assessments, err := scanner.ScanImage(ctx, config.Conf.ImageName, config.Conf.FilePath, dockerOption)
@@ -112,7 +112,7 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 	case "sarif":
 		writer = &report.SarifWriter{Output: output}
 	default:
-		writer = &report.ListWriter{Output: output, NoColor: c.Bool("no-color")}
+		writer = &report.ListWriter{Output: output, NoColor: config.Conf.NoColor}
 	}
 
 	abend, err := writer.Write(assessmentMap)
