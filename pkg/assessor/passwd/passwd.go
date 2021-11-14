@@ -59,6 +59,10 @@ func (a PasswdAssessor) RequiredFiles() []string {
 	return []string{"etc/shadow", "etc/master.passwd"}
 }
 
+func (a PasswdAssessor) RequiredExtensions() []string {
+	return []string{}
+}
+
 func (a PasswdAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{}
 }

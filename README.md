@@ -20,7 +20,7 @@ $ dockle [YOUR_IMAGE_NAME]
 ```
 See [Installation](#installation) and [Common Examples](#common-examples)
 
-<img src="imgs/dockle.gif" width="800">
+<img src="imgs/dockle.png" width="800">
 
 # Checkpoints Comparison
 
@@ -38,6 +38,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
   - [Arch Linux](#arch-linux)
   - [Windows](#windows)
   - [Binary](#binary)
+  - [asdf](#asdf)
   - [From source](#from-source)
   - [Use Docker](#use-docker)
 - [Quick Start](#quick-start)
@@ -99,7 +100,7 @@ $ brew install goodwithtech/r/dockle
 ## RHEL/CentOS
 
 ```bash
-$ VERSION=$(
+VERSION=$(
  curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
@@ -109,7 +110,7 @@ $ VERSION=$(
 ## Debian/Ubuntu
 
 ```bash
-$ VERSION=$(
+VERSION=$(
  curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
@@ -117,18 +118,16 @@ $ VERSION=$(
 $ sudo dpkg -i dockle.deb && rm dockle.deb
 ```
 ## Arch Linux
-dockle-bin can be installed from the Arch User Repository. Examples:
+dockle can be installed from the Arch User Repository using `dockle` or `dockle-bin` package.
 ```
-pikaur -Sy dockle-bin
-```
-or
-```
-yay -Sy dockle-bin
+git clone https://aur.archlinux.org/dockle-bin.git
+cd dockle-bin
+makepkg -sri
 ```
 ## Windows
 
 ```bash
-$ VERSION=$(
+VERSION=$(
  curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
@@ -144,6 +143,27 @@ You can get the latest version binary from [releases page](https://github.com/go
 Download the archive file for your operating system/architecture. Unpack the archive, and put the binary somewhere in your `$PATH` (on UNIX-y systems, `/usr/local/bin` or the like).
 
 - NOTE: Make sure that it's execution bits turned on. (`chmod +x dockle`)
+
+## asdf
+
+You can install dockle with the [asdf version manager](https://asdf-vm.com/) with this [plugin](https://github.com/mathew-fleisch/asdf-dockle), which automates the process of installing (and switching between) various versions of github release binaries. With asdf already installed, run these commands to install dockle:
+
+```bash
+# Add dockle plugin
+asdf plugin add dockle
+
+# Show all installable versions
+asdf list-all dockle
+
+# Install specific version
+asdf install dockle latest
+
+# Set a version globally (on your ~/.tool-versions file)
+asdf global dockle latest
+
+# Now dockle commands are available
+dockle --version
+```
 
 ## From source
 
@@ -627,7 +647,14 @@ The `--ignore, -i` option can ignore specified checkpoints.
 $ dockle -i CIS-DI-0001 -i DKL-DI-0006 [IMAGE_NAME]
 ```
 
-Or, use `.dockleignore` file.
+Or, use `DOCKLE_IGNORS`:
+
+```
+export DOCKLE_IGNORES=CIS-DI-0001,DKL-DI-0006
+dockle [IMAGE_NAME]
+```
+
+Or, use `.dockleignore` file:
 
 ```bash
 $ cat .dockleignore
@@ -635,6 +662,22 @@ $ cat .dockleignore
 CIS-DI-0001
 # Use latest tag because to check the image inside only
 DKL-DI-0006
+```
+
+### Accept  suspitious `environment variables` / `files` / `file extensions`
+
+```bash
+# --accept-key value, --ak value             You can add acceptable keywords.
+dockle -ak GPG_KEY -ak KEYCLOAK_VERSION [IMAGE_NAME]
+or DOCKLE_ACCEPT_KEYS=GPG_KEY,KEYCLOAK_VERSION dockle [IMAGE_NAME]
+
+# --accept-file value, --af value            You can add acceptable file names.
+dockle -af id_rsa -af id_dsa [IMAGE_NAME]
+or DOCKLE_ACCEPT_FILES=id_rsa,id_dsa dockle [IMAGE_NAME]
+
+# --accept-file-extension value, --ae value  You can add acceptable file extensions.
+dockle -ae pem -ae log [IMAGE_NAME]
+or DOCKLE_ACCEPT_FILE_EXTENSIONS=pem,log dockle [IMAGE_NAME]
 ```
 
 ## Continuous Integration (CI)

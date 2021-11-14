@@ -29,6 +29,7 @@ var AlertLevelColors = map[int]color.Color{
 
 type ListWriter struct {
 	Output io.Writer
+	NoColor bool
 }
 
 func (lw ListWriter) Write(assessMap types.AssessmentMap) (abend bool, err error) {
@@ -56,6 +57,10 @@ func (lw ListWriter) showTargetResult(code string, level int, assessments []*typ
 }
 
 func (lw ListWriter) showTitleLine(code string, level int) {
+	if lw.NoColor {
+		fmt.Fprint(lw.Output, AlertLabels[level], TAB, "-", SPACE, code, COLON, SPACE, types.TitleMap[code], NEWLINE)
+		return
+	}
 	cyan := color.Cyan
 	fmt.Fprint(lw.Output, colorizeAlert(level), TAB, "-", SPACE, cyan.Add(code), COLON, SPACE, types.TitleMap[code], NEWLINE)
 }

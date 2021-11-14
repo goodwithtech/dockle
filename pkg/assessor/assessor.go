@@ -26,6 +26,7 @@ var assessors []Assessor
 type Assessor interface {
 	Assess(deckodertypes.FileMap) ([]*types.Assessment, error)
 	RequiredFiles() []string
+	RequiredExtensions() []string
 	RequiredPermissions() []os.FileMode
 }
 
@@ -61,6 +62,13 @@ func LoadRequiredFiles() (filenames []string) {
 		filenames = append(filenames, assessor.RequiredFiles()...)
 	}
 	return filenames
+}
+
+func LoadRequiredExtensions() (extensions []string) {
+	for _, assessor := range assessors {
+		extensions = append(extensions, assessor.RequiredExtensions()...)
+	}
+	return extensions
 }
 
 func LoadRequiredPermissions() (permissions []os.FileMode) {

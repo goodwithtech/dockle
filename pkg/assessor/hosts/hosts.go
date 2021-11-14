@@ -11,7 +11,7 @@ import (
 
 type HostsAssessor struct{}
 
-func (a HostsAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a HostsAssessor) Assess(_ deckodertypes.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : /etc/hosts")
 
 	assesses := []*types.Assessment{}
@@ -21,6 +21,10 @@ func (a HostsAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessmen
 
 func (a HostsAssessor) RequiredFiles() []string {
 	return []string{"etc/hosts"}
+}
+
+func (a HostsAssessor) RequiredExtensions() []string {
+	return []string{}
 }
 
 func (a HostsAssessor) RequiredPermissions() []os.FileMode {

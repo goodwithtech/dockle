@@ -62,6 +62,10 @@ func (a UserAssessor) RequiredFiles() []string {
 	return []string{"etc/passwd"}
 }
 
+func (a UserAssessor) RequiredExtensions() []string {
+	return []string{}
+}
+
 func (a UserAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{}
 }

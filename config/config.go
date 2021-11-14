@@ -27,6 +27,7 @@ var ExitLevelMap = map[string]int{
 
 type Config struct {
 	Debug     bool
+	Quiet     bool
 	Timeout   time.Duration
 	AuthURL   string
 	Username  string
@@ -59,6 +60,7 @@ func CreateFromCli(c *cli.Context) {
 	}
 	Conf.IgnoreMap = GetIgnoreCheckpointMap(c.StringSlice("ignore"))
 	Conf.Debug = c.Bool("debug")
+	Conf.Quiet = c.Bool("quiet")
 	Conf.Timeout = c.Duration("timeout")
 	Conf.AuthURL = c.String("authurl")
 	Conf.Username = c.String("username")

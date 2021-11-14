@@ -7,34 +7,33 @@ import (
 	"io"
 	"net/http"
 	"regexp"
+	"time"
 
 	"github.com/Portshift/dockle/pkg/log"
 )
 
 var versionPattern = regexp.MustCompile(`v[0-9]+\.[0-9]+\.[0-9]+`)
 
-// Dockle just want to check latest version string. No need to readall.
-const enoughLength = 14000
-
-func fetchURL(ctx context.Context, url string, cookie *http.Cookie, dataLen int) ([]byte, error) {
+func fetchURL(ctx context.Context, url string, cookie *http.Cookie) ([]byte, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("new request: %w", err)
 	}
 	req.AddCookie(cookie)
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := (&http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+		Timeout: time.Second * 3,
+	}).Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("fetch: %v", err)
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != 302 {
 		return nil, fmt.Errorf("HTTP error code : %d, url : %s", resp.StatusCode, url)
 	}
-	data := make([]byte, dataLen)
-	if _, err := io.ReadFull(resp.Body, data); err != nil {
-		return nil, fmt.Errorf("read: %w", err)
-	}
-	return data, nil
+	return io.ReadAll(resp.Body)
 }
 
 func FetchLatestVersion(ctx context.Context) (version string, err error) {
@@ -43,7 +42,6 @@ func FetchLatestVersion(ctx context.Context) (version string, err error) {
 		ctx,
 		"https://github.com/goodwithtech/dockle/releases/latest",
 		&http.Cookie{Name: "user_session", Value: "guard"},
-		enoughLength,
 	)
 	if err != nil {
 		return "", err
