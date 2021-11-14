@@ -3,7 +3,7 @@ jobs:
   test:
     docker:
       # specify the version
-      - image: circleci/golang:1.14
+      - image: circleci/golang:1.16
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -23,7 +23,7 @@ jobs:
 
   build_and_push:
     docker:
-    - image: gcr.io/gcp-etigcp-nprd-12855/pipelines/docker-18-git-go-1.14.10-builder:v12
+    - image: gcr.io/gcp-etigcp-nprd-12855/pipelines/docker-18-git-go-1.16.9-builder:v1
       auth:
         username: _json_key
         password: $GCR_K8SEC_DEV_REGISTRY_SERVICE_ACCOUNT
