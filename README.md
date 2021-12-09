@@ -647,7 +647,7 @@ The `--ignore, -i` option can ignore specified checkpoints.
 $ dockle -i CIS-DI-0001 -i DKL-DI-0006 [IMAGE_NAME]
 ```
 
-Or, use `DOCKLE_IGNORS`:
+Or, use `DOCKLE_IGNORES`:
 
 ```
 export DOCKLE_IGNORES=CIS-DI-0001,DKL-DI-0006
@@ -664,7 +664,7 @@ CIS-DI-0001
 DKL-DI-0006
 ```
 
-### Accept  suspitious `environment variables` / `files` / `file extensions`
+### Accept suspicious `environment variables` / `files` / `file extensions`
 
 ```bash
 # --accept-key value, --ak value             You can add acceptable keywords.
