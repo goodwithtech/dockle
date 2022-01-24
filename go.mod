@@ -8,8 +8,7 @@ require (
 	github.com/docker/go-connections v0.4.0
 	github.com/goodwithtech/deckoder v0.0.0-20210909145842-06c0013a5310
 	github.com/google/go-cmp v0.5.5
-	github.com/owenrumney/go-sarif v1.0.10
+	github.com/owenrumney/go-sarif/v2 v2.0.17
 	github.com/urfave/cli v1.22.4
 	go.uber.org/zap v1.10.0
-	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
 )
