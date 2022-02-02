@@ -1,4 +1,4 @@
-  <img src="imgs/logo.png" width="450">
+<img src="imgs/logo.png" width="450">
 
 [![Financial Contributors on Open Collective](https://opencollective.com/dockle/all/badge.svg?label=financial+contributors)](https://opencollective.com/dockle) [![GitHub release](https://img.shields.io/github/release/goodwithtech/dockle.svg)](https://github.com/goodwithtech/dockle/releases/latest)
 [![CircleCI](https://circleci.com/gh/goodwithtech/dockle.svg?style=svg)](https://circleci.com/gh/goodwithtech/dockle)
