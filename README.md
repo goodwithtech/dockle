@@ -851,10 +851,6 @@ export DOCKLE_PASSWORD={PASSWORD}
 export DOCKLE_NON_SSL=true
 ```
 
-# Credits
-
-Special Thanks to [@knqyf263](https://github.com/knqyf263) (Teppei Fukuda) and [Trivy](https://github.com/knqyf263/trivy)
-
 ## Contributors
 
 ### Code Contributors
@@ -874,7 +870,7 @@ Become a financial contributor and help us sustain our community. [[Contribute](
 
 Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/dockle/contribute)]
 
-<a href="https://opencollective.com/dockle/organization/0/website"><img src="https://opencollective.com/dockle/organization/0/avatar.svg"></a>
+<a href="https://www.tines.com/?utm_source=oss&utm_medium=sponsorship&utm_campaign=dockle"><img src="imgs/tines.png"></a>
 <a href="https://opencollective.com/dockle/organization/1/website"><img src="https://opencollective.com/dockle/organization/1/avatar.svg"></a>
 <a href="https://opencollective.com/dockle/organization/2/website"><img src="https://opencollective.com/dockle/organization/2/avatar.svg"></a>
 <a href="https://opencollective.com/dockle/organization/3/website"><img src="https://opencollective.com/dockle/organization/3/avatar.svg"></a>
@@ -889,33 +885,9 @@ Support this project with your organization. Your logo will show up here with a 
 
 - AGPLv3
 
+
 # Author
 
 [@tomoyamachi](https://github.com/tomoyamachi) (Tomoya Amachi)
 
-# Roadmap
-
-- [x] JSON output
-- [ ] Check php.ini file
-- [ ] Check nginx.conf file
-- [ ] create CI badges
-- Check /etc/hosts
-  - [ ] duplicates
-  - [ ] hostname
-  - [ ] localhost
-- Packages
-  - [ ] Package managers
-- File Permissions
-  - [ ] Insecure permission
-- Image Size
-  - [ ] check large size container
-
-## if running docker daemon...
-
-- Networking
-  - [ ] `docker port container` if docker running
-  - [ ] by file
-    - `/proc/1/net/tcp` : openning port (if running)
-- Volume mount
-  - dangerous mount
-    - `/boot`, `/dev`, `/etc`, `/lib`
+Special Thanks to [@knqyf263](https://github.com/knqyf263) (Teppei Fukuda) and [Trivy](https://github.com/knqyf263/trivy)
