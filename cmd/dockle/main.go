@@ -107,6 +107,11 @@ OPTIONS:
 			Usage:  "docker timeout. e.g) 5s, 5m...",
 		},
 		cli.StringFlag{
+			Name:   "host",
+			EnvVar: "DOCKLE_HOST",
+			Usage:  "docker daemon host",
+		},
+		cli.StringFlag{
 			Name:   "authurl",
 			EnvVar: "DOCKLE_AUTH_URL",
 			Usage:  "registry authenticate url",

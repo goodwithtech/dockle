@@ -59,6 +59,7 @@ func Run(c *cli.Context) (err error) {
 		UserName:              c.String("username"),
 		Password:              c.String("password"),
 		InsecureSkipTLSVerify: c.Bool("insecure"),
+		DockerDaemonHost:      c.String("host"),
 		SkipPing:              true,
 	}
 	var imageName string
