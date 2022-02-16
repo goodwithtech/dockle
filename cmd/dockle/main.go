@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	l "log"
 	"os"
 	"time"
@@ -35,6 +36,15 @@ OPTIONS:
   {{end}}{{$option}}{{end}}{{end}}
 `
 	app := cli.NewApp()
+
+	var dockerSockPath string
+	xdgRuntimeDir := os.Getenv("XDG_RUNTIME_DIR")
+	if xdgRuntimeDir != "" {
+		dockerSockPath = fmt.Sprintf("unix://%s/docker.sock", xdgRuntimeDir)
+	} else {
+		dockerSockPath = "unix:///var/run/docker.sock"
+	}
+
 	app.Name = "dockle"
 	app.Version = version
 	app.ArgsUsage = "image_name"
@@ -105,6 +115,12 @@ OPTIONS:
 			Value:  time.Second * 90,
 			EnvVar: "DOCKLE_TIMEOUT",
 			Usage:  "docker timeout. e.g) 5s, 5m...",
+		},
+		cli.StringFlag{
+			Name:   "host",
+			EnvVar: "DOCKLE_HOST",
+			Usage:  "docker daemon host",
+			Value:  dockerSockPath,
 		},
 		cli.StringFlag{
 			Name:   "authurl",
