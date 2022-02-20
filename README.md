@@ -38,6 +38,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
   - [Arch Linux](#arch-linux)
   - [Windows](#windows)
   - [Binary](#binary)
+  - [asdf](#asdf)
   - [From source](#from-source)
   - [Use Docker](#use-docker)
 - [Quick Start](#quick-start)
@@ -117,13 +118,11 @@ VERSION=$(
 $ sudo dpkg -i dockle.deb && rm dockle.deb
 ```
 ## Arch Linux
-dockle-bin can be installed from the Arch User Repository. Examples:
+dockle can be installed from the Arch User Repository using `dockle` or `dockle-bin` package.
 ```
-pikaur -Sy dockle-bin
-```
-or
-```
-yay -Sy dockle-bin
+git clone https://aur.archlinux.org/dockle-bin.git
+cd dockle-bin
+makepkg -sri
 ```
 ## Windows
 
@@ -144,6 +143,27 @@ You can get the latest version binary from [releases page](https://github.com/go
 Download the archive file for your operating system/architecture. Unpack the archive, and put the binary somewhere in your `$PATH` (on UNIX-y systems, `/usr/local/bin` or the like).
 
 - NOTE: Make sure that it's execution bits turned on. (`chmod +x dockle`)
+
+## asdf
+
+You can install dockle with the [asdf version manager](https://asdf-vm.com/) with this [plugin](https://github.com/mathew-fleisch/asdf-dockle), which automates the process of installing (and switching between) various versions of github release binaries. With asdf already installed, run these commands to install dockle:
+
+```bash
+# Add dockle plugin
+asdf plugin add dockle
+
+# Show all installable versions
+asdf list-all dockle
+
+# Install specific version
+asdf install dockle latest
+
+# Set a version globally (on your ~/.tool-versions file)
+asdf global dockle latest
+
+# Now dockle commands are available
+dockle --version
+```
 
 ## From source
 
@@ -627,7 +647,7 @@ The `--ignore, -i` option can ignore specified checkpoints.
 $ dockle -i CIS-DI-0001 -i DKL-DI-0006 [IMAGE_NAME]
 ```
 
-Or, use `DOCKLE_IGNORS`:
+Or, use `DOCKLE_IGNORES`:
 
 ```
 export DOCKLE_IGNORES=CIS-DI-0001,DKL-DI-0006
@@ -644,7 +664,7 @@ CIS-DI-0001
 DKL-DI-0006
 ```
 
-### Accept  suspitious `environment variables` / `files` / `file extensions`
+### Accept suspicious `environment variables` / `files` / `file extensions`
 
 ```bash
 # --accept-key value, --ak value             You can add acceptable keywords.
@@ -831,10 +851,6 @@ export DOCKLE_PASSWORD={PASSWORD}
 export DOCKLE_NON_SSL=true
 ```
 
-# Credits
-
-Special Thanks to [@knqyf263](https://github.com/knqyf263) (Teppei Fukuda) and [Trivy](https://github.com/knqyf263/trivy)
-
 ## Contributors
 
 ### Code Contributors
@@ -854,7 +870,7 @@ Become a financial contributor and help us sustain our community. [[Contribute](
 
 Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/dockle/contribute)]
 
-<a href="https://opencollective.com/dockle/organization/0/website"><img src="https://opencollective.com/dockle/organization/0/avatar.svg"></a>
+<a href="https://www.tines.com/?utm_source=oss&utm_medium=sponsorship&utm_campaign=dockle"><img src="imgs/tines.png"></a>
 <a href="https://opencollective.com/dockle/organization/1/website"><img src="https://opencollective.com/dockle/organization/1/avatar.svg"></a>
 <a href="https://opencollective.com/dockle/organization/2/website"><img src="https://opencollective.com/dockle/organization/2/avatar.svg"></a>
 <a href="https://opencollective.com/dockle/organization/3/website"><img src="https://opencollective.com/dockle/organization/3/avatar.svg"></a>
@@ -869,33 +885,9 @@ Support this project with your organization. Your logo will show up here with a 
 
 - AGPLv3
 
+
 # Author
 
 [@tomoyamachi](https://github.com/tomoyamachi) (Tomoya Amachi)
 
-# Roadmap
-
-- [x] JSON output
-- [ ] Check php.ini file
-- [ ] Check nginx.conf file
-- [ ] create CI badges
-- Check /etc/hosts
-  - [ ] duplicates
-  - [ ] hostname
-  - [ ] localhost
-- Packages
-  - [ ] Package managers
-- File Permissions
-  - [ ] Insecure permission
-- Image Size
-  - [ ] check large size container
-
-## if running docker daemon...
-
-- Networking
-  - [ ] `docker port container` if docker running
-  - [ ] by file
-    - `/proc/1/net/tcp` : openning port (if running)
-- Volume mount
-  - dangerous mount
-    - `/boot`, `/dev`, `/etc`, `/lib`
+Special Thanks to [@knqyf263](https://github.com/knqyf263) (Teppei Fukuda) and [Trivy](https://github.com/knqyf263/trivy)
