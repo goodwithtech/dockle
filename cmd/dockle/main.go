@@ -147,7 +147,12 @@ OPTIONS:
 			EnvVar: "DOCKLE_NON_SSL",
 			Usage:  "registry connect without ssl",
 		},
-
+		cli.StringFlag{
+			Name:   "cert-path",
+			EnvVar: "DOCKLE_CERT_PATH",
+			Usage:  "docker daemon certificate path",
+			Value:  dockerSockPath,
+		},
 		cli.StringFlag{
 			Name:  "cache-dir",
 			Usage: "cache directory",
