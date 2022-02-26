@@ -1,4 +1,0 @@
-general:
-  vulnerabilities:
-    # dockle does not use a target feature
-    - CVE-2021-43816
