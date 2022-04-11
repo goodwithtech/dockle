@@ -21,38 +21,10 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: make test
 
-  build_and_push:
-    docker:
-    - image: gcr.io/gcp-etigcp-nprd-12855/pipelines/docker-18-git-go-1.16.9-builder:v1
-      auth:
-        username: _json_key
-        password: $GCR_K8SEC_DEV_REGISTRY_SERVICE_ACCOUNT
-    working_directory: /home/ubuntu/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run: docker login -u _json_key -p "${GCR_ETI_CLOUD_REGISTRY_SERVICE_ACCOUNT}" http://gcr.io
-      - run: echo ${CIRCLE_SHA1}
-      - run: echo ${CIRCLE_TAG}
-      - run: VERSION=${CIRCLE_SHA1} make docker.push
-      - run: >
-           if [ "${CIRCLE_TAG}" != "" ];
-           then
-            VERSION=${CIRCLE_TAG} make docker.push
-           fi
-
-
 workflows:
-  test_build_and_push:
+  test:
     jobs:
       - test:
-          filters:
-            tags:
-              only: /^[0-9]+(\.[0-9]+)*$/
-      - build_and_push:
-          requires:
-            - test
-          context: CISCO_REG_CREDS
           filters:
             tags:
               only: /^[0-9]+(\.[0-9]+)*$/
