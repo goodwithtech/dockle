@@ -88,7 +88,7 @@ RUN apt-get update && apt-get install -y package-a
 
 ```bash
 chmod u-s setuid-file
-chmod u-g setgid-file
+chmod g-s setgid-file
 ```
 
 ### CIS-DI-0009
