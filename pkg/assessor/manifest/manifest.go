@@ -23,6 +23,7 @@ type ManifestAssessor struct{}
 
 var ConfigFileName = "metadata"
 var (
+	sensitiveWords   = []string{"pass", "passwd", "access", "token", "secret", "key", "api", "password"}
 	sensitiveDirs    = map[string]struct{}{"/sys": {}, "/dev": {}, "/proc": {}}
 	suspiciousEnvKey = []string{"PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS"}
 	acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
@@ -43,6 +44,10 @@ func (a ManifestAssessor) Assess(fileMap deckodertypes.FileMap) (assesses []*typ
 	}
 
 	return checkAssessments(d)
+}
+
+func AddSensitiveWords(words []string) {
+	sensitiveWords = append(sensitiveWords, words...)
 }
 
 func AddAcceptanceKeys(keys []string) {
@@ -227,7 +232,6 @@ func sensitiveVars(cmd string) bool {
 		return false
 	}
 
-	sensitiveWords := []string{"pass", "passwd", "access", "token", "secret", "key", "api", "password"}
 	for _, s := range sensitiveWords {
 		sensitiveWords = append(sensitiveWords, strings.ToUpper(s))
 	}

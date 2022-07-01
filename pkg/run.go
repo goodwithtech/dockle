@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
 	l "log"
 	"os"
 	"strings"
+
+	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
 
 	"github.com/containers/image/v5/transports/alltransports"
 	deckodertypes "github.com/goodwithtech/deckoder/types"
@@ -75,6 +76,7 @@ func Run(c *cli.Context) (err error) {
 			return fmt.Errorf("invalid image: %w", err)
 		}
 	}
+	manifest.AddSensitiveWords(c.StringSlice("sensitive-word"))
 	manifest.AddAcceptanceKeys(c.StringSlice("accept-key"))
 	scanner.AddAcceptanceFiles(c.StringSlice("accept-file"))
 	scanner.AddAcceptanceExtensions(c.StringSlice("accept-file-extension"))
