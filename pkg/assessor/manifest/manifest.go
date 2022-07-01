@@ -4,11 +4,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
 	deckodertypes "github.com/goodwithtech/deckoder/types"
+
+	"github.com/google/shlex"
 
 	"github.com/goodwithtech/dockle/pkg/log"
 
@@ -132,6 +136,14 @@ func splitByCommands(line string) map[int][]string {
 func assessHistory(index int, cmd types.History) []*types.Assessment {
 	var assesses []*types.Assessment
 	cmdSlices := splitByCommands(cmd.CreatedBy)
+
+	if sensitiveVars(cmd.CreatedBy) {
+		assesses = append(assesses, &types.Assessment{
+			Code:     types.AvoidCredential,
+			Filename: ConfigFileName,
+			Desc:     fmt.Sprintf("Suspicious ENV key found : %s", cmd.CreatedBy),
+		})
+	}
 	if reducableApkAdd(cmdSlices) {
 		assesses = append(assesses, &types.Assessment{
 			Code:     types.UseApkAddNoCache,
@@ -208,6 +220,39 @@ func useADDstatement(cmdSlices map[int][]string) bool {
 		}
 	}
 	return false
+}
+
+func sensitiveVars(cmd string) bool {
+	if !strings.Contains(cmd, "=") {
+		return false
+	}
+
+	sensitiveWords := []string{"pass", "passwd", "access", "token", "secret", "key", "api", "password"}
+	for _, s := range sensitiveWords {
+		sensitiveWords = append(sensitiveWords, strings.ToUpper(s))
+	}
+	pat := strings.ReplaceAll(`.*(REP).*`, "REP", strings.Join(sensitiveWords, "|"))
+	r, _ := regexp.Compile(pat)
+
+	toklexer := shlex.NewLexer(strings.NewReader(strings.ReplaceAll(cmd, "#", "")))
+
+	for {
+		word, err := toklexer.Next()
+		if err == io.EOF {
+			break
+		}
+		if !strings.Contains(word, "=") {
+			continue
+		}
+		varName := strings.Split(word, "=")[0]
+
+		if r.MatchString(varName) {
+			return true
+		}
+	}
+
+	return false
+
 }
 
 func checkAptCommand(target []string, command string) bool {
