@@ -401,6 +401,26 @@ func TestAddStatement(t *testing.T) {
 	}
 }
 
+func TestSensitiveVars(t *testing.T) {
+	var tests = map[string]struct {
+		cmd      string
+		expected bool
+	}{
+		"basic":              {cmd: "/bin/sh -c #(nop) ENV PASS=ADMIN", expected: true},
+		"two vars":           {cmd: "/bin/sh -c #(nop) ENV abc=hello password=sensibledata", expected: true},
+		"run command":        {cmd: `/bin/sh -c  SECRET_API_KEY=63AF7AA15067C05616FDDD88A3A2E8F226F0BC06 echo "data"`, expected: true},
+		"run false positive": {cmd: `/bin/sh -c HELLO="PASS=\"notThis\"" echo "false positive"`, expected: false},
+		"run command 2":      {cmd: `/bin/sh -c SECRET=myLittleSecret VAR2=VALUE2 VAR3=VALUE3 echo "Do something"`, expected: true},
+	}
+	for testname, v := range tests {
+		actual := sensitiveVars(v.cmd)
+		if actual != v.expected {
+			t.Errorf("%s want: %t, got %t", testname, v.expected, actual)
+		}
+	}
+
+}
+
 func TestUseDistUpgrade(t *testing.T) {
 	var tests = map[string]struct {
 		cmdSlices map[int][]string
