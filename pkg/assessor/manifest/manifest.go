@@ -23,9 +23,8 @@ type ManifestAssessor struct{}
 
 var ConfigFileName = "metadata"
 var (
-	sensitiveWords   = []string{"pass", "passwd", "access", "token", "secret", "key", "api", "password"}
 	sensitiveDirs    = map[string]struct{}{"/sys": {}, "/dev": {}, "/proc": {}}
-	suspiciousEnvKey = []string{"PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS"}
+	suspiciousEnvKey = []string{"PASS", "PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS", "TOKEN", "API"}
 	acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
 )
 
@@ -47,7 +46,7 @@ func (a ManifestAssessor) Assess(fileMap deckodertypes.FileMap) (assesses []*typ
 }
 
 func AddSensitiveWords(words []string) {
-	sensitiveWords = append(sensitiveWords, words...)
+	suspiciousEnvKey = append(suspiciousEnvKey, words...)
 }
 
 func AddAcceptanceKeys(keys []string) {
@@ -142,11 +141,12 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 	var assesses []*types.Assessment
 	cmdSlices := splitByCommands(cmd.CreatedBy)
 
-	if sensitiveVars(cmd.CreatedBy) {
+	found, varName := sensitiveVars(cmd.CreatedBy)
+	if found {
 		assesses = append(assesses, &types.Assessment{
 			Code:     types.AvoidCredential,
 			Filename: ConfigFileName,
-			Desc:     fmt.Sprintf("Suspicious ENV key found : %s", cmd.CreatedBy),
+			Desc:     fmt.Sprintf("Suspicious ENV key found : %s on %s", varName, cmd.CreatedBy),
 		})
 	}
 	if reducableApkAdd(cmdSlices) {
@@ -227,16 +227,16 @@ func useADDstatement(cmdSlices map[int][]string) bool {
 	return false
 }
 
-func sensitiveVars(cmd string) bool {
+func sensitiveVars(cmd string) (bool, string) {
 	if !strings.Contains(cmd, "=") {
-		return false
+		return false, ""
 	}
 
-	for _, s := range sensitiveWords {
-		sensitiveWords = append(sensitiveWords, strings.ToUpper(s))
+	pat := fmt.Sprintf(`.*(?i)%s.*`, strings.Join(suspiciousEnvKey, "|"))
+	r, err := regexp.Compile(pat)
+	if err != nil {
+		return false, ""
 	}
-	pat := strings.ReplaceAll(`.*(REP).*`, "REP", strings.Join(sensitiveWords, "|"))
-	r, _ := regexp.Compile(pat)
 
 	toklexer := shlex.NewLexer(strings.NewReader(strings.ReplaceAll(cmd, "#", "")))
 
@@ -251,12 +251,11 @@ func sensitiveVars(cmd string) bool {
 		varName := strings.Split(word, "=")[0]
 
 		if r.MatchString(varName) {
-			return true
+			return true, varName
 		}
 	}
 
-	return false
-
+	return false, ""
 }
 
 func checkAptCommand(target []string, command string) bool {
