@@ -250,6 +250,10 @@ func sensitiveVars(cmd string) (bool, string) {
 		}
 		varName := strings.Split(word, "=")[0]
 
+		if _, ok := acceptanceEnvKey[varName]; ok {
+			continue
+		}
+
 		if r.MatchString(varName) {
 			return true, varName
 		}
