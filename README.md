@@ -37,6 +37,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
   - [Debian/Ubuntu](#debianubuntu)
   - [Arch Linux](#arch-linux)
   - [Windows](#windows)
+  - [Microsoft PowerShell 7](#microsoft-powershell-7)
   - [Binary](#binary)
   - [asdf](#asdf)
   - [From source](#from-source)
@@ -135,7 +136,13 @@ VERSION=$(
 $ unzip dockle.zip && rm dockle.zip
 $ ./dockle.exe [IMAGE_NAME]
 ```
-
+## Microsoft PowerShell 7
+```bash
+if (((Invoke-WebRequest "https://api.github.com/repos/goodwithtech/dockle/releases/latest").Content) -match '"tag_name":"v(?<ver>[^"]+)"') {
+$VERSION=$Matches.ver &&
+Invoke-WebRequest "https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Windows-64bit.zip" -OutFile dockle.zip &&
+Expand-Archive dockle.zip && Remove-Item dockle.zip }
+```
 ## Binary
 
 You can get the latest version binary from [releases page](https://github.com/goodwithtech/dockle/releases/latest).
