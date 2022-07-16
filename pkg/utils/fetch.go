@@ -2,7 +2,6 @@ package utils
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -53,5 +52,5 @@ func FetchLatestVersion(ctx context.Context) (version string, err error) {
 	if versionMatched := versionPattern.FindString(*body); versionMatched != "" {
 		return versionMatched, nil
 	}
-	return "", errors.New("not found version patterns")
+	return "", fmt.Errorf("not found version patterns parsing GH response: %s", string(body))
 }
