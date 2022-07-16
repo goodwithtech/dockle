@@ -23,9 +23,10 @@ type ManifestAssessor struct{}
 
 var ConfigFileName = "metadata"
 var (
-	sensitiveDirs    = map[string]struct{}{"/sys": {}, "/dev": {}, "/proc": {}}
-	suspiciousEnvKey = []string{"PASS", "PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS", "TOKEN", "API"}
-	acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
+	sensitiveDirs      = map[string]struct{}{"/sys": {}, "/dev": {}, "/proc": {}}
+	suspiciousEnvKey   = []string{"PASS", "PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS", "TOKEN", "API"}
+	acceptanceEnvKey   = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
+	suspiciousCompiler *regexp.Regexp
 )
 
 func (a ManifestAssessor) Assess(fileMap deckodertypes.FileMap) (assesses []*types.Assessment, err error) {
@@ -55,30 +56,26 @@ func AddAcceptanceKeys(keys []string) {
 	}
 }
 
+func setSensitivePatterns() error {
+	pat := fmt.Sprintf(`.*(?i)%s.*`, strings.Join(suspiciousEnvKey, "|"))
+	r, err := regexp.Compile(pat)
+	if err != nil {
+		return fmt.Errorf("compile suspicious key: %w", err)
+	}
+	suspiciousCompiler = r
+	return nil
+}
+
 func checkAssessments(img types.Image) (assesses []*types.Assessment, err error) {
+	if err := setSensitivePatterns(); err != nil {
+		return nil, err
+	}
 	if img.Config.User == "" || img.Config.User == "root" {
 		assesses = append(assesses, &types.Assessment{
 			Code:     types.AvoidRootDefault,
 			Filename: ConfigFileName,
 			Desc:     "Last user should not be root",
 		})
-	}
-
-	for _, envVar := range img.Config.Env {
-		e := strings.Split(envVar, "=")
-		envKey := e[0]
-		for _, suspiciousKey := range suspiciousEnvKey {
-			if strings.Contains(envKey, suspiciousKey) {
-				if _, ok := acceptanceEnvKey[envKey]; ok {
-					continue
-				}
-				assesses = append(assesses, &types.Assessment{
-					Code:     types.AvoidCredential,
-					Filename: ConfigFileName,
-					Desc:     fmt.Sprintf("Suspicious ENV key found : %s (You can suppress it with --accept-key)", envKey),
-				})
-			}
-		}
 	}
 
 	if img.Config.Healthcheck == nil {
@@ -146,7 +143,7 @@ func assessHistory(index int, cmd types.History) []*types.Assessment {
 		assesses = append(assesses, &types.Assessment{
 			Code:     types.AvoidCredential,
 			Filename: ConfigFileName,
-			Desc:     fmt.Sprintf("Suspicious ENV key found : %s on %s", varName, cmd.CreatedBy),
+			Desc:     fmt.Sprintf("Suspicious ENV key found : %s on %s (You can suppress it with --accept-key)", varName, cmd.CreatedBy),
 		})
 	}
 	if reducableApkAdd(cmdSlices) {
@@ -231,15 +228,7 @@ func sensitiveVars(cmd string) (bool, string) {
 	if !strings.Contains(cmd, "=") {
 		return false, ""
 	}
-
-	pat := fmt.Sprintf(`.*(?i)%s.*`, strings.Join(suspiciousEnvKey, "|"))
-	r, err := regexp.Compile(pat)
-	if err != nil {
-		return false, ""
-	}
-
 	toklexer := shlex.NewLexer(strings.NewReader(strings.ReplaceAll(cmd, "#", "")))
-
 	for {
 		word, err := toklexer.Next()
 		if err == io.EOF {
@@ -249,12 +238,11 @@ func sensitiveVars(cmd string) (bool, string) {
 			continue
 		}
 		varName := strings.Split(word, "=")[0]
-
 		if _, ok := acceptanceEnvKey[varName]; ok {
 			continue
 		}
 
-		if r.MatchString(varName) {
+		if suspiciousCompiler.MatchString(varName) {
 			return true, varName
 		}
 	}
