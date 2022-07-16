@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"regexp"
 	"time"
@@ -14,7 +13,7 @@ import (
 
 var versionPattern = regexp.MustCompile(`v[0-9]+\.[0-9]+\.[0-9]+`)
 
-func fetchURL(ctx context.Context, url string, cookie *http.Cookie) ([]byte, error) {
+func fetchLocation(ctx context.Context, url string, cookie *http.Cookie) (*string, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("new request: %w", err)
@@ -33,12 +32,17 @@ func fetchURL(ctx context.Context, url string, cookie *http.Cookie) ([]byte, err
 	if resp.StatusCode != 302 {
 		return nil, fmt.Errorf("HTTP error code : %d, url : %s", resp.StatusCode, url)
 	}
-	return io.ReadAll(resp.Body)
+	location, err := resp.Location()
+	if err != nil {
+		return nil, err
+	}
+	locationString := location.String()
+	return &locationString, nil
 }
 
 func FetchLatestVersion(ctx context.Context) (version string, err error) {
 	log.Logger.Debug("Fetch latest version from github")
-	body, err := fetchURL(
+	body, err := fetchLocation(
 		ctx,
 		"https://github.com/goodwithtech/dockle/releases/latest",
 		&http.Cookie{Name: "user_session", Value: "guard"},
@@ -46,7 +50,7 @@ func FetchLatestVersion(ctx context.Context) (version string, err error) {
 	if err != nil {
 		return "", err
 	}
-	if versionMatched := versionPattern.FindString(string(body)); versionMatched != "" {
+	if versionMatched := versionPattern.FindString(*body); versionMatched != "" {
 		return versionMatched, nil
 	}
 	return "", errors.New("not found version patterns")
