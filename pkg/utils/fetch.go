@@ -52,5 +52,5 @@ func FetchLatestVersion(ctx context.Context) (version string, err error) {
 	if versionMatched := versionPattern.FindString(*body); versionMatched != "" {
 		return versionMatched, nil
 	}
-	return "", fmt.Errorf("not found version patterns parsing GH response: %s", string(body))
+	return "", fmt.Errorf("not found version patterns parsing GH response: %s", *body)
 }
