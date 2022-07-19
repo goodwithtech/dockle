@@ -24,7 +24,7 @@ type ManifestAssessor struct{}
 var ConfigFileName = "metadata"
 var (
 	sensitiveDirs      = map[string]struct{}{"/sys": {}, "/dev": {}, "/proc": {}}
-	suspiciousEnvKey   = []string{"PASS", "PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS", "TOKEN", "API"}
+	suspiciousEnvKey   = []string{"PASS", "PASSWD", "PASSWORD", "SECRET", "KEY", "ACCESS", "TOKEN"}
 	acceptanceEnvKey   = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
 	suspiciousCompiler *regexp.Regexp
 )
