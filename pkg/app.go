@@ -110,6 +110,11 @@ OPTIONS:
 			EnvVar: "NO_COLOR",
 			Usage:  "suppress log output",
 		},
+		cli.BoolFlag{
+			Name:   "version-check",
+			EnvVar: "DOCKLE_VERSION_CHECK",
+			Usage:  "show an update notification",
+		},
 
 		// Registry flag
 		cli.DurationFlag{
