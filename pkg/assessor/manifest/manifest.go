@@ -237,7 +237,12 @@ func sensitiveVars(cmd string) (bool, string) {
 		if !strings.Contains(word, "=") {
 			continue
 		}
-		varName := strings.Split(word, "=")[0]
+		vars := strings.Split(word, "=")
+		varName, varVal := vars[0], vars[1]
+		if varVal == "" {
+			continue
+		}
+
 		if _, ok := acceptanceEnvKey[varName]; ok {
 			continue
 		}
