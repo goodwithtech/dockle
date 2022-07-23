@@ -13,3 +13,4 @@ jobs:
         severity-threshold: CRITICAL
       env:
         TRIVY_IGNORE_UNFIXED: true
+        DOCKLE_HOST: "unix:///var/run/docker.sock"
