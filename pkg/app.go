@@ -2,9 +2,10 @@ package pkg
 
 import (
 	"fmt"
-	"github.com/urfave/cli"
 	"os"
 	"time"
+
+	"github.com/urfave/cli"
 )
 
 var (
@@ -61,6 +62,11 @@ OPTIONS:
 			Name:   "accept-key, ak",
 			EnvVar: "DOCKLE_ACCEPT_KEYS",
 			Usage:  "For CIS-DI-0010. You can add acceptable keywords. e.g) -ak GPG_KEY -ak KEYCLOAK",
+		},
+		cli.StringSliceFlag{
+			Name:   "sensitive-word, sw",
+			EnvVar: "DOCKLE_REJECT_KEYS",
+			Usage:  "For CIS-DI-0010. You can add sensitive keywords to look for. e.g) -ak api_password -sw keys",
 		},
 		cli.StringSliceFlag{
 			Name:   "accept-file, af",
