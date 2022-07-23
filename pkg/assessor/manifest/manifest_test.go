@@ -402,6 +402,9 @@ func TestAddStatement(t *testing.T) {
 }
 
 func TestSensitiveVars(t *testing.T) {
+	if err := compileSensitivePatterns(); err != nil {
+		t.Fatalf("compile sensitive var patterns: %s", err)
+	}
 	var tests = map[string]struct {
 		cmd      string
 		expected bool

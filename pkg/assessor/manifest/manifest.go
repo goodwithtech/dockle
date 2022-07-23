@@ -56,7 +56,7 @@ func AddAcceptanceKeys(keys []string) {
 	}
 }
 
-func setSensitivePatterns() error {
+func compileSensitivePatterns() error {
 	pat := fmt.Sprintf(`.*(?i)%s.*`, strings.Join(suspiciousEnvKey, "|"))
 	r, err := regexp.Compile(pat)
 	if err != nil {
@@ -67,7 +67,7 @@ func setSensitivePatterns() error {
 }
 
 func checkAssessments(img types.Image) (assesses []*types.Assessment, err error) {
-	if err := setSensitivePatterns(); err != nil {
+	if err := compileSensitivePatterns(); err != nil {
 		return nil, err
 	}
 	if img.Config.User == "" || img.Config.User == "root" {
