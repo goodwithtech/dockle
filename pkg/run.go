@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
 	l "log"
 	"os"
 	"strings"
@@ -14,6 +13,7 @@ import (
 	"github.com/urfave/cli"
 
 	"github.com/Portshift/dockle/config"
+	"github.com/Portshift/dockle/pkg/assessor/manifest"
 	"github.com/Portshift/dockle/pkg/log"
 	"github.com/Portshift/dockle/pkg/report"
 	"github.com/Portshift/dockle/pkg/scanner"
