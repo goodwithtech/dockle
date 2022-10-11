@@ -63,7 +63,7 @@ func Run(c *cli.Context) (err error) {
 		UserName:              c.String("username"),
 		Password:              c.String("password"),
 		InsecureSkipTLSVerify: c.Bool("insecure"),
-		DockerDaemonHost:      c.String("host"),
+		DockerDaemonHost:      getDockerSockPath(c),
 		DockerDaemonCertPath:  c.String("cert-path"),
 		SkipPing:              true,
 	}
@@ -131,6 +131,17 @@ func Run(c *cli.Context) (err error) {
 	}
 
 	return nil
+}
+
+func getDockerSockPath(c *cli.Context) string {
+	if c.String("host") != "" {
+		return c.String("host")
+	}
+	xdgRuntimeDir := os.Getenv("XDG_RUNTIME_DIR")
+	if c.Bool("use-xdg") && xdgRuntimeDir != "" {
+		return fmt.Sprintf("unix://%s/docker.sock", xdgRuntimeDir)
+	}
+	return "unix:///var/run/docker.sock"
 }
 
 func useLatest(imageName string) (bool, error) {
