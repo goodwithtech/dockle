@@ -1,8 +1,6 @@
 package pkg
 
 import (
-	"fmt"
-	"os"
 	"time"
 
 	"github.com/urfave/cli"
@@ -35,13 +33,6 @@ OPTIONS:
 	app := cli.NewApp()
 
 	var dockerSockPath string
-	xdgRuntimeDir := os.Getenv("XDG_RUNTIME_DIR")
-	if xdgRuntimeDir != "" {
-		dockerSockPath = fmt.Sprintf("unix://%s/docker.sock", xdgRuntimeDir)
-	} else {
-		dockerSockPath = "unix:///var/run/docker.sock"
-	}
-
 	app.Name = "dockle"
 	app.Version = version
 	app.ArgsUsage = "image_name"
@@ -122,6 +113,11 @@ OPTIONS:
 			Value:  time.Second * 90,
 			EnvVar: "DOCKLE_TIMEOUT",
 			Usage:  "docker timeout. e.g) 5s, 5m...",
+		},
+		cli.BoolFlag{
+			Name:   "use-xdg, x",
+			EnvVar: "USE_XDG",
+			Usage:  "Docker daemon host file  XDG_RUNTIME_DIR",
 		},
 		cli.StringFlag{
 			Name:   "host",
