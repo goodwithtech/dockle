@@ -414,9 +414,13 @@ func TestSensitiveVars(t *testing.T) {
 		"mixed cases":        {cmd: "/bin/sh -c #(nop) ENV PasS=ADMIN", expected: true},
 		"two vars":           {cmd: "/bin/sh -c #(nop) ENV abc=hello password=sensibledata", expected: true},
 		"empty two value":    {cmd: "/bin/sh -c #(nop) ENV ABC=hello PASS= ", expected: false},
-		"run command":        {cmd: `/bin/sh -c  SECRET_API_KEY=63AF7AA15067C05616FDDD88A3A2E8F226F0BC06 echo "data"`, expected: true},
+		"run command":        {cmd: `/bin/sh -c SECRET_API_KEY=63AF7AA15067C05616FDDD88A3A2E8F226F0BC06 echo "data"`, expected: true},
 		"run false positive": {cmd: `/bin/sh -c HELLO="PASS=\"notThis\"" echo "false positive"`, expected: false},
 		"run command 2":      {cmd: `/bin/sh -c SECRET=myLittleSecret VAR2=VALUE2 VAR3=VALUE3 echo "Do something"`, expected: true},
+		"secret with space":  {cmd: `/bin/sh -c SECRET="hello world"`, expected: true},
+		"skip space key":     {cmd: `/bin/sh -c echo 'secret = foo;' > test.conf`, expected: false},
+		// TODO : expected must be false
+		//"skip echo string": {cmd: `/bin/sh -c echo 'secret=foo;' > test.conf`, expected: true},
 	}
 	for testname, v := range tests {
 		actual, _ := sensitiveVars(v.cmd)

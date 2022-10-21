@@ -239,6 +239,9 @@ func sensitiveVars(cmd string) (bool, string) {
 		}
 		vars := strings.Split(word, "=")
 		varName, varVal := vars[0], vars[1]
+		if strings.Contains(varName, " ") {
+			continue
+		}
 		if varVal == "" {
 			continue
 		}
