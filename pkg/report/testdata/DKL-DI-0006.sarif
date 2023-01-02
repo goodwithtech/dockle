@@ -1,0 +1,43 @@
+{
+    "version": "2.1.0",
+    "$schema": "https://json.schemastore.org/sarif-2.1.0-rtm.5.json",
+    "runs": [
+        {
+            "tool": {
+                "driver": {
+                    "informationUri": "https://github.com/goodwithtech/dockle",
+                    "name": "Dockle",
+                    "rules": [
+                        {
+                            "id": "DKL-DI-0006",
+                            "name": "DKL-DI-0006",
+                            "shortDescription": {
+                                "text": "Avoid latest tag"
+                            },
+                            "helpUri": "https://github.com/goodwithtech/dockle/blob/master/CHECKPOINT.md#DKL-DI-0006"
+                        }
+                    ]
+                }
+            },
+            "results": [
+                {
+                    "ruleId": "DKL-DI-0006",
+                    "ruleIndex": 0,
+                    "level": "warning",
+                    "message": {
+                        "text": "Avoid 'latest' tag"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "docker://alpine:latest"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
