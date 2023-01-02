@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine AS builder
+FROM golang:1.19-alpine AS builder
 ARG TARGET_DIR="github.com/goodwithtech/dockle"
 
 WORKDIR /go/src/${TARGET_DIR}
@@ -6,7 +6,7 @@ RUN apk --no-cache add git
 COPY . .
 RUN CGO_ENABLED=0 go build -a -o /dockle ${PWD}/cmd/dockle
 
-FROM alpine:3.14
+FROM alpine:3.17
 COPY --from=builder /dockle /usr/local/bin/dockle
 RUN chmod +x /usr/local/bin/dockle
 RUN apk --no-cache add ca-certificates shadow
