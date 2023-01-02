@@ -31,7 +31,7 @@
                         {
                             "physicalLocation": {
                                 "artifactLocation": {
-                                    "uri": "docker://alpine:latest"
+                                    "uri": "alpine:latest"
                                 }
                             }
                         }

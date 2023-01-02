@@ -94,7 +94,7 @@ func Run(c *cli.Context) (err error) {
 	if useLatestTag {
 		assessments = append(assessments, &types.Assessment{
 			Code:     types.AvoidLatestTag,
-			Filename: "docker://" + imageName,
+			Filename: imageName,
 			Desc:     "Avoid 'latest' tag",
 		})
 	}
