@@ -22,7 +22,7 @@ func TestSarifWriter_Write(t *testing.T) {
 			assessments: types.AssessmentSlice{
 				{
 					Code:     "DKL-DI-0006",
-					Filename: "docker://alpine:latest",
+					Filename: "alpine:latest",
 					Desc:     "Avoid 'latest' tag",
 				},
 			},
