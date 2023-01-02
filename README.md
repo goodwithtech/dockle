@@ -54,6 +54,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
   - [Specify exit level](#specify-exit-level)
   - [Ignore the specified checkpoints](#ignore-the-specified-checkpoints)
 - [Continuous Integration](#continuous-integration-ci)
+  - [GitHub Action](#github-action)
   - [Travis CI](#travis-ci)
   - [CircleCI](#circleci)
   - [GitLab CI](#gitlab-ci)
@@ -696,6 +697,21 @@ In these examples, the test will fail with if any warnings were found.
 Though, you can ignore the specified target checkpoints by using `.dockleignore` file.
 
 Or, if you just want the results to display and not let the test fail for this, specify `--exit-code` to `0` in `dockle` command.
+
+### GitHub Action
+
+We provide [goodwithtech/dockle-action](https://github.com/goodwithtech/dockle-action).
+
+```yaml
+- uses: goodwithtech/dockle-action@main
+  with:
+    image: 'target'
+    format: 'list'
+    exit-code: '1'
+    exit-level: 'warn'
+    ignore: 'CIS-DI-0001,DKL-DI-0006'
+```
+
 
 ### Travis CI
 
