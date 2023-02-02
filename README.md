@@ -906,7 +906,7 @@ Support this project with your organization. Your logo will show up here with a 
 
 # License
 
-- AGPLv3
+- Apache License 2.0
 
 
 # Author
