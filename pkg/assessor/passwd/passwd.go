@@ -30,9 +30,13 @@ func (a PasswdAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessme
 		scanner := bufio.NewScanner(bytes.NewBuffer(file.Body))
 		for scanner.Scan() {
 			line := scanner.Text()
+			if len(line) == 0 || line[0] == '#' {
+				continue
+			}
 			passData := strings.Split(line, ":")
-			// password must given
-			if passData[1] == "" {
+			if len(passData) < 2 {
+				log.Logger.Debug("The password format may be invalid.", line)
+			} else if passData[1] == "" {
 				assesses = append(
 					assesses,
 					&types.Assessment{
