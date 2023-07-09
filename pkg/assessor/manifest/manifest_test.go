@@ -34,11 +34,11 @@ func TestAssess(t *testing.T) {
 
 			assesses: []*types.Assessment{
 				{
-					Code:     types.AvoidRootDefault,
+					Code:     types.UseApkAddNoCache,
 					Filename: ConfigFileName,
 				},
 				{
-					Code:     types.UseApkAddNoCache,
+					Code:     types.AvoidRootDefault,
 					Filename: ConfigFileName,
 				},
 				{
@@ -65,6 +65,42 @@ func TestAssess(t *testing.T) {
 				},
 				{
 					Code:     types.AddHealthcheck,
+					Filename: ConfigFileName,
+				},
+			},
+		},
+		"ADDStatementNotFirst": {
+			path: "./testdata/add_with_arg_statement.json",
+
+			assesses: []*types.Assessment{
+				{
+					Code:     types.AvoidRootDefault,
+					Filename: ConfigFileName,
+				},
+				{
+					Code:     types.AddHealthcheck,
+					Filename: ConfigFileName,
+				},
+			},
+		},
+		"MultiADDStatements": {
+			path: "./testdata/multi_add.json",
+
+			assesses: []*types.Assessment{
+				{
+					Code:     types.AvoidRootDefault,
+					Filename: ConfigFileName,
+				},
+				{
+					Code:     types.AddHealthcheck,
+					Filename: ConfigFileName,
+				},
+				{
+					Code:     types.UseCOPY,
+					Filename: ConfigFileName,
+				},
+				{
+					Code:     types.UseCOPY,
 					Filename: ConfigFileName,
 				},
 			},
