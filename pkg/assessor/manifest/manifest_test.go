@@ -2,7 +2,7 @@ package manifest
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"os"
 	"sort"
 	"testing"
@@ -572,7 +572,7 @@ func loadImageFromFile(path string) (config types.Image, err error) {
 	if err != nil {
 		return config, err
 	}
-	filebytes, err := ioutil.ReadAll(read)
+	filebytes, err := io.ReadAll(read)
 	if err != nil {
 		return config, err
 	}
