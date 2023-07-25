@@ -1,6 +1,6 @@
 module github.com/goodwithtech/dockle
 
-go 1.19
+go 1.20
 
 require (
 	github.com/containers/image/v5 v5.24.1
