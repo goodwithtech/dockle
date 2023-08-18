@@ -3,7 +3,7 @@
 
 ## Docker Image Checkpoints
 
-These checkpoints refered to [CIS Docker 1.13.0 Benchmark v1.0.0](https://www.cisecurity.org/benchmark/docker/).
+These checkpoints referred to [CIS Docker 1.13.0 Benchmark v1.0.0](https://www.cisecurity.org/benchmark/docker/).
 
 ### CIS-DI-0001
 **Create a user for the container**
