@@ -8,7 +8,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/anchore/stereoscope/pkg/image"
 	"github.com/containers/image/v5/transports/alltransports"
 	"github.com/urfave/cli"
 
@@ -56,19 +55,6 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 		l.Fatal(err)
 	}
 
-	registryOption := image.RegistryOptions{
-		InsecureSkipTLSVerify: config.Conf.Insecure,
-		Credentials: []image.RegistryCredentials{
-			{
-				Username: config.Conf.Username,
-				Password: config.Conf.Password,
-				Token:    config.Conf.Token,
-			},
-		},
-		InsecureUseHTTP: config.Conf.NonSSL,
-		Platform:        config.Conf.Platform,
-	}
-
 	var useLatestTag bool
 	// Check whether 'latest' tag is used
 	if config.Conf.ImageName != "" {
@@ -81,7 +67,7 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 	scanner.AddAcceptanceExtensions(config.Conf.AcceptanceExtensions)
 	log.Logger.Debug("Start assessments...")
 
-	assessments, err := scanner.ScanImage(ctx, config.Conf.ImageName, config.Conf.FilePath, registryOption)
+	assessments, err := scanner.ScanImage(ctx, config.Conf)
 
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {

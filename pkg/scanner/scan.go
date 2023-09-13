@@ -10,6 +10,7 @@ import (
 	"github.com/anchore/stereoscope"
 	"github.com/anchore/stereoscope/pkg/image"
 
+	"github.com/Portshift/dockle/config"
 	"github.com/Portshift/dockle/pkg/assessor"
 	"github.com/Portshift/dockle/pkg/types"
 )
@@ -32,70 +33,63 @@ func AddAcceptanceExtensions(keys []string) {
 	}
 }
 
-func ScanImage(ctx context.Context, imageName, filePath string, reigstryOptions image.RegistryOptions) (assessments []*types.Assessment, err error) {
-	//var ext extractor.Extractor
-	//var cleanup func()
-	//if imageName != "" {
-	//	ext, cleanup, err = docker.NewDockerExtractor(ctx, imageName, dockerOption)
-	//	if err != nil {
-	//		return nil, fmt.Errorf("%v. %w", err, types.ErrorCreateDockerExtractor)
-	//	}
-	//} else if filePath != "" {
-	//	ext, cleanup, err = docker.NewDockerArchiveExtractor(ctx, filePath, dockerOption)
-	//	if err != nil {
-	//		return nil, fmt.Errorf("%v. %w", err, types.ErrorCreateDockerExtractor)
-	//	}
-	//} else {
-	//	return nil, types.ErrSetImageOrFile
-	//}
-	//defer cleanup()
-	//ac := analyzer.New(ext)
-	//var files deckodertypes.FileMap
-	//filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredExtensions(), assessor.LoadRequiredPermissions())
-	//if files, err = ac.Analyze(ctx, filterFunc); err != nil {
-	//	return nil, fmt.Errorf("%v. %w", err, types.ErrorAnalyze)
-	//}
+func ScanImage(ctx context.Context, cfg config.Config) ([]*types.Assessment, error) {
+	registryOptions := image.RegistryOptions{
+		InsecureSkipTLSVerify: config.Conf.Insecure,
+		Credentials: []image.RegistryCredentials{
+			{
+				Username: config.Conf.Username,
+				Password: config.Conf.Password,
+				Token:    config.Conf.Token,
+			},
+		},
+		InsecureUseHTTP: config.Conf.NonSSL,
+		Platform:        config.Conf.Platform,
+	}
 
 	var userInput string
-	if filePath != "" {
-		userInput = filePath
-	} else if imageName != "" {
-		userInput = "registry:" + imageName
+	if cfg.FilePath != "" {
+		userInput = cfg.FilePath
+	} else if cfg.ImageName != "" {
+		userInput = setImageSource(cfg.LocalImage, cfg.ImageName)
 	} else {
 		return nil, types.ErrSetImageOrFile
 	}
 
-	opts := stereoscope.WithRegistryOptions(reigstryOptions)
-	image, err := stereoscope.GetImage(ctx, userInput, opts)
+	opts := stereoscope.WithRegistryOptions(registryOptions)
+	img, err := stereoscope.GetImage(ctx, userInput, opts)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get image from source : %w", err)
+		return nil, fmt.Errorf("failed to get image from user input=%s: %w", userInput, err)
 	}
 
 	files := make(map[string]types.FileData)
 	filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredExtensions(), assessor.LoadRequiredPermissions())
 
-	refs := image.SquashedTree().AllFiles()
+	files["/config"] = types.FileData{
+		Body: img.Metadata.RawConfig,
+	}
+	refs := img.SquashedTree().AllFiles()
 	for i := range refs {
-		entry, err := image.FileCatalog.Get(refs[i])
+		entry, err := img.FileCatalog.Get(refs[i])
 		if err != nil {
-			panic(err)
+			return nil, fmt.Errorf("failed to get entry from file catalog reference=%+v: %w", refs[i], err)
 		}
 		fileMode := entry.FileInfo.Mode()
 		ok, err := filterFunc(entry.Path, fileMode)
 		if err != nil {
-			panic(err)
+			return nil, fmt.Errorf("failed to run filter function on file=%s: %w", entry.RealPath, err)
 		}
 		if !ok {
 			continue
 		}
 
-		contentReader, err := image.OpenPathFromSquash(entry.RealPath)
+		contentReader, err := img.OpenPathFromSquash(entry.RealPath)
 		if err != nil {
-			panic(err)
+			return nil, fmt.Errorf("failed to open file=%s: %w", entry.RealPath, err)
 		}
 		content, err := io.ReadAll(contentReader)
 		if err != nil {
-			panic(err)
+			return nil, fmt.Errorf("failed to read content of file=%s: %w", entry.RealPath, err)
 		}
 		files[entry.Path] = types.FileData{
 			Body:     content,
@@ -103,8 +97,7 @@ func ScanImage(ctx context.Context, imageName, filePath string, reigstryOptions 
 		}
 	}
 
-	assessments = assessor.GetAssessments(files)
-	return assessments, nil
+	return assessor.GetAssessments(files), nil
 }
 
 func createPathPermissionFilterFunc(filenames, extensions []string, permissions []os.FileMode) types.FilterFunc {
@@ -166,4 +159,11 @@ func createPathPermissionFilterFunc(filenames, extensions []string, permissions 
 		}
 		return false, nil
 	}
+}
+
+func setImageSource(local bool, source string) string {
+	if local {
+		return "docker:" + source
+	}
+	return "registry:" + source
 }

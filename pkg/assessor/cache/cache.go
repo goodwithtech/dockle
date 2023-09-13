@@ -8,6 +8,7 @@ import (
 
 	"github.com/Portshift/dockle/pkg/log"
 	"github.com/Portshift/dockle/pkg/types"
+	"github.com/Portshift/dockle/pkg/utils"
 )
 
 var (
@@ -29,7 +30,7 @@ func (a CacheAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error
 		dirBase := filepath.Base(dirName)
 
 		// match Directory
-		if stringInSlice(dirBase+"/", reqDirs) || stringInSlice(dirName+"/", reqDirs) {
+		if utils.StringInSlice(dirBase+"/", reqDirs) || utils.StringInSlice(dirName+"/", reqDirs) {
 			if _, ok := detectedDir[dirName]; ok {
 				continue
 			}
@@ -51,7 +52,7 @@ func (a CacheAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error
 		}
 
 		// match File
-		if stringInSlice(filename, reqFiles) || stringInSlice(fileBase, reqFiles) {
+		if utils.StringInSlice(filename, reqFiles) || utils.StringInSlice(fileBase, reqFiles) {
 			assesses = append(
 				assesses,
 				&types.Assessment{
@@ -84,13 +85,4 @@ func (a CacheAssessor) RequiredExtensions() []string {
 
 func (a CacheAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{}
-}
-
-func stringInSlice(a string, list []string) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
-	}
-	return false
 }
