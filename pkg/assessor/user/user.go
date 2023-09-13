@@ -57,7 +57,7 @@ func (a UserAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error)
 }
 
 func (a UserAssessor) RequiredFiles() []string {
-	return []string{"etc/passwd"}
+	return []string{"/etc/passwd"}
 }
 
 func (a UserAssessor) RequiredExtensions() []string {

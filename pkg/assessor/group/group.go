@@ -60,7 +60,7 @@ func (a GroupAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error
 }
 
 func (a GroupAssessor) RequiredFiles() []string {
-	return []string{"etc/group"}
+	return []string{"/etc/group"}
 }
 
 func (a GroupAssessor) RequiredExtensions() []string {

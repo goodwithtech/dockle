@@ -54,7 +54,7 @@ func (a PasswdAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, erro
 }
 
 func (a PasswdAssessor) RequiredFiles() []string {
-	return []string{"etc/shadow", "etc/master.passwd"}
+	return []string{"/etc/shadow", "/etc/master.passwd"}
 }
 
 func (a PasswdAssessor) RequiredExtensions() []string {
