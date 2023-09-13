@@ -6,8 +6,6 @@ import (
 	"path/filepath"
 	"unicode/utf8"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/Portshift/dockle/pkg/log"
 
 	"github.com/Portshift/dockle/pkg/types"
@@ -15,7 +13,7 @@ import (
 
 type CredentialAssessor struct{}
 
-func (a CredentialAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a CredentialAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : credential files")
 	assesses := []*types.Assessment{}
 	fmap := makeMaps(a.RequiredFiles())

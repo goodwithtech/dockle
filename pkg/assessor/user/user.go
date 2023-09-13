@@ -7,15 +7,13 @@ import (
 	"os"
 	"strings"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/Portshift/dockle/pkg/log"
 	"github.com/Portshift/dockle/pkg/types"
 )
 
 type UserAssessor struct{}
 
-func (a UserAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a UserAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : /etc/passwd")
 
 	var existFile bool

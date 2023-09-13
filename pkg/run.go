@@ -8,8 +8,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/anchore/stereoscope/pkg/image"
 	"github.com/containers/image/v5/transports/alltransports"
-	deckodertypes "github.com/goodwithtech/deckoder/types"
 	"github.com/urfave/cli"
 
 	"github.com/Portshift/dockle/config"
@@ -18,7 +18,6 @@ import (
 	"github.com/Portshift/dockle/pkg/report"
 	"github.com/Portshift/dockle/pkg/scanner"
 	"github.com/Portshift/dockle/pkg/types"
-	"github.com/Portshift/dockle/pkg/utils"
 )
 
 func RunFromCli(c *cli.Context) (err error) {
@@ -27,15 +26,15 @@ func RunFromCli(c *cli.Context) (err error) {
 
 	config.CreateFromCli(c)
 
-	cliVersion := "v" + c.App.Version
-	latestVersion, err := utils.FetchLatestVersion(ctx)
-
-	// check latest version
-	if err != nil {
-		log.Logger.Infof("Failed to check latest version. %s", err)
-	} else if cliVersion != latestVersion && c.App.Version != "dev" {
-		log.Logger.Warnf("A new version %s is now available! You have %s.", latestVersion, cliVersion)
-	}
+	//cliVersion := "v" + c.App.Version
+	//latestVersion, err := utils.FetchLatestVersion(ctx)
+	//
+	//// check latest version
+	//if err != nil {
+	//	log.Logger.Infof("Failed to check latest version. %s", err)
+	//} else if cliVersion != latestVersion && c.App.Version != "dev" {
+	//	log.Logger.Warnf("A new version %s is now available! You have %s.", latestVersion, cliVersion)
+	//}
 
 	_, err = run(ctx)
 
@@ -57,13 +56,17 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 		l.Fatal(err)
 	}
 
-	// set docker option
-	dockerOption := deckodertypes.DockerOption{
-		Timeout:               config.Conf.Timeout,
-		UserName:              config.Conf.Username,
-		Password:              config.Conf.Password,
+	registryOption := image.RegistryOptions{
 		InsecureSkipTLSVerify: config.Conf.Insecure,
-		SkipPing:              true,
+		Credentials: []image.RegistryCredentials{
+			{
+				Username: config.Conf.Username,
+				Password: config.Conf.Password,
+				Token:    config.Conf.Token,
+			},
+		},
+		InsecureUseHTTP: config.Conf.NonSSL,
+		Platform:        config.Conf.Platform,
 	}
 
 	var useLatestTag bool
@@ -78,7 +81,8 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 	scanner.AddAcceptanceExtensions(config.Conf.AcceptanceExtensions)
 	log.Logger.Debug("Start assessments...")
 
-	assessments, err := scanner.ScanImage(ctx, config.Conf.ImageName, config.Conf.FilePath, dockerOption)
+	assessments, err := scanner.ScanImage(ctx, config.Conf.ImageName, config.Conf.FilePath, registryOption)
+
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
 			return nil, fmt.Errorf("Pull it with \"docker pull %s\" or \"dockle --timeout 600s\" to increase the timeout\n%w", config.Conf.ImageName, err)

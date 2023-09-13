@@ -1,16 +1,14 @@
 package scanner
 
 import (
-	"archive/tar"
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 
-	"github.com/goodwithtech/deckoder/analyzer"
-	"github.com/goodwithtech/deckoder/extractor"
-	"github.com/goodwithtech/deckoder/extractor/docker"
-	deckodertypes "github.com/goodwithtech/deckoder/types"
+	"github.com/anchore/stereoscope"
+	"github.com/anchore/stereoscope/pkg/image"
 
 	"github.com/Portshift/dockle/pkg/assessor"
 	"github.com/Portshift/dockle/pkg/types"
@@ -34,35 +32,82 @@ func AddAcceptanceExtensions(keys []string) {
 	}
 }
 
-func ScanImage(ctx context.Context, imageName, filePath string, dockerOption deckodertypes.DockerOption) (assessments []*types.Assessment, err error) {
-	var ext extractor.Extractor
-	var cleanup func()
-	if imageName != "" {
-		ext, cleanup, err = docker.NewDockerExtractor(ctx, imageName, dockerOption)
-		if err != nil {
-			return nil, fmt.Errorf("%v. %w", err, types.ErrorCreateDockerExtractor)
-		}
-	} else if filePath != "" {
-		ext, cleanup, err = docker.NewDockerArchiveExtractor(ctx, filePath, dockerOption)
-		if err != nil {
-			return nil, fmt.Errorf("%v. %w", err, types.ErrorCreateDockerExtractor)
-		}
+func ScanImage(ctx context.Context, imageName, filePath string, reigstryOptions image.RegistryOptions) (assessments []*types.Assessment, err error) {
+	//var ext extractor.Extractor
+	//var cleanup func()
+	//if imageName != "" {
+	//	ext, cleanup, err = docker.NewDockerExtractor(ctx, imageName, dockerOption)
+	//	if err != nil {
+	//		return nil, fmt.Errorf("%v. %w", err, types.ErrorCreateDockerExtractor)
+	//	}
+	//} else if filePath != "" {
+	//	ext, cleanup, err = docker.NewDockerArchiveExtractor(ctx, filePath, dockerOption)
+	//	if err != nil {
+	//		return nil, fmt.Errorf("%v. %w", err, types.ErrorCreateDockerExtractor)
+	//	}
+	//} else {
+	//	return nil, types.ErrSetImageOrFile
+	//}
+	//defer cleanup()
+	//ac := analyzer.New(ext)
+	//var files deckodertypes.FileMap
+	//filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredExtensions(), assessor.LoadRequiredPermissions())
+	//if files, err = ac.Analyze(ctx, filterFunc); err != nil {
+	//	return nil, fmt.Errorf("%v. %w", err, types.ErrorAnalyze)
+	//}
+
+	var userInput string
+	if filePath != "" {
+		userInput = filePath
+	} else if imageName != "" {
+		userInput = "registry:" + imageName
 	} else {
 		return nil, types.ErrSetImageOrFile
 	}
-	defer cleanup()
-	ac := analyzer.New(ext)
-	var files deckodertypes.FileMap
+
+	opts := stereoscope.WithRegistryOptions(reigstryOptions)
+	image, err := stereoscope.GetImage(ctx, userInput, opts)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get image from source : %w", err)
+	}
+
+	files := make(map[string]types.FileData)
 	filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredExtensions(), assessor.LoadRequiredPermissions())
-	if files, err = ac.Analyze(ctx, filterFunc); err != nil {
-		return nil, fmt.Errorf("%v. %w", err, types.ErrorAnalyze)
+
+	refs := image.SquashedTree().AllFiles()
+	for i := range refs {
+		entry, err := image.FileCatalog.Get(refs[i])
+		if err != nil {
+			panic(err)
+		}
+		fileMode := entry.FileInfo.Mode()
+		ok, err := filterFunc(entry.Path, fileMode)
+		if err != nil {
+			panic(err)
+		}
+		if !ok {
+			continue
+		}
+
+		contentReader, err := image.OpenPathFromSquash(entry.RealPath)
+		if err != nil {
+			panic(err)
+		}
+		content, err := io.ReadAll(contentReader)
+		if err != nil {
+			panic(err)
+		}
+		files[entry.Path] = types.FileData{
+			Body:     content,
+			FileMode: entry.FileInfo.Mode(),
+		}
 	}
 
 	assessments = assessor.GetAssessments(files)
 	return assessments, nil
 }
 
-func createPathPermissionFilterFunc(filenames, extensions []string, permissions []os.FileMode) deckodertypes.FilterFunc {
+func createPathPermissionFilterFunc(filenames, extensions []string, permissions []os.FileMode) types.FilterFunc {
 	requiredDirNames := map[string]struct{}{}
 	requiredFileNames := map[string]struct{}{}
 	requiredExts := map[string]struct{}{}
@@ -78,8 +123,7 @@ func createPathPermissionFilterFunc(filenames, extensions []string, permissions 
 		requiredExts[extension] = struct{}{}
 	}
 
-	return func(h *tar.Header) (bool, error) {
-		filePath := filepath.Clean(h.Name)
+	return func(filePath string, fileMode os.FileMode) (bool, error) {
 		fileName := filepath.Base(filePath)
 		// Skip check if acceptance files
 		if _, ok := acceptanceExtensions[filepath.Ext(fileName)]; ok {
@@ -115,8 +159,6 @@ func createPathPermissionFilterFunc(filenames, extensions []string, permissions 
 			return true, nil
 		}
 
-		fi := h.FileInfo()
-		fileMode := fi.Mode()
 		for _, p := range permissions {
 			if fileMode&p != 0 {
 				return true, nil

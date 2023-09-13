@@ -2,6 +2,7 @@ package config
 
 import (
 	"bufio"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -9,7 +10,6 @@ import (
 	"github.com/Portshift/dockle/pkg/types"
 
 	"github.com/urfave/cli"
-	"log"
 )
 
 const (
@@ -32,6 +32,7 @@ type Config struct {
 	AuthURL              string
 	Username             string
 	Password             string
+	Token                string
 	Insecure             bool
 	NonSSL               bool
 	ImageName            string
@@ -45,6 +46,7 @@ type Config struct {
 	AcceptanceFiles      []string
 	AcceptanceExtensions []string
 	NoColor              bool
+	Platform             string
 }
 
 var Conf Config

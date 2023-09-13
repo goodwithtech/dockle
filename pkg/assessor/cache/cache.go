@@ -6,9 +6,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-	"github.com/goodwithtech/deckoder/utils"
-
 	"github.com/Portshift/dockle/pkg/log"
 	"github.com/Portshift/dockle/pkg/types"
 )
@@ -23,7 +20,7 @@ var (
 
 type CacheAssessor struct{}
 
-func (a CacheAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a CacheAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : cache files")
 	assesses := []*types.Assessment{}
 	for filename := range fileMap {
@@ -32,7 +29,7 @@ func (a CacheAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessmen
 		dirBase := filepath.Base(dirName)
 
 		// match Directory
-		if utils.StringInSlice(dirBase+"/", reqDirs) || utils.StringInSlice(dirName+"/", reqDirs) {
+		if stringInSlice(dirBase+"/", reqDirs) || stringInSlice(dirName+"/", reqDirs) {
 			if _, ok := detectedDir[dirName]; ok {
 				continue
 			}
@@ -54,7 +51,7 @@ func (a CacheAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessmen
 		}
 
 		// match File
-		if utils.StringInSlice(filename, reqFiles) || utils.StringInSlice(fileBase, reqFiles) {
+		if stringInSlice(filename, reqFiles) || stringInSlice(fileBase, reqFiles) {
 			assesses = append(
 				assesses,
 				&types.Assessment{
@@ -87,4 +84,13 @@ func (a CacheAssessor) RequiredExtensions() []string {
 
 func (a CacheAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{}
+}
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }

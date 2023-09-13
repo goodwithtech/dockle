@@ -4,14 +4,12 @@ import (
 	"fmt"
 	"os"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/Portshift/dockle/pkg/types"
 )
 
 type PrivilegeAssessor struct{}
 
-func (a PrivilegeAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a PrivilegeAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error) {
 	var assesses []*types.Assessment
 
 	for filename, filedata := range fileMap {

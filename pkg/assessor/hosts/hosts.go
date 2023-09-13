@@ -3,15 +3,13 @@ package hosts
 import (
 	"os"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/Portshift/dockle/pkg/log"
 	"github.com/Portshift/dockle/pkg/types"
 )
 
 type HostsAssessor struct{}
 
-func (a HostsAssessor) Assess(_ deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a HostsAssessor) Assess(_ types.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : /etc/hosts")
 
 	assesses := []*types.Assessment{}
