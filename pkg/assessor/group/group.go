@@ -7,8 +7,6 @@ import (
 	"os"
 	"strings"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/Portshift/dockle/pkg/log"
 
 	"github.com/Portshift/dockle/pkg/types"
@@ -16,20 +14,25 @@ import (
 
 type GroupAssessor struct{}
 
-func (a GroupAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a GroupAssessor) Assess(imageData *types.ImageData) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : /etc/group")
 
 	var existFile bool
 	assesses := []*types.Assessment{}
 	for _, filename := range a.RequiredFiles() {
-		file, ok := fileMap[filename]
+		file, ok := imageData.FileMap[filename]
 		if !ok {
 			continue
 		}
 		existFile = true
-		scanner := bufio.NewScanner(bytes.NewBuffer(file.Body))
-		gidMap := map[string]struct{}{}
 
+		content, err := file.ReadContent(imageData.Image)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read content: %w", err)
+		}
+
+		scanner := bufio.NewScanner(bytes.NewBuffer(content))
+		gidMap := map[string]struct{}{}
 		for scanner.Scan() {
 			line := scanner.Text()
 			data := strings.Split(line, ":")
@@ -47,6 +50,9 @@ func (a GroupAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessmen
 			}
 			gidMap[gid] = struct{}{}
 		}
+		if scanner.Err() != nil {
+			return nil, fmt.Errorf("failed to create scanner: %w", err)
+		}
 	}
 	if !existFile {
 		assesses = []*types.Assessment{
@@ -62,7 +68,7 @@ func (a GroupAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessmen
 }
 
 func (a GroupAssessor) RequiredFiles() []string {
-	return []string{"etc/group"}
+	return []string{"/etc/group"}
 }
 
 func (a GroupAssessor) RequiredExtensions() []string {

@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/containers/image/v5/transports/alltransports"
-	deckodertypes "github.com/goodwithtech/deckoder/types"
 	"github.com/urfave/cli"
 
 	"github.com/Portshift/dockle/config"
@@ -57,15 +56,6 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 		l.Fatal(err)
 	}
 
-	// set docker option
-	dockerOption := deckodertypes.DockerOption{
-		Timeout:               config.Conf.Timeout,
-		UserName:              config.Conf.Username,
-		Password:              config.Conf.Password,
-		InsecureSkipTLSVerify: config.Conf.Insecure,
-		SkipPing:              true,
-	}
-
 	var useLatestTag bool
 	// Check whether 'latest' tag is used
 	if config.Conf.ImageName != "" {
@@ -78,7 +68,8 @@ func run(ctx context.Context) (ret types.AssessmentMap, err error) {
 	scanner.AddAcceptanceExtensions(config.Conf.AcceptanceExtensions)
 	log.Logger.Debug("Start assessments...")
 
-	assessments, err := scanner.ScanImage(ctx, config.Conf.ImageName, config.Conf.FilePath, dockerOption)
+	assessments, err := scanner.ScanImage(ctx, config.Conf)
+
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
 			return nil, fmt.Errorf("Pull it with \"docker pull %s\" or \"dockle --timeout 600s\" to increase the timeout\n%w", config.Conf.ImageName, err)

@@ -7,27 +7,30 @@ import (
 	"os"
 	"strings"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/Portshift/dockle/pkg/log"
-
 	"github.com/Portshift/dockle/pkg/types"
 )
 
 type PasswdAssessor struct{}
 
-func (a PasswdAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a PasswdAssessor) Assess(imageData *types.ImageData) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : password files")
 
 	var existFile bool
 	assesses := []*types.Assessment{}
 	for _, filename := range a.RequiredFiles() {
-		file, ok := fileMap[filename]
+		file, ok := imageData.FileMap[filename]
 		if !ok {
 			continue
 		}
 		existFile = true
-		scanner := bufio.NewScanner(bytes.NewBuffer(file.Body))
+
+		content, err := file.ReadContent(imageData.Image)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read content: %w", err)
+		}
+
+		scanner := bufio.NewScanner(bytes.NewBuffer(content))
 		for scanner.Scan() {
 			line := scanner.Text()
 			passData := strings.Split(line, ":")
@@ -41,6 +44,9 @@ func (a PasswdAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessme
 						Desc:     fmt.Sprintf("No password user found! username : %s", passData[0]),
 					})
 			}
+		}
+		if scanner.Err() != nil {
+			return nil, fmt.Errorf("failed to create scanner: %w", err)
 		}
 	}
 	if !existFile {
@@ -56,7 +62,7 @@ func (a PasswdAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessme
 }
 
 func (a PasswdAssessor) RequiredFiles() []string {
-	return []string{"etc/shadow", "etc/master.passwd"}
+	return []string{"/etc/shadow", "/etc/master.passwd"}
 }
 
 func (a PasswdAssessor) RequiredExtensions() []string {

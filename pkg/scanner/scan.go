@@ -1,17 +1,15 @@
 package scanner
 
 import (
-	"archive/tar"
 	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 
-	"github.com/goodwithtech/deckoder/analyzer"
-	"github.com/goodwithtech/deckoder/extractor"
-	"github.com/goodwithtech/deckoder/extractor/docker"
-	deckodertypes "github.com/goodwithtech/deckoder/types"
+	"github.com/anchore/stereoscope"
+	"github.com/anchore/stereoscope/pkg/image"
 
+	"github.com/Portshift/dockle/config"
 	"github.com/Portshift/dockle/pkg/assessor"
 	"github.com/Portshift/dockle/pkg/types"
 )
@@ -34,35 +32,76 @@ func AddAcceptanceExtensions(keys []string) {
 	}
 }
 
-func ScanImage(ctx context.Context, imageName, filePath string, dockerOption deckodertypes.DockerOption) (assessments []*types.Assessment, err error) {
-	var ext extractor.Extractor
-	var cleanup func()
-	if imageName != "" {
-		ext, cleanup, err = docker.NewDockerExtractor(ctx, imageName, dockerOption)
-		if err != nil {
-			return nil, fmt.Errorf("%v. %w", err, types.ErrorCreateDockerExtractor)
-		}
-	} else if filePath != "" {
-		ext, cleanup, err = docker.NewDockerArchiveExtractor(ctx, filePath, dockerOption)
-		if err != nil {
-			return nil, fmt.Errorf("%v. %w", err, types.ErrorCreateDockerExtractor)
-		}
+func ScanImage(ctx context.Context, cfg config.Config) ([]*types.Assessment, error) {
+	registryOptions := image.RegistryOptions{
+		InsecureSkipTLSVerify: config.Conf.Insecure,
+		Credentials: []image.RegistryCredentials{
+			{
+				Username: config.Conf.Username,
+				Password: config.Conf.Password,
+				Token:    config.Conf.Token,
+			},
+		},
+		InsecureUseHTTP: config.Conf.NonSSL,
+	}
+
+	var userInput string
+	if cfg.FilePath != "" {
+		userInput = cfg.FilePath
+	} else if cfg.ImageName != "" {
+		userInput = setImageSource(cfg.LocalImage, cfg.ImageName)
 	} else {
 		return nil, types.ErrSetImageOrFile
 	}
-	defer cleanup()
-	ac := analyzer.New(ext)
-	var files deckodertypes.FileMap
+
+	opts := stereoscope.WithRegistryOptions(registryOptions)
+	img, err := stereoscope.GetImage(ctx, userInput, opts)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get image from user input=%s: %w", userInput, err)
+	}
+	defer img.Cleanup()
+
 	filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredExtensions(), assessor.LoadRequiredPermissions())
-	if files, err = ac.Analyze(ctx, filterFunc); err != nil {
-		return nil, fmt.Errorf("%v. %w", err, types.ErrorAnalyze)
+	files, err := createFileMap(img, filterFunc)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create file map: %w", err)
 	}
 
-	assessments = assessor.GetAssessments(files)
-	return assessments, nil
+	imageData := &types.ImageData{
+		Image:   img,
+		FileMap: files,
+	}
+
+	return assessor.GetAssessments(imageData), nil
 }
 
-func createPathPermissionFilterFunc(filenames, extensions []string, permissions []os.FileMode) deckodertypes.FilterFunc {
+func createFileMap(img *image.Image, filterFunc types.FilterFunc) (map[string]types.FileData, error) {
+	files := make(map[string]types.FileData)
+	refs := img.SquashedTree().AllFiles()
+	for i := range refs {
+		entry, err := img.FileCatalog.Get(refs[i])
+		if err != nil {
+			return nil, fmt.Errorf("failed to get entry from file catalog reference=%+v: %w", refs[i], err)
+		}
+		fileMode := entry.FileInfo.Mode()
+		ok, err := filterFunc(entry.Path, fileMode)
+		if err != nil {
+			return nil, fmt.Errorf("failed to run filter function on file=%s: %w", entry.RealPath, err)
+		}
+		if !ok {
+			continue
+		}
+
+		files[entry.Path] = types.FileData{
+			RealPath: entry.RealPath,
+			FileMode: fileMode,
+		}
+	}
+
+	return files, nil
+}
+
+func createPathPermissionFilterFunc(filenames, extensions []string, permissions []os.FileMode) types.FilterFunc {
 	requiredDirNames := map[string]struct{}{}
 	requiredFileNames := map[string]struct{}{}
 	requiredExts := map[string]struct{}{}
@@ -78,8 +117,7 @@ func createPathPermissionFilterFunc(filenames, extensions []string, permissions 
 		requiredExts[extension] = struct{}{}
 	}
 
-	return func(h *tar.Header) (bool, error) {
-		filePath := filepath.Clean(h.Name)
+	return func(filePath string, fileMode os.FileMode) (bool, error) {
 		fileName := filepath.Base(filePath)
 		// Skip check if acceptance files
 		if _, ok := acceptanceExtensions[filepath.Ext(fileName)]; ok {
@@ -115,8 +153,6 @@ func createPathPermissionFilterFunc(filenames, extensions []string, permissions 
 			return true, nil
 		}
 
-		fi := h.FileInfo()
-		fileMode := fi.Mode()
 		for _, p := range permissions {
 			if fileMode&p != 0 {
 				return true, nil
@@ -124,4 +160,11 @@ func createPathPermissionFilterFunc(filenames, extensions []string, permissions 
 		}
 		return false, nil
 	}
+}
+
+func setImageSource(local bool, source string) string {
+	if local {
+		return "docker:" + source
+	}
+	return "registry:" + source
 }

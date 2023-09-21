@@ -8,8 +8,6 @@ import (
 	"strings"
 	"time"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/Portshift/dockle/pkg/log"
 
 	"github.com/Portshift/dockle/pkg/types"
@@ -24,16 +22,14 @@ var (
 	acceptanceEnvKey = map[string]struct{}{"GPG_KEY": {}, "GPG_KEYS": {}}
 )
 
-func (a ManifestAssessor) Assess(fileMap deckodertypes.FileMap) (assesses []*types.Assessment, err error) {
-	log.Logger.Debug("Scan start : config file")
-	file, ok := fileMap["/config"]
-	if !ok {
+func (a ManifestAssessor) Assess(imageData *types.ImageData) (assesses []*types.Assessment, err error) {
+	log.Logger.Debug("Scan start : check config")
+	if imageData.Metadata.RawConfig == nil {
 		return nil, errors.New("config json file doesn't exist")
 	}
 
 	var d types.Image
-
-	err = json.Unmarshal(file.Body, &d)
+	err = json.Unmarshal(imageData.Metadata.RawConfig, &d)
 	if err != nil {
 		return nil, errors.New("Fail to parse docker config file.")
 	}

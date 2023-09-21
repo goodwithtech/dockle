@@ -3,8 +3,6 @@ package contentTrust
 import (
 	"os"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/Portshift/dockle/pkg/log"
 	"github.com/Portshift/dockle/pkg/types"
 )
@@ -13,7 +11,7 @@ var HostEnvironmentFileName = "ENVIRONMENT variable on HOST OS"
 
 type ContentTrustAssessor struct{}
 
-func (a ContentTrustAssessor) Assess(_ deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a ContentTrustAssessor) Assess(_ *types.ImageData) ([]*types.Assessment, error) {
 	log.Logger.Debug("Scan start : DOCKER_CONTENT_TRUST")
 
 	if os.Getenv("DOCKER_CONTENT_TRUST") != "1" {

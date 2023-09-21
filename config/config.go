@@ -2,6 +2,7 @@ package config
 
 import (
 	"bufio"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -9,7 +10,6 @@ import (
 	"github.com/Portshift/dockle/pkg/types"
 
 	"github.com/urfave/cli"
-	"log"
 )
 
 const (
@@ -32,9 +32,11 @@ type Config struct {
 	AuthURL              string
 	Username             string
 	Password             string
+	Token                string
 	Insecure             bool
 	NonSSL               bool
 	ImageName            string
+	LocalImage           bool
 	FilePath             string
 	Output               string
 	Format               string
@@ -62,6 +64,7 @@ func CreateFromCli(c *cli.Context) {
 	if Conf.FilePath == "" {
 		Conf.ImageName = args[0]
 	}
+	Conf.LocalImage = c.Bool("local")
 	Conf.IgnoreMap = GetIgnoreCheckpointMap(c.StringSlice("ignore"))
 	Conf.Debug = c.Bool("debug")
 	Conf.Quiet = c.Bool("quiet")
@@ -69,6 +72,7 @@ func CreateFromCli(c *cli.Context) {
 	Conf.AuthURL = c.String("authurl")
 	Conf.Username = c.String("username")
 	Conf.Password = c.String("password")
+	Conf.Token = c.String("token")
 	Conf.Insecure = c.Bool("insecure")
 	Conf.NonSSL = c.Bool("nonssl")
 	Conf.Output = c.String("output")

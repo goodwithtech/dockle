@@ -4,17 +4,15 @@ import (
 	"fmt"
 	"os"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/Portshift/dockle/pkg/types"
 )
 
 type PrivilegeAssessor struct{}
 
-func (a PrivilegeAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a PrivilegeAssessor) Assess(imageData *types.ImageData) ([]*types.Assessment, error) {
 	var assesses []*types.Assessment
 
-	for filename, filedata := range fileMap {
+	for filename, filedata := range imageData.FileMap {
 		if filedata.FileMode&os.ModeSetuid != 0 {
 			assesses = append(
 				assesses,

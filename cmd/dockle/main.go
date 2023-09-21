@@ -5,9 +5,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/urfave/cli"
+
 	"github.com/Portshift/dockle/pkg"
 	"github.com/Portshift/dockle/pkg/log"
-	"github.com/urfave/cli"
 )
 
 var (
@@ -120,6 +121,16 @@ OPTIONS:
 			Name:   "password",
 			EnvVar: "DOCKLE_PASSWORD",
 			Usage:  "registry login password. Using --password via CLI is insecure.",
+		},
+		cli.StringFlag{
+			Name:   "token",
+			EnvVar: "DOCKLE_TOKEN",
+			Usage:  "registry token. Using --token via CLI is insecure.",
+		},
+		cli.BoolFlag{
+			Name:   "local",
+			EnvVar: "DOCKLE_LOCAL",
+			Usage:  "scan local docker image",
 		},
 		cli.BoolFlag{
 			Name:   "insecure",

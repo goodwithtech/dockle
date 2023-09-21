@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
-
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-	"github.com/goodwithtech/deckoder/utils"
 
 	"github.com/Portshift/dockle/pkg/log"
 	"github.com/Portshift/dockle/pkg/types"
@@ -23,16 +21,16 @@ var (
 
 type CacheAssessor struct{}
 
-func (a CacheAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a CacheAssessor) Assess(imageData *types.ImageData) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : cache files")
 	assesses := []*types.Assessment{}
-	for filename := range fileMap {
+	for filename := range imageData.FileMap {
 		fileBase := filepath.Base(filename)
 		dirName := filepath.Dir(filename)
 		dirBase := filepath.Base(dirName)
 
 		// match Directory
-		if utils.StringInSlice(dirBase+"/", reqDirs) || utils.StringInSlice(dirName+"/", reqDirs) {
+		if slices.Contains(reqDirs, dirBase+"/") || slices.Contains(reqDirs, dirName+"/") {
 			if _, ok := detectedDir[dirName]; ok {
 				continue
 			}
@@ -54,7 +52,7 @@ func (a CacheAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessmen
 		}
 
 		// match File
-		if utils.StringInSlice(filename, reqFiles) || utils.StringInSlice(fileBase, reqFiles) {
+		if slices.Contains(reqFiles, filename) || slices.Contains(reqFiles, fileBase) {
 			assesses = append(
 				assesses,
 				&types.Assessment{
