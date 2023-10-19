@@ -16,6 +16,7 @@ builds:
   - 386
   - arm
   - arm64
+  - loong64
   goarm:
   - 7
 
@@ -61,6 +62,7 @@ archives:
       {{- if eq .Arch "amd64" }}64bit
       {{- else if eq .Arch "arm" }}ARM
       {{- else if eq .Arch "arm64" }}ARM64
+      {{- else if eq .Arch "loong64" }}LOONG64
       {{- else }}{{ .Arch }}{{ end }}
     files:
     - README.md
