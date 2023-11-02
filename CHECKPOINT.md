@@ -195,4 +195,4 @@ These checkpoints referred to [Linux Best Practices](https://www.cyberciti.biz/t
 ### DKL-LI-0003
 **Only put necessary files**
 
-Check `.cache`, `tmp` and so on directories.
+Check `.cache`, `.git` and so on directories.
