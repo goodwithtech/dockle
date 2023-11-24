@@ -11,6 +11,7 @@ builds:
   goos:
   - darwin
   - linux
+  - windows
   goarch:
   - amd64
   - 386
@@ -20,8 +21,7 @@ builds:
   - 7
 
 nfpms:
-  -
-    formats:
+  - formats:
       - apk
       - deb
       - rpm
@@ -44,8 +44,7 @@ nfpms:
       {{- else }}{{ .Arch }}{{ end }}
 
 archives:
-  -
-    format: tar.gz
+  - format: tar.gz
     format_overrides:
     - goos: windows
       format: zip
@@ -67,8 +66,7 @@ archives:
     - LICENSE
 
 brews:
-  -
-    tap:
+  - repository:
       owner: goodwithtech
       name: homebrew-r
     folder: Formula
