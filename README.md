@@ -131,6 +131,18 @@ makepkg -sri
 
 ## Windows
 
+### Bash
+
+```bash
+VERSION=$(
+ curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+ grep '"tag_name":' | \
+ sed -E 's/.*"v([^"]+)".*/\1/' \
+) && curl -L -o dockle.zip https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Windows-64bit.zip
+unzip dockle.zip && rm dockle.zip
+./dockle.exe [IMAGE_NAME]
+```
+
 ### Microsoft PowerShell 7
 
 ```powershell
