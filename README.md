@@ -14,10 +14,11 @@
     - Checkpoints includes [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
 
 ```bash
-$ brew untap goodwithtech/dockle # who use 0.1.16 or older version
-$ brew install goodwithtech/r/dockle
-$ dockle [YOUR_IMAGE_NAME]
+brew untap goodwithtech/dockle # who use 0.1.16 or older version
+brew install goodwithtech/r/dockle
+dockle [YOUR_IMAGE_NAME]
 ```
+
 See [Installation](#installation) and [Common Examples](#common-examples)
 
 <img src="imgs/dockle.png" width="800">
@@ -58,13 +59,11 @@ See [Installation](#installation) and [Common Examples](#common-examples)
   - [Travis CI](#travis-ci)
   - [CircleCI](#circleci)
   - [GitLab CI](#gitlab-ci)
-  - [Authorization for Private Docker Registry](#authorization-for-private-docker-registry) 
+  - [Authorization for Private Docker Registry](#authorization-for-private-docker-registry)
 - [Checkpoint Details](CHECKPOINT.md)
   - CIS's Docker Image Checkpoints
   - Dockle Checkpoints for Docker
   - Dockle Checkpoints for Linux
-- [Credits](#credits)
-- [Roadmap](#roadmap)
 
 # Features
 
@@ -86,7 +85,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
 | Target |  Image | Dockerfile | Host<br/>Docker Daemon<br/>Image<br/>Container Runtime | Image |
 | How to run | Binary | Binary | ShellScript | Binary |
 | Dependency | No | No | Some dependencies | No |
-| CI Suitable | ✓ | ✓ | x | x | 
+| CI Suitable | ✓ | ✓ | x | x |
 | Purpose |Security Audit<br/>Dockerfile Lint| Dockerfile Lint | Security Audit<br/>Dockerfile Lint | Scan Vulnerabilities |
 
 # Installation
@@ -96,7 +95,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
 You can use Homebrew on [Mac OS X](https://brew.sh/) or [Linux and WSL (Windows Subsystem for Linux)](https://docs.brew.sh/Homebrew-on-Linux).
 
 ```bash
-$ brew install goodwithtech/r/dockle
+brew install goodwithtech/r/dockle
 ```
 
 ## RHEL/CentOS
@@ -119,31 +118,29 @@ VERSION=$(
 ) && curl -L -o dockle.deb https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.deb
 $ sudo dpkg -i dockle.deb && rm dockle.deb
 ```
+
 ## Arch Linux
+
 dockle can be installed from the Arch User Repository using `dockle` or `dockle-bin` package.
-```
+
+```bash
 git clone https://aur.archlinux.org/dockle-bin.git
 cd dockle-bin
 makepkg -sri
 ```
+
 ## Windows
 
-```bash
-VERSION=$(
- curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
- grep '"tag_name":' | \
- sed -E 's/.*"v([^"]+)".*/\1/' \
-) && curl -L -o dockle.zip https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Windows-64bit.zip
-$ unzip dockle.zip && rm dockle.zip
-$ ./dockle.exe [IMAGE_NAME]
-```
-## Microsoft PowerShell 7
-```bash
+### Microsoft PowerShell 7
+
+```powershell
 if (((Invoke-WebRequest "https://api.github.com/repos/goodwithtech/dockle/releases/latest").Content) -match '"tag_name":"v(?<ver>[^"]+)"') {
-$VERSION=$Matches.ver &&
-Invoke-WebRequest "https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Windows-64bit.zip" -OutFile dockle.zip &&
-Expand-Archive dockle.zip && Remove-Item dockle.zip }
+  $VERSION=$Matches.ver
+  Invoke-WebRequest "https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Windows-64bit.zip" -OutFile dockle.zip
+  Expand-Archive dockle.zip && Remove-Item dockle.zip
+}
 ```
+
 ## Binary
 
 You can get the latest version binary from [releases page](https://github.com/goodwithtech/dockle/releases/latest).
@@ -176,16 +173,16 @@ dockle --version
 ## From source
 
 ```bash
-$ GO111MODULE=off go get github.com/goodwithtech/dockle/cmd/dockle
-$ cd $GOPATH/src/github.com/goodwithtech/dockle && GO111MODULE=on go build -o $GOPATH/bin/dockle cmd/dockle/main.go
+GO111MODULE=off go get github.com/goodwithtech/dockle/cmd/dockle
+cd $GOPATH/src/github.com/goodwithtech/dockle && GO111MODULE=on go build -o $GOPATH/bin/dockle cmd/dockle/main.go
 ```
 
 ## Use Docker
 
 There's a [`Dockle` image on Docker Hub](https://hub.docker.com/r/goodwithtech/dockle) also. You can try `dockle` before installing the command.
 
-```
-$ VERSION=$(
+```bash
+VERSION=$(
  curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
@@ -202,13 +199,13 @@ You only need `-v /var/run/docker.sock:/var/run/docker.sock` when you'd like to 
 Simply specify an image name (and a tag).
 
 ```bash
-$ dockle [YOUR_IMAGE_NAME]
+dockle [YOUR_IMAGE_NAME]
 ```
 
 <details>
 <summary>Result</summary>
 
-```
+```text
 FATAL   - CIS-DI-0009: Use COPY instead of ADD in Dockerfile
         * Use COPY : /bin/sh -c #(nop) ADD file:81c0a803075715d1a6b4f75a29f8a01b21cc170cfc1bff6702317d1be2fe71a3 in /app/credentials.json
 FATAL   - CIS-DI-0010: Do not store credential in ENVIRONMENT vars/files
@@ -241,7 +238,6 @@ INFO    - CIS-DI-0008: Confirm safety of setuid/setgid files
         * setgid file: usr/bin/expiry grwxr-xr-x
         * setuid file: usr/bin/newgrp urwxr-xr-x
 IGNORE  - CIS-DI-0006: Add HEALTHCHECK instruction to the container image
-
 ```
 
 </details>
@@ -251,18 +247,18 @@ IGNORE  - CIS-DI-0006: Add HEALTHCHECK instruction to the container image
 Also, you can use Docker to use `dockle` command as follow.
 
 ```bash
-$ export DOCKLE_LATEST=$(
+export DOCKLE_LATEST=$(
  curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
  grep '"tag_name":' | \
  sed -E 's/.*"v([^"]+)".*/\1/' \
 )
-$ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
+docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 ```
 
 - If you'd like to scan the image on your host machine, you need to mount `docker.sock`.
 
     ```bash
-    $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ...
+    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ...
     ```
 
 # Checkpoint Summary
@@ -314,13 +310,13 @@ $ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 Simply specify an image name (and a tag).
 
 ```bash
-$ dockle goodwithtech/test-image:v1
+dockle goodwithtech/test-image:v1
 ```
 
 <details>
 <summary>Result</summary>
 
-```
+```text
 FATAL   - CIS-DI-0001: Create a user for the container
         * Last user should not be root
 WARN    - CIS-DI-0005: Enable Content trust for Docker
@@ -354,20 +350,21 @@ FATAL   - DKL-LI-0001: Avoid empty password
 PASS    - DKL-LI-0002: Be unique UID
 PASS    - DKL-LI-0002: Be unique GROUP
 ```
+
 </details>
 
 ### Scan an image file
 
 ```bash
-$ docker save alpine:latest -o alpine.tar
-$ dockle --input alpine.tar
+docker save alpine:latest -o alpine.tar
+dockle --input alpine.tar
 ```
 
 ### Get or Save the results as JSON
 
 ```bash
-$ dockle -f json goodwithtech/test-image:v1
-$ dockle -f json -o results.json goodwithtech/test-image:v1
+dockle -f json goodwithtech/test-image:v1
+dockle -f json -o results.json goodwithtech/test-image:v1
 ```
 
 <details>
@@ -471,8 +468,8 @@ $ dockle -f json -o results.json goodwithtech/test-image:v1
 ### Get or Save the results as SARIF
 
 ```bash
-$ dockle -f sarif goodwithtech/test-image:v1
-$ dockle -f sarif -o results.json goodwithtech/test-image:v1
+dockle -f sarif goodwithtech/test-image:v1
+dockle -f sarif -o results.json goodwithtech/test-image:v1
 ```
 
 <details>
@@ -626,6 +623,7 @@ $ dockle -f sarif -o results.json goodwithtech/test-image:v1
   ]
 }
 ```
+
 </details>
 
 ### Specify exit code
@@ -635,7 +633,7 @@ By default, `Dockle` exits with code `0` even if there are some problems.
 Use the `--exit-code, -c` option to exit with a non-zero exit code if `WARN` or `FATAL` alert were found.
 
 ```bash
-$ dockle --exit-code 1 [IMAGE_NAME]
+dockle --exit-code 1 [IMAGE_NAME]
 ```
 
 ### Specify exit level
@@ -645,8 +643,8 @@ By default, `--exit-code` run when there are `WARN` or `FATAL` level alerts.
 Use the `--exit-level, -l` option to change alert level. You can set `info`, `warn` or `fatal`.
 
 ```bash
-$ dockle --exit-code 1 --exit-level info [IMAGE_NAME]
-$ dockle --exit-code 1 --exit-level fatal [IMAGE_NAME]
+dockle --exit-code 1 --exit-level info [IMAGE_NAME]
+dockle --exit-code 1 --exit-level fatal [IMAGE_NAME]
 ```
 
 ### Ignore the specified checkpoints
@@ -654,12 +652,12 @@ $ dockle --exit-code 1 --exit-level fatal [IMAGE_NAME]
 The `--ignore, -i` option can ignore specified checkpoints.
 
 ```bash
-$ dockle -i CIS-DI-0001 -i DKL-DI-0006 [IMAGE_NAME]
+dockle -i CIS-DI-0001 -i DKL-DI-0006 [IMAGE_NAME]
 ```
 
 Or, use `DOCKLE_IGNORES`:
 
-```
+```bash
 export DOCKLE_IGNORES=CIS-DI-0001,DKL-DI-0006
 dockle [IMAGE_NAME]
 ```
@@ -714,7 +712,6 @@ We provide [goodwithtech/dockle-action](https://github.com/goodwithtech/dockle-a
     ignore: 'CIS-DI-0001,DKL-DI-0006'
 ```
 
-
 ### Travis CI
 
 <details>
@@ -737,10 +734,11 @@ script:
   - ./dockle dockle-ci-test:${COMMIT}
   - ./dockle --exit-code 1 dockle-ci-test:${COMMIT}
 ```
+
 </details>
 
-- Example: https://travis-ci.org/goodwithtech/dockle-ci-test
-- Repository: https://github.com/goodwithtech/dockle-ci-test
+- Example: <https://travis-ci.org/goodwithtech/dockle-ci-test>
+- Repository: <https://github.com/goodwithtech/dockle-ci-test>
 
 ### CircleCI
 
@@ -779,10 +777,11 @@ workflows:
     jobs:
       - build
 ```
+
 </details>
 
-- Example: https://circleci.com/gh/goodwithtech/dockle-ci-test
-- Repository: https://github.com/goodwithtech/dockle-ci-test
+- Example: <https://circleci.com/gh/goodwithtech/dockle-ci-test>
+- Repository: <https://github.com/goodwithtech/dockle-ci-test>
 
 ## GitLab CI
 
@@ -815,10 +814,11 @@ unit_test:
       tar zxvf dockle.tar.gz
     - ./dockle --exit-code 1 dockle-ci-test:${CI_COMMIT_SHORT_SHA}
 ```
+
 </details>
 
-- Example: https://gitlab.com/tomoyamachi/dockle-ci-test/-/jobs/238215077
-- Repository: https://github.com/goodwithtech/dockle-ci-test
+- Example: <https://gitlab.com/tomoyamachi/dockle-ci-test/-/jobs/238215077>
+- Repository: <https://github.com/goodwithtech/dockle-ci-test>
 
 ## Authorization for Private Docker Registry
 
@@ -831,7 +831,6 @@ All you have to do is: install `Dockle` and set ENVIRONMENT variables.
 ### Docker Hub
 
 To download the private repository from Docker Hub, you need to set `DOCKLE_AUTH_URL`, `DOCKLE_USERNAME` and `DOCKLE_PASSWORD` ENV vars.
-
 
 ```bash
 export DOCKLE_AUTH_URL=https://registry.hub.docker.com
@@ -909,7 +908,6 @@ Support this project with your organization. Your logo will show up here with a 
 # License
 
 - Apache License 2.0
-
 
 # Author
 
