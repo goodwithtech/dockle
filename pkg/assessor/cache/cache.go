@@ -14,9 +14,9 @@ import (
 )
 
 var (
-	reqFiles = []string{"Dockerfile", "docker-compose.yml", ".vimrc"}
+	reqFiles = []string{"Dockerfile", "docker-compose.yml", ".vimrc", ".DS_Store"}
 	// Directory ends "/" separator
-	reqDirs            = []string{".cache/", "tmp/", ".git/", ".vscode/", ".idea/", ".npm/"}
+	reqDirs            = []string{".cache/", ".aws/", ".azure/", ".gcp/", ".git/", ".vscode/", ".idea/", ".npm/"}
 	uncontrollableDirs = []string{"node_modules/", "vendor/"}
 	detectedDir        = map[string]struct{}{}
 )
