@@ -1,4 +1,4 @@
-FROM golang:1.20-alpine AS builder
+FROM golang:1.21-alpine AS builder
 ARG TARGET_DIR="github.com/goodwithtech/dockle"
 
 WORKDIR /go/src/${TARGET_DIR}
