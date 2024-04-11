@@ -1,6 +1,6 @@
 module github.com/goodwithtech/dockle
 
-go 1.21
+go 1.21.6
 
 toolchain go1.21.6
 
