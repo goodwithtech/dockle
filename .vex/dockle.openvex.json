@@ -1,0 +1,236 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "goodwithtech/dockle:e3f1396fca8b873f997c9fd51e1db455bdc501a8",
+  "author": "Tomoya AMACHI",
+  "timestamp": "2024-08-20T15:40:25.683571Z",
+  "version": 1,
+  "tooling": "https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck",
+  "statements": [
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2022-0646",
+        "name": "GO-2022-0646",
+        "description": "Use of risky cryptographic algorithm in github.com/aws/aws-sdk-go",
+        "aliases": [
+          "CVE-2020-8911",
+          "CVE-2020-8912",
+          "GHSA-7f33-f4f5-xwgw",
+          "GHSA-f5pg-7wfw-84q9"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "Govulncheck determined that the vulnerable code isn't called"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2512",
+        "name": "GO-2024-2512",
+        "description": "Classic builder cache poisoning in github.com/docker/docker",
+        "aliases": [
+          "CVE-2024-24557",
+          "GHSA-xw73-rw38-6vjc"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "Govulncheck determined that the vulnerable code isn't called"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2598",
+        "name": "GO-2024-2598",
+        "description": "Verify panics on certificates with an unknown public key algorithm in crypto/x509",
+        "aliases": [
+          "CVE-2024-24783"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "under_investigation"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2599",
+        "name": "GO-2024-2599",
+        "description": "Memory exhaustion in multipart form parsing in net/textproto and net/http",
+        "aliases": [
+          "CVE-2023-45290"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "under_investigation"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2600",
+        "name": "GO-2024-2600",
+        "description": "Incorrect forwarding of sensitive headers and cookies on HTTP redirect in net/http",
+        "aliases": [
+          "CVE-2023-45289"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "under_investigation"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2609",
+        "name": "GO-2024-2609",
+        "description": "Comments in display names are incorrectly handled in net/mail",
+        "aliases": [
+          "CVE-2024-24784"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "Govulncheck determined that the vulnerable code isn't called"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2610",
+        "name": "GO-2024-2610",
+        "description": "Errors returned from JSON marshaling may break template escaping in html/template",
+        "aliases": [
+          "CVE-2024-24785"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "Govulncheck determined that the vulnerable code isn't called"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2687",
+        "name": "GO-2024-2687",
+        "description": "HTTP/2 CONTINUATION flood in net/http",
+        "aliases": [
+          "CVE-2023-45288",
+          "GHSA-4v7x-pqxf-cx7m"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "under_investigation"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2842",
+        "name": "GO-2024-2842",
+        "description": "Unexpected authenticated registry accesses in github.com/containers/image/v5",
+        "aliases": [
+          "CVE-2024-3727",
+          "GHSA-6wvf-f2vw-3425"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "under_investigation"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2887",
+        "name": "GO-2024-2887",
+        "description": "Unexpected behavior from Is methods for IPv4-mapped IPv6 addresses in net/netip",
+        "aliases": [
+          "CVE-2024-24790"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "under_investigation"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2888",
+        "name": "GO-2024-2888",
+        "description": "Mishandling of corrupt central directory record in archive/zip",
+        "aliases": [
+          "CVE-2024-24789"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "Govulncheck determined that the vulnerable code isn't called"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-2963",
+        "name": "GO-2024-2963",
+        "description": "Denial of service due to improper 100-continue handling in net/http",
+        "aliases": [
+          "CVE-2024-24791"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "under_investigation"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2024-3005",
+        "name": "GO-2024-3005",
+        "description": "Moby authz zero length regression in github.com/moby/moby",
+        "aliases": [
+          "CVE-2024-41110"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "Govulncheck determined that the vulnerable code isn't called"
+    }
+  ]
+}
