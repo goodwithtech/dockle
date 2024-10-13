@@ -76,6 +76,7 @@ func (a CredentialAssessor) RequiredFiles() []string {
 		"settings.py",
 		"database.yml",
 		"credentials.xml",
+		".env",
 	}
 }
 
