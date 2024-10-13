@@ -690,6 +690,22 @@ dockle -ae pem -ae log [IMAGE_NAME]
 or DOCKLE_ACCEPT_FILE_EXTENSIONS=pem,log dockle [IMAGE_NAME]
 ```
 
+### Reject suspicious `environment variables` / `files` / `file extensions`
+
+```bash
+# --sensitive-word value, --sw value             You can add acceptable keywords.
+dockle -sw PRIVATE [IMAGE_NAME]
+or DOCKLE_ACCEPT_KEYS=GPG_KEY,KEYCLOAK_VERSION dockle [IMAGE_NAME]
+
+# --sensitive-file value, --sf value            You can add acceptable file names.
+dockle -sf .env [IMAGE_NAME]
+or DOCKLE_REJECT_FILES=.env dockle [IMAGE_NAME]
+
+# --sensitive-file-extension value, --se value  You can add acceptable file extensions.
+dockle -se pfx [IMAGE_NAME]
+or DOCKLE_REJECT_FILE_EXTENSIONS=pfx dockle [IMAGE_NAME]
+```
+
 ## Continuous Integration (CI)
 
 You can scan your built image with `Dockle` in Travis CI/CircleCI.

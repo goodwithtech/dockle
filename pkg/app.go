@@ -65,9 +65,19 @@ OPTIONS:
 			Usage:  "For CIS-DI-0010. You can add acceptable file names. e.g) -af id_rsa -af config.json",
 		},
 		cli.StringSliceFlag{
+			Name:   "sensitive-file, sf",
+			EnvVar: "DOCKLE_REJECT_FILES",
+			Usage:  "For CIS-DI-0010. You can add sensitive files to look for. e.g) -sf .git",
+		},
+		cli.StringSliceFlag{
 			Name:   "accept-file-extension, ae",
 			EnvVar: "DOCKLE_ACCEPT_FILE_EXTENSIONS",
 			Usage:  "For CIS-DI-0010. You can add acceptable file extensions. e.g) -ae pem -ae log",
+		},
+		cli.StringSliceFlag{
+			Name:   "sensitive-file-extension, se",
+			EnvVar: "DOCKLE_REJECT_FILE_EXTENSIONS",
+			Usage:  "For CIS-DI-0010. You can add sensitive files to look for. e.g) -se .pfx",
 		},
 		cli.StringFlag{
 			Name:   "format, f",
