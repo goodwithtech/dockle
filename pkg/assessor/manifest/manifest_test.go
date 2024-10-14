@@ -459,7 +459,7 @@ func TestSensitiveVars(t *testing.T) {
 		//"skip echo string": {cmd: `/bin/sh -c echo 'secret=foo;' > test.conf`, expected: true},
 	}
 	for testname, v := range tests {
-		actual, _ := sensitiveVars(v.cmd)
+		actual, _, _ := sensitiveVars(v.cmd)
 		if actual != v.expected {
 			t.Errorf("%s want: %t, got %t", testname, v.expected, actual)
 		}

@@ -169,13 +169,13 @@ func assessHistory(index int, cmd types.History) []*AssessmentWithColumns {
 	var assesses []*AssessmentWithColumns
 	cmdSlices := splitByCommands(cmd.CreatedBy)
 
-	found, varName := sensitiveVars(cmd.CreatedBy)
+	found, varName, varVal := sensitiveVars(cmd.CreatedBy)
 	if found {
 		assesses = append(assesses, &AssessmentWithColumns{
 			Assessment: types.Assessment{
 				Code:     types.AvoidCredential,
 				Filename: ConfigFileName,
-				Desc:     fmt.Sprintf("Suspicious ENV key found : %s on %s (You can suppress it with --accept-key)", varName, cmd.CreatedBy),
+				Desc:     fmt.Sprintf("Suspicious ENV key found : %s on %s (You can suppress it with --accept-key)", varName, strings.ReplaceAll(cmd.CreatedBy, varVal, "*******")),
 			},
 			HistoryIndex: index,
 		})
@@ -277,9 +277,9 @@ func useADDstatement(cmdSlices map[int][]string) bool {
 	return false
 }
 
-func sensitiveVars(cmd string) (bool, string) {
+func sensitiveVars(cmd string) (bool, string, string) {
 	if !strings.Contains(cmd, "=") {
-		return false, ""
+		return false, "", ""
 	}
 	toklexer := shlex.NewLexer(strings.NewReader(strings.ReplaceAll(cmd, "#", "")))
 	for {
@@ -304,11 +304,11 @@ func sensitiveVars(cmd string) (bool, string) {
 		}
 
 		if suspiciousCompiler.MatchString(varName) {
-			return true, varName
+			return true, varName, varVal
 		}
 	}
 
-	return false, ""
+	return false, "", ""
 }
 
 func checkAptCommand(target []string, command string) bool {
