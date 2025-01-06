@@ -44,7 +44,8 @@ jobs:
         if: success() && startsWith(github.ref, 'refs/tags/v')
         uses: goreleaser/goreleaser-action@v2
         with:
-          version: latest
+          distribution: goreleaser
+          version: "~> v2"
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
