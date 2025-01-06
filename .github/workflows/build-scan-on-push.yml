@@ -6,9 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - uses: actions/setup-go@v5
-      with:
-        go-version: '>=1.22.0'
     - run: docker build . -t ${{ github.sha }}
     - uses: Azure/container-scan@v0
       with:
