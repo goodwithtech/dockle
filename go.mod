@@ -1,8 +1,6 @@
 module github.com/goodwithtech/dockle
 
-go 1.22.7
-
-toolchain go1.22.10
+go 1.22.10
 
 require (
 	github.com/containers/image/v5 v5.33.0
