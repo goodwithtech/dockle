@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/goodwithtech/dockle/pkg/assessor/credential"
 	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
 
 	"github.com/containers/image/v5/transports/alltransports"
@@ -81,7 +82,9 @@ func Run(c *cli.Context) (err error) {
 	}
 	manifest.AddSensitiveWords(c.StringSlice("sensitive-word"))
 	manifest.AddAcceptanceKeys(c.StringSlice("accept-key"))
+	credential.AddSensitiveFiles(c.StringSlice("sensitive-file"))
 	scanner.AddAcceptanceFiles(c.StringSlice("accept-file"))
+	credential.AddSensitiveFileExtensions(c.StringSlice("sensitive-file-extension"))
 	scanner.AddAcceptanceExtensions(c.StringSlice("accept-file-extension"))
 	log.Logger.Debug("Start assessments...")
 	assessments, err := scanner.ScanImage(ctx, imageName, filePath, dockerOption)

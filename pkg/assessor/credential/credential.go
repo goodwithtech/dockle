@@ -13,7 +13,20 @@ import (
 	"github.com/goodwithtech/dockle/pkg/types"
 )
 
+var (
+	suspiciousFiles          []string
+	suspiciousFileExtensions []string
+)
+
 type CredentialAssessor struct{}
+
+func AddSensitiveFiles(files []string) {
+	suspiciousFiles = append(suspiciousFiles, files...)
+}
+
+func AddSensitiveFileExtensions(fileExtensions []string) {
+	suspiciousFileExtensions = append(suspiciousFileExtensions, fileExtensions...)
+}
 
 func (a CredentialAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : credential files")
@@ -58,7 +71,7 @@ func makeMaps(keys []string) map[string]struct{} {
 }
 
 func (a CredentialAssessor) RequiredFiles() []string {
-	return []string{
+	return append([]string{
 		"credentials.json",
 		"credential.json",
 		// TODO: Only check .docker/config.json
@@ -76,11 +89,12 @@ func (a CredentialAssessor) RequiredFiles() []string {
 		"settings.py",
 		"database.yml",
 		"credentials.xml",
-	}
+		//".env",
+	}, suspiciousFiles...)
 }
 
 func (a CredentialAssessor) RequiredExtensions() []string {
-	return []string{
+	return append([]string{
 		// reference: https://github.com/eth0izzle/shhgit/blob/master/config.yaml
 		// TODO: potential sensitive data but they have many false-positives.
 		//       Dockle need to analyze each file.
@@ -107,7 +121,7 @@ func (a CredentialAssessor) RequiredExtensions() []string {
 		".keychain",
 		".pcap",
 		".gnucache",
-	}
+	}, suspiciousFileExtensions...)
 }
 
 func (a CredentialAssessor) RequiredPermissions() []os.FileMode {
