@@ -354,7 +354,7 @@ func reducableAptGetInstall(cmdSlices map[int][]string) bool {
 			useAptLibrary = true
 		}
 		// remove cache must be run after apt library directory changed
-		if useAptLibrary && containsThreshold(cmdSlice, removeAptLibCmds, 3) {
+		if useAptLibrary && (containsThreshold(cmdSlice, removeAptLibCmds, 3) || checkAptCommand(cmdSlice, "dist-clean") || checkAptCommand(cmdSlice, "distclean")) {
 			return false
 		}
 	}
