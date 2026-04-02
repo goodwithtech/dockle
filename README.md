@@ -922,6 +922,13 @@ Support this project with your organization. Your logo will show up here with a 
 <a href="https://opencollective.com/dockle/organization/8/website"><img src="https://opencollective.com/dockle/organization/8/avatar.svg"></a>
 <a href="https://opencollective.com/dockle/organization/9/website"><img src="https://opencollective.com/dockle/organization/9/avatar.svg"></a>
 
+### OSS Program Supporters
+
+This project uses services provided through the following OSS programs.
+
+<a href="https://flatt.tech/oss/gmo/trampoline" target="_blank"><img src="https://flatt.tech/assets/images/badges/gmo-oss.svg" height="24px"/></a>
+<a href="https://github.com/1Password/for-open-source" target="_blank"><img src="https://img.shields.io/badge/1Password-OSS%20Program-0094F5?logo=1password&logoColor=white" height="24px"/></a>
+
 # License
 
 - Apache License 2.0
