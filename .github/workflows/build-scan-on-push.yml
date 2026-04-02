@@ -17,3 +17,9 @@ jobs:
         severity: CRITICAL
         ignore-unfixed: true
         exit-code: '1'
+    - name: Run Dockle container linter
+      uses: goodwithtech/dockle-action@e30e6af832aad6ea7dca2a248d31a85eab6dbd68 # v0.4.15
+      with:
+        image: ${{ github.sha }}
+        exit-code: '1'
+        exit-level: warn
