@@ -1,16 +1,19 @@
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build-and-scan:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
     - run: docker build . -t ${{ github.sha }}
-    - uses: Azure/container-scan@v0
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
       with:
-        image-name: ${{ github.sha }}
-        severity-threshold: CRITICAL
-      env:
-        TRIVY_IGNORE_UNFIXED: true
-        DOCKLE_HOST: "unix:///var/run/docker.sock"
+        image-ref: ${{ github.sha }}
+        severity: CRITICAL
+        ignore-unfixed: true
+        exit-code: '1'
