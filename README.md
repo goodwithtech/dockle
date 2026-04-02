@@ -96,7 +96,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
 You can use Homebrew on [Mac OS X](https://brew.sh/) or [Linux and WSL (Windows Subsystem for Linux)](https://docs.brew.sh/Homebrew-on-Linux).
 
 ```bash
-$ brew install goodwithtech/r/dockle
+brew install goodwithtech/r/dockle
 ```
 
 ## RHEL/CentOS
