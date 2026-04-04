@@ -392,6 +392,39 @@ func TestReducableAptGetInstall(t *testing.T) {
 			},
 			expected: false,
 		},
+		"UnReducableDistClean": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apt-get", "install", "-y", "git",
+				},
+				1: {
+					"apt-get", "dist-clean",
+				},
+			},
+			expected: false,
+		},
+		"UnReducableDistclean": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apt-get", "install", "-y", "git",
+				},
+				1: {
+					"apt", "distclean",
+				},
+			},
+			expected: false,
+		},
+		"UnReducableDistCleanWithOptions": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apt-get", "install", "-y", "git",
+				},
+				1: {
+					"apt-get", "-q", "-y", "dist-clean",
+				},
+			},
+			expected: false,
+		},
 	}
 	for testname, v := range tests {
 		actual := reducableAptGetInstall(v.cmdSlices)
