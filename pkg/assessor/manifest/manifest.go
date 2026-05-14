@@ -364,7 +364,7 @@ func reducableAptGetInstall(cmdSlices map[int][]string) bool {
 func reducableApkAdd(cmdSlices map[int][]string) bool {
 	for _, cmdSlice := range cmdSlices {
 		if containsAll(cmdSlice, []string{"apk", "add"}) {
-			if !containsAll(cmdSlice, []string{"--no-cache"}) {
+			if !containsAll(cmdSlice, []string{"--no-cache"}) && !containsAll(cmdSlice, []string{"--no-network"}) {
 				return true
 			}
 		}
