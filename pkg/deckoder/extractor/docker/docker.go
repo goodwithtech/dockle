@@ -4,6 +4,7 @@ import (
 	"archive/tar"
 	"context"
 	"crypto/sha256"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"path/filepath"
@@ -11,7 +12,6 @@ import (
 	"time"
 
 	digest "github.com/opencontainers/go-digest"
-	"golang.org/x/xerrors"
 
 	"github.com/goodwithtech/dockle/pkg/deckoder/extractor/image/token/ecr"
 	"github.com/goodwithtech/dockle/pkg/deckoder/extractor/image/token/gcr"
@@ -70,7 +70,7 @@ func newDockerExtractor(ctx context.Context, imgRef image.Reference, transports 
 
 	img, err := image.NewImage(ctx, imgRef, transports, option)
 	if err != nil {
-		return Extractor{}, nil, xerrors.Errorf("unable to initialize a image struct: %w", err)
+		return Extractor{}, nil, fmt.Errorf("unable to initialize a image struct: %w", err)
 	}
 
 	cleanup := func() {
@@ -136,7 +136,7 @@ func (d Extractor) LayerIDs() []string {
 func (d Extractor) ExtractLayerFiles(ctx context.Context, dig digest.Digest, filterFunc types.FilterFunc) (types.FileMap, []string, []string, error) {
 	img, err := d.image.GetLayer(ctx, dig)
 	if err != nil {
-		return nil, nil, nil, xerrors.Errorf("failed to get a blob: %w", err)
+		return nil, nil, nil, fmt.Errorf("failed to get a blob: %w", err)
 	}
 	defer img.Close()
 
@@ -146,7 +146,7 @@ func (d Extractor) ExtractLayerFiles(ctx context.Context, dig digest.Digest, fil
 
 	files, opqDirs, whFiles, err := d.extractFiles(r, filterFunc)
 	if err != nil {
-		return nil, nil, nil, xerrors.Errorf("failed to extract files: %w", err)
+		return nil, nil, nil, fmt.Errorf("failed to extract files: %w", err)
 	}
 
 	return files, opqDirs, whFiles, nil
@@ -166,7 +166,7 @@ func (d Extractor) extractFiles(layer io.Reader, filterFunc types.FilterFunc) (t
 			break
 		}
 		if err != nil {
-			return data, nil, nil, xerrors.Errorf("failed to extract the archive: %w", err)
+			return data, nil, nil, fmt.Errorf("failed to extract the archive: %w", err)
 		}
 
 		filePath := hdr.Name
@@ -200,7 +200,7 @@ func (d Extractor) extractFiles(layer io.Reader, filterFunc types.FilterFunc) (t
 			// Determine if we should extract the element
 			extract, err = filterFunc(hdr)
 			if err != nil {
-				return data, nil, nil, xerrors.Errorf("failed to filtering file: %w", err)
+				return data, nil, nil, fmt.Errorf("failed to filtering file: %w", err)
 			}
 			if !extract {
 				continue
@@ -215,7 +215,7 @@ func (d Extractor) extractFiles(layer io.Reader, filterFunc types.FilterFunc) (t
 		if hdr.Typeflag == tar.TypeSymlink || hdr.Typeflag == tar.TypeLink || hdr.Typeflag == tar.TypeReg {
 			d, err := ioutil.ReadAll(tr)
 			if err != nil {
-				return nil, nil, nil, xerrors.Errorf("failed to read file: %w", err)
+				return nil, nil, nil, fmt.Errorf("failed to read file: %w", err)
 			}
 			data[filePath] = types.FileData{
 				Body:     d,

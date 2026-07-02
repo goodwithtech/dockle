@@ -3,6 +3,7 @@ package ecr
 import (
 	"context"
 	"encoding/base64"
+	"fmt"
 	"strings"
 
 	"github.com/goodwithtech/dockle/pkg/types"
@@ -11,7 +12,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
-	"golang.org/x/xerrors"
 )
 
 const ecrURL = "amazonaws.com"
@@ -41,11 +41,11 @@ func getConfig(ctx context.Context, option types.DockerOption) (aws.Config, erro
 
 func (e *ECR) CheckOptions(domain string, option types.DockerOption) error {
 	if !strings.HasSuffix(domain, ecrURL) {
-		return xerrors.Errorf("ECR : %w", types.InvalidURLPattern)
+		return fmt.Errorf("ECR : %w", types.InvalidURLPattern)
 	}
 	cfg, err := getConfig(context.TODO(), option)
 	if err != nil {
-		return xerrors.Errorf("failed to load AWS config: %w", err)
+		return fmt.Errorf("failed to load AWS config: %w", err)
 	}
 	e.Client = ecr.NewFromConfig(cfg)
 	return nil
@@ -55,12 +55,12 @@ func (e *ECR) GetCredential(ctx context.Context) (username, password string, err
 	input := &ecr.GetAuthorizationTokenInput{}
 	result, err := e.Client.GetAuthorizationToken(ctx, input)
 	if err != nil {
-		return "", "", xerrors.Errorf("failed to get authorization token: %w", err)
+		return "", "", fmt.Errorf("failed to get authorization token: %w", err)
 	}
 	for _, data := range result.AuthorizationData {
 		b, err := base64.StdEncoding.DecodeString(aws.ToString(data.AuthorizationToken))
 		if err != nil {
-			return "", "", xerrors.Errorf("base64 decode failed: %w", err)
+			return "", "", fmt.Errorf("base64 decode failed: %w", err)
 		}
 		// e.g. AWS:eyJwYXlsb2...
 		split := strings.SplitN(string(b), ":", 2)

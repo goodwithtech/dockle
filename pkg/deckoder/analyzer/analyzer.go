@@ -2,9 +2,10 @@ package analyzer
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	digest "github.com/opencontainers/go-digest"
-	"golang.org/x/xerrors"
 
 	"github.com/goodwithtech/dockle/pkg/deckoder/extractor"
 	"github.com/goodwithtech/dockle/pkg/deckoder/extractor/docker"
@@ -15,11 +16,11 @@ var (
 	additionalFiles []string
 
 	// ErrUnknownOS occurs when unknown OS is analyzed.
-	ErrUnknownOS = xerrors.New("unknown OS")
+	ErrUnknownOS = errors.New("unknown OS")
 	// ErrPkgAnalysis occurs when the analysis of packages is failed.
-	ErrPkgAnalysis = xerrors.New("failed to analyze packages")
+	ErrPkgAnalysis = errors.New("failed to analyze packages")
 	// ErrNoPkgsDetected occurs when the required files for an OS package manager are not detected
-	ErrNoPkgsDetected = xerrors.New("no packages detected")
+	ErrNoPkgsDetected = errors.New("no packages detected")
 )
 
 type Config struct {
@@ -38,7 +39,7 @@ func (ac Config) Analyze(ctx context.Context, filterFunc types.FilterFunc) (type
 		dig := digest.Digest(layerID)
 		layerInfo, err := ac.analyzeLayer(ctx, dig, filterFunc)
 		if err != nil {
-			return nil, xerrors.Errorf("failed to analyze layer: %s : %w", dig, err)
+			return nil, fmt.Errorf("failed to analyze layer: %s : %w", dig, err)
 		}
 		layerInfos = append(layerInfos, layerInfo)
 	}
@@ -46,7 +47,7 @@ func (ac Config) Analyze(ctx context.Context, filterFunc types.FilterFunc) (type
 	fileMap := docker.ApplyLayers(layerInfos)
 	config, err := ac.analyzeConfig(ctx)
 	if err != nil {
-		return nil, xerrors.Errorf("unable to analyze config: %w", err)
+		return nil, fmt.Errorf("unable to analyze config: %w", err)
 	}
 	fileMap["/config"] = config
 
@@ -56,7 +57,7 @@ func (ac Config) Analyze(ctx context.Context, filterFunc types.FilterFunc) (type
 func (ac Config) analyzeLayer(ctx context.Context, dig digest.Digest, filterFunc types.FilterFunc) (types.LayerInfo, error) {
 	files, opqDirs, whFiles, err := ac.Extractor.ExtractLayerFiles(ctx, dig, filterFunc)
 	if err != nil {
-		return types.LayerInfo{}, xerrors.Errorf("unable to extract files from layer %s: %w", dig, err)
+		return types.LayerInfo{}, fmt.Errorf("unable to extract files from layer %s: %w", dig, err)
 	}
 
 	layerInfo := types.LayerInfo{
@@ -71,7 +72,7 @@ func (ac Config) analyzeLayer(ctx context.Context, dig digest.Digest, filterFunc
 func (ac Config) analyzeConfig(ctx context.Context) (types.FileData, error) {
 	configBlob, err := ac.Extractor.ConfigBlob(ctx)
 	if err != nil {
-		return types.FileData{}, xerrors.Errorf("unable to get config blob: %w", err)
+		return types.FileData{}, fmt.Errorf("unable to get config blob: %w", err)
 	}
 
 	// special file for config
