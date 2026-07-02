@@ -6,10 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/goodwithtech/deckoder/analyzer"
-	"github.com/goodwithtech/deckoder/extractor"
-	"github.com/goodwithtech/deckoder/extractor/docker"
-	deckodertypes "github.com/goodwithtech/deckoder/types"
+	"github.com/goodwithtech/dockle/pkg/deckoder/analyzer"
+	"github.com/goodwithtech/dockle/pkg/deckoder/extractor"
+	"github.com/goodwithtech/dockle/pkg/deckoder/extractor/docker"
+	deckodertypes "github.com/goodwithtech/dockle/pkg/deckoder/types"
 
 	"github.com/goodwithtech/dockle/pkg/types"
 

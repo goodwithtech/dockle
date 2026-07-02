@@ -12,7 +12,7 @@ import (
 	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
 
 	"github.com/containers/image/v5/transports/alltransports"
-	deckodertypes "github.com/goodwithtech/deckoder/types"
+	deckodertypes "github.com/goodwithtech/dockle/pkg/deckoder/types"
 
 	"github.com/goodwithtech/dockle/config"
 	"github.com/goodwithtech/dockle/pkg/utils"

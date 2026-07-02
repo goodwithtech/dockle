@@ -3,7 +3,7 @@ package assessor
 import (
 	"os"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
+	deckodertypes "github.com/goodwithtech/dockle/pkg/deckoder/types"
 
 	"github.com/goodwithtech/dockle/pkg/assessor/cache"
 	"github.com/goodwithtech/dockle/pkg/assessor/privilege"

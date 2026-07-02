@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
+	deckodertypes "github.com/goodwithtech/dockle/pkg/deckoder/types"
 
 	"github.com/goodwithtech/dockle/pkg/log"
 

@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-	"github.com/goodwithtech/deckoder/utils"
+	deckodertypes "github.com/goodwithtech/dockle/pkg/deckoder/types"
+	"github.com/goodwithtech/dockle/pkg/deckoder/utils"
 
 	"github.com/goodwithtech/dockle/pkg/log"
 	"github.com/goodwithtech/dockle/pkg/types"
