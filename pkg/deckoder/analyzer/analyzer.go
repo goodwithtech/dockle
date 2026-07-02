@@ -8,7 +8,7 @@ import (
 
 	"github.com/goodwithtech/dockle/pkg/deckoder/extractor"
 	"github.com/goodwithtech/dockle/pkg/deckoder/extractor/docker"
-	"github.com/goodwithtech/dockle/pkg/deckoder/types"
+	"github.com/goodwithtech/dockle/pkg/types"
 )
 
 var (

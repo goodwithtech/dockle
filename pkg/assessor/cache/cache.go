@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	deckodertypes "github.com/goodwithtech/dockle/pkg/deckoder/types"
 	"github.com/goodwithtech/dockle/pkg/deckoder/utils"
 
 	"github.com/goodwithtech/dockle/pkg/log"
@@ -23,7 +22,7 @@ var (
 
 type CacheAssessor struct{}
 
-func (a CacheAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a CacheAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : cache files")
 	assesses := []*types.Assessment{}
 	for filename := range fileMap {

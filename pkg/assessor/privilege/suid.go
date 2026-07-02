@@ -4,14 +4,12 @@ import (
 	"fmt"
 	"os"
 
-	deckodertypes "github.com/goodwithtech/dockle/pkg/deckoder/types"
-
 	"github.com/goodwithtech/dockle/pkg/types"
 )
 
 type PrivilegeAssessor struct{}
 
-func (a PrivilegeAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a PrivilegeAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error) {
 	var assesses []*types.Assessment
 
 	for filename, filedata := range fileMap {
@@ -46,7 +44,7 @@ func (a PrivilegeAssessor) RequiredExtensions() []string {
 	return []string{}
 }
 
-//const GidMode os.FileMode = 4000
+// const GidMode os.FileMode = 4000
 func (a PrivilegeAssessor) RequiredPermissions() []os.FileMode {
 	return []os.FileMode{os.ModeSetgid, os.ModeSetuid}
 }

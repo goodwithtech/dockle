@@ -19,7 +19,7 @@ import (
 	"github.com/knqyf263/nested"
 
 	"github.com/goodwithtech/dockle/pkg/deckoder/extractor/image"
-	"github.com/goodwithtech/dockle/pkg/deckoder/types"
+	"github.com/goodwithtech/dockle/pkg/types"
 )
 
 const (

@@ -9,7 +9,6 @@ import (
 	"github.com/goodwithtech/dockle/pkg/deckoder/analyzer"
 	"github.com/goodwithtech/dockle/pkg/deckoder/extractor"
 	"github.com/goodwithtech/dockle/pkg/deckoder/extractor/docker"
-	deckodertypes "github.com/goodwithtech/dockle/pkg/deckoder/types"
 
 	"github.com/goodwithtech/dockle/pkg/types"
 
@@ -34,7 +33,7 @@ func AddAcceptanceExtensions(keys []string) {
 	}
 }
 
-func ScanImage(ctx context.Context, imageName, filePath string, dockerOption deckodertypes.DockerOption) (assessments []*types.Assessment, err error) {
+func ScanImage(ctx context.Context, imageName, filePath string, dockerOption types.DockerOption) (assessments []*types.Assessment, err error) {
 	var ext extractor.Extractor
 	var cleanup func()
 	if imageName != "" {
@@ -52,7 +51,7 @@ func ScanImage(ctx context.Context, imageName, filePath string, dockerOption dec
 	}
 	defer cleanup()
 	ac := analyzer.New(ext)
-	var files deckodertypes.FileMap
+	var files types.FileMap
 	filterFunc := createPathPermissionFilterFunc(assessor.LoadRequiredFiles(), assessor.LoadRequiredExtensions(), assessor.LoadRequiredPermissions())
 	if files, err = ac.Analyze(ctx, filterFunc); err != nil {
 		return nil, err
@@ -62,7 +61,7 @@ func ScanImage(ctx context.Context, imageName, filePath string, dockerOption dec
 	return assessments, nil
 }
 
-func createPathPermissionFilterFunc(filenames, extensions []string, permissions []os.FileMode) deckodertypes.FilterFunc {
+func createPathPermissionFilterFunc(filenames, extensions []string, permissions []os.FileMode) types.FilterFunc {
 	requiredDirNames := map[string]struct{}{}
 	requiredFileNames := map[string]struct{}{}
 	requiredExts := map[string]struct{}{}

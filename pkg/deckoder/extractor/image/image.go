@@ -13,7 +13,7 @@ import (
 	digest "github.com/opencontainers/go-digest"
 	"golang.org/x/xerrors"
 
-	"github.com/goodwithtech/dockle/pkg/deckoder/types"
+	"github.com/goodwithtech/dockle/pkg/types"
 )
 
 type ImageSource interface {

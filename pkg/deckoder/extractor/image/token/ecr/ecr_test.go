@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/goodwithtech/dockle/pkg/deckoder/types"
+	"github.com/goodwithtech/dockle/pkg/types"
 	"golang.org/x/xerrors"
 
 	"github.com/aws/aws-sdk-go/aws/request"

@@ -7,8 +7,6 @@ import (
 	"os"
 	"strings"
 
-	deckodertypes "github.com/goodwithtech/dockle/pkg/deckoder/types"
-
 	"github.com/goodwithtech/dockle/pkg/log"
 
 	"github.com/goodwithtech/dockle/pkg/types"
@@ -16,7 +14,7 @@ import (
 
 type GroupAssessor struct{}
 
-func (a GroupAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a GroupAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : /etc/group")
 
 	var existFile bool

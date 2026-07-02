@@ -16,5 +16,7 @@ Package layout:
   on top of `containers/image` transports (daemon, registry, archive)
 - `extractor/image` — image source resolution and registry authentication
   (`token/ecr`, `token/gcr` provide ECR/GCR credentials)
-- `types/` — `FileMap`, `FilterFunc`, `DockerOption`, layer metadata
 - `utils/` — small shared helpers
+
+The shared data types (`FileMap`, `FilterFunc`, `DockerOption`, layer
+metadata) live in `pkg/types` together with the rest of Dockle's types.

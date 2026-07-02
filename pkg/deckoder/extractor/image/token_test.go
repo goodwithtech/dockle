@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	imageTypes "github.com/containers/image/v5/types"
-	"github.com/goodwithtech/dockle/pkg/deckoder/types"
+	"github.com/goodwithtech/dockle/pkg/types"
 	"github.com/stretchr/testify/assert"
 )
 

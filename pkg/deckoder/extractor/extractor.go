@@ -5,7 +5,7 @@ import (
 
 	digest "github.com/opencontainers/go-digest"
 
-	"github.com/goodwithtech/dockle/pkg/deckoder/types"
+	"github.com/goodwithtech/dockle/pkg/types"
 )
 
 type Extractor interface {

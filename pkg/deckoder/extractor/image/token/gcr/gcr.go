@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/goodwithtech/dockle/pkg/deckoder/types"
+	"github.com/goodwithtech/dockle/pkg/types"
 
 	"golang.org/x/xerrors"
 
