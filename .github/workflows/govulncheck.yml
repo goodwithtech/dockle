@@ -1,0 +1,74 @@
+name: govulncheck
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    # Weekly on Monday morning (UTC) so new vulnerabilities are caught
+    # even when there is no PR/push activity.
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  govulncheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version-file: go.mod
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+      - name: Run govulncheck and fail on non-allowlisted findings
+        # govulncheck has no built-in per-finding suppression, so this step
+        # runs it in -json mode and compares the OSV IDs that actually affect
+        # this module (findings with a non-empty call/import trace) against an
+        # explicit allowlist. Any finding outside the allowlist fails the job,
+        # so newly published vulnerabilities are caught immediately.
+        #
+        # Allowlisted findings (as of 2026-07): 5 vulnerabilities from
+        # github.com/docker/docker@v28.5.2+incompatible. All are daemon-side
+        # issues with "Fixed in: N/A" because the moby v29 module split means
+        # no fixed version exists on the old module path. Remove these entries
+        # once containers/image and this repository migrate to the moby v29
+        # module split.
+        env:
+          # Match the test workflow: with cgo enabled, loading the
+          # containers/storage btrfs driver fails on runners without the
+          # btrfs headers installed.
+          CGO_ENABLED: "0"
+        run: |
+          printf '%s\n' \
+            GO-2026-4883 \
+            GO-2026-4887 \
+            GO-2026-5617 \
+            GO-2026-5668 \
+            GO-2026-5746 \
+            | sort > allowlist.txt
+
+          # -json mode exits 0 even when findings exist, so a non-zero exit
+          # here means govulncheck itself failed.
+          govulncheck -json ./... > govulncheck.json
+
+          jq -r 'select(.finding != null and (.finding.trace | length) > 0) | .finding.osv' govulncheck.json \
+            | sort -u > found.txt
+
+          echo "Vulnerabilities affecting this module:"
+          cat found.txt
+
+          stale=$(comm -13 found.txt allowlist.txt)
+          if [ -n "$stale" ]; then
+            echo "::warning::Allowlisted vulnerabilities no longer reported (remove from allowlist): ${stale//$'\n'/, }"
+          fi
+
+          new=$(comm -23 found.txt allowlist.txt)
+          if [ -n "$new" ]; then
+            echo "::error::New vulnerabilities not in the allowlist: ${new//$'\n'/, }"
+            echo "Details: https://pkg.go.dev/vuln/<ID> — or run 'govulncheck ./...' locally."
+            exit 1
+          fi
+          echo "OK: only allowlisted findings are present."
