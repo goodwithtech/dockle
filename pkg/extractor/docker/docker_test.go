@@ -11,9 +11,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"github.com/goodwithtech/dockle/pkg/deckoder/utils"
 	"github.com/goodwithtech/dockle/pkg/extractor/image"
 	"github.com/goodwithtech/dockle/pkg/types"
-	"github.com/goodwithtech/dockle/pkg/deckoder/utils"
 )
 
 const (

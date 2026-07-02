@@ -28,7 +28,7 @@ var AlertLevelColors = map[int]color.Color{
 }
 
 type ListWriter struct {
-	Output io.Writer
+	Output  io.Writer
 	NoColor bool
 }
 

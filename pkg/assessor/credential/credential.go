@@ -6,8 +6,6 @@ import (
 	"path/filepath"
 	"unicode/utf8"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/goodwithtech/dockle/pkg/log"
 
 	"github.com/goodwithtech/dockle/pkg/types"
@@ -28,7 +26,7 @@ func AddSensitiveFileExtensions(fileExtensions []string) {
 	suspiciousFileExtensions = append(suspiciousFileExtensions, fileExtensions...)
 }
 
-func (a CredentialAssessor) Assess(fileMap deckodertypes.FileMap) ([]*types.Assessment, error) {
+func (a CredentialAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error) {
 	log.Logger.Debug("Start scan : credential files")
 	assesses := []*types.Assessment{}
 	fmap := makeMaps(a.RequiredFiles())

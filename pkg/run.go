@@ -12,7 +12,6 @@ import (
 	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
 
 	"github.com/containers/image/v5/transports/alltransports"
-	deckodertypes "github.com/goodwithtech/deckoder/types"
 
 	"github.com/goodwithtech/dockle/config"
 	"github.com/goodwithtech/dockle/pkg/utils"
@@ -59,7 +58,7 @@ func Run(c *cli.Context) (err error) {
 		return
 	}
 	// set docker option
-	dockerOption := deckodertypes.DockerOption{
+	dockerOption := types.DockerOption{
 		Timeout:               c.Duration("timeout"),
 		UserName:              c.String("username"),
 		Password:              c.String("password"),
