@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Language Policy
+
+Dockle is OSS for a worldwide audience. Everything that ends up in Git history — commit messages, code comments, documentation, test fixtures, PR titles and descriptions — must be written in English.
+
 ## Project Overview
 
 Dockle is a container image linter for security, written in Go. It scans built Docker images (not Dockerfiles) against CIS Benchmark checkpoints (`CIS-DI-*`) and Dockle original checkpoints (`DKL-DI-*` for Docker best practices, `DKL-LI-*` for Linux best practices). All checkpoints are documented in `CHECKPOINT.md`.
@@ -30,11 +34,11 @@ Releases are built by GoReleaser (`goreleaser.yaml`) via GitHub Actions when a `
 
 ## Architecture
 
-The scan pipeline flows: **CLI → scanner → extractor (deckoder) → assessors → assessment map → report writer**.
+The scan pipeline flows: **CLI → scanner → extractor (`pkg/deckoder`) → assessors → assessment map → report writer**.
 
 1. **Entry point**: `cmd/dockle/main.go` calls `pkg.NewApp()` (`pkg/app.go`), which defines all CLI flags using `urfave/cli` v1. The action is `pkg.Run` (`pkg/run.go`), which wires everything together. `config.CreateFromCli` (`config/config.go`) populates the global `config.Conf` (ignore rules from flags/`DOCKLE_IGNORES`/`.dockleignore`, exit code, etc.).
 
-2. **Image extraction**: `pkg/scanner/scan.go` uses `github.com/goodwithtech/deckoder` (a companion library maintained in a separate repo) to fetch the image from a Docker daemon, remote registry, or tar archive. Only files that assessors declare they need — via `RequiredFiles()` / `RequiredExtensions()` / `RequiredPermissions()` — are extracted, using a tar filter function. Acceptance flags (`--accept-file`, `--accept-file-extension`) remove files from that filter.
+2. **Image extraction**: `pkg/scanner/scan.go` uses `pkg/deckoder` (formerly the separate `github.com/goodwithtech/deckoder` library, now integrated into this repository — see `pkg/deckoder/README.md`) to fetch the image from a Docker daemon, remote registry, or tar archive. Only files that assessors declare they need — via `RequiredFiles()` / `RequiredExtensions()` / `RequiredPermissions()` — are extracted, using a tar filter function. Acceptance flags (`--accept-file`, `--accept-file-extension`) remove files from that filter.
 
 3. **Assessors** (`pkg/assessor/`): each subpackage implements the `Assessor` interface (`assessor.go`) and is registered in its `init()`-style list in `pkg/assessor/assessor.go`. Each assessor inspects the extracted `FileMap` and returns `[]*types.Assessment` tagged with a checkpoint code. The `manifest` assessor is the largest — it parses image config/history to lint Dockerfile-derived instructions. Assessor-level allow/deny lists (sensitive words, credential file names) are injected from CLI flags in `pkg/run.go`.
 

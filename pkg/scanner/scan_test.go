@@ -8,8 +8,6 @@ import (
 
 	"github.com/google/go-cmp/cmp/cmpopts"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/google/go-cmp/cmp"
 
 	"github.com/goodwithtech/dockle/pkg/assessor/contentTrust"
@@ -23,7 +21,7 @@ func TestScanImage(t *testing.T) {
 	testcases := map[string]struct {
 		imageName string
 		fileName  string
-		option    deckodertypes.DockerOption
+		option    types.DockerOption
 		wantErr   error
 		expected  []*types.Assessment
 	}{
@@ -31,7 +29,7 @@ func TestScanImage(t *testing.T) {
 			// TODO : too large to use github / fileName:  "base.tar",
 			// testdata/Dockerfile.base
 			imageName: "goodwithtech/dockle-test:base-test",
-			option:    deckodertypes.DockerOption{Timeout: time.Minute},
+			option:    types.DockerOption{Timeout: time.Minute},
 			expected: []*types.Assessment{
 				{Code: types.AvoidEmptyPassword, Filename: "etc/shadow"},
 				{Code: types.AvoidRootDefault, Filename: manifest.ConfigFileName},

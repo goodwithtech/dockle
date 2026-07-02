@@ -4,4 +4,5 @@ import "errors"
 
 var (
 	ErrSetImageOrFile = errors.New("image name or image file must be specified")
+	InvalidURLPattern = errors.New("invalid url pattern")
 )

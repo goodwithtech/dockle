@@ -10,8 +10,6 @@ import (
 	"strings"
 	"time"
 
-	deckodertypes "github.com/goodwithtech/deckoder/types"
-
 	"github.com/google/shlex"
 
 	"github.com/goodwithtech/dockle/pkg/log"
@@ -29,7 +27,7 @@ var (
 	suspiciousCompiler *regexp.Regexp
 )
 
-func (a ManifestAssessor) Assess(fileMap deckodertypes.FileMap) (assesses []*types.Assessment, err error) {
+func (a ManifestAssessor) Assess(fileMap types.FileMap) (assesses []*types.Assessment, err error) {
 	log.Logger.Debug("Scan start : config file")
 	file, ok := fileMap["/config"]
 	if !ok {
