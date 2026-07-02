@@ -2,6 +2,8 @@ package image
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"io"
 
 	"github.com/containers/image/v5/image"
@@ -11,7 +13,6 @@ import (
 	imageTypes "github.com/containers/image/v5/types"
 	"github.com/distribution/reference"
 	digest "github.com/opencontainers/go-digest"
-	"golang.org/x/xerrors"
 
 	"github.com/goodwithtech/dockle/pkg/types"
 )
@@ -57,7 +58,7 @@ func NewImage(ctx context.Context, image Reference, transports []string, option 
 	if !image.IsFile {
 		named, err := reference.ParseNormalizedNamed(image.Name)
 		if err != nil {
-			return RealImage{}, xerrors.Errorf("invalid image name: %w", err)
+			return RealImage{}, fmt.Errorf("invalid image name: %w", err)
 		}
 
 		// add 'latest' tag
@@ -83,7 +84,7 @@ func NewImage(ctx context.Context, image Reference, transports []string, option 
 
 	rawSource, src, err := newSource(ctx, image.Name, transports, sys)
 	if err != nil {
-		return RealImage{}, xerrors.Errorf("failed to initialize source: %w", err)
+		return RealImage{}, fmt.Errorf("failed to initialize source: %w", err)
 	}
 
 	return RealImage{
@@ -96,13 +97,13 @@ func NewImage(ctx context.Context, image Reference, transports []string, option 
 
 func newSource(ctx context.Context, imageName string, transports []string, sys *imageTypes.SystemContext) (
 	ImageSource, ImageCloser, error) {
-	err := xerrors.New("no valid transport")
+	err := errors.New("no valid transport")
 	for _, transport := range transports {
 		imgName := transport + imageName
 		var ref imageTypes.ImageReference
 		ref, err = alltransports.ParseImageName(imgName)
 		if err != nil {
-			return nil, nil, xerrors.Errorf("failed to parse an image name: %w", err)
+			return nil, nil, fmt.Errorf("failed to parse an image name: %w", err)
 		}
 
 		var rawSource imageTypes.ImageSource
@@ -115,7 +116,7 @@ func newSource(ctx context.Context, imageName string, transports []string, sys *
 		var src imageTypes.ImageCloser
 		src, err = image.FromSource(ctx, sys, rawSource)
 		if err != nil {
-			return nil, nil, xerrors.Errorf("failed to initialize: %w", err)
+			return nil, nil, fmt.Errorf("failed to initialize: %w", err)
 		}
 
 		return rawSource, src, nil
@@ -151,12 +152,12 @@ func (img RealImage) ConfigBlob(ctx context.Context) ([]byte, error) {
 func (img RealImage) GetLayer(ctx context.Context, dig digest.Digest) (io.ReadCloser, error) {
 	rc, _, err := img.rawSource.GetBlob(ctx, imageTypes.BlobInfo{Digest: dig, Size: -1}, img.blobInfoCache)
 	if err != nil {
-		return nil, xerrors.Errorf("failed to download the layer(%s): %w", dig, err)
+		return nil, fmt.Errorf("failed to download the layer(%s): %w", dig, err)
 	}
 
 	stream, _, err := compression.AutoDecompress(rc)
 	if err != nil {
-		return nil, xerrors.Errorf("failed to download the layer(%s): %w", dig, err)
+		return nil, fmt.Errorf("failed to download the layer(%s): %w", dig, err)
 	}
 
 	return stream, nil
@@ -165,12 +166,12 @@ func (img RealImage) GetLayer(ctx context.Context, dig digest.Digest) (io.ReadCl
 func (img RealImage) Close() error {
 	if img.src != nil {
 		if err := img.src.Close(); err != nil {
-			return xerrors.Errorf("unable to close image source: %w", err)
+			return fmt.Errorf("unable to close image source: %w", err)
 		}
 	}
 	if img.rawSource != nil {
 		if err := img.rawSource.Close(); err != nil {
-			return xerrors.Errorf("unable to close image source: %w", err)
+			return fmt.Errorf("unable to close image source: %w", err)
 		}
 	}
 	return nil

@@ -2,10 +2,10 @@ package ecr
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/goodwithtech/dockle/pkg/types"
-	"golang.org/x/xerrors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
@@ -33,7 +33,7 @@ func TestCheckOptions(t *testing.T) {
 		a := &ECR{}
 		err := a.CheckOptions(v.domain, v.opt)
 		if err != nil {
-			if !xerrors.Is(err, v.wantErr) {
+			if !errors.Is(err, v.wantErr) {
 				t.Errorf("[%s]\nexpected error based on %v\nactual : %v", testname, v.wantErr, err)
 			}
 			continue
