@@ -36,7 +36,7 @@ Releases are built by GoReleaser (`goreleaser.yaml`) via GitHub Actions when a `
 
 The scan pipeline flows: **CLI → scanner → extractor (`pkg/deckoder`) → assessors → assessment map → report writer**.
 
-1. **Entry point**: `cmd/dockle/main.go` calls `pkg.NewApp()` (`pkg/app.go`), which defines all CLI flags using `urfave/cli` v1. The action is `pkg.Run` (`pkg/run.go`), which wires everything together. `config.CreateFromCli` (`config/config.go`) populates the global `config.Conf` (ignore rules from flags/`DOCKLE_IGNORES`/`.dockleignore`, exit code, etc.).
+1. **Entry point**: `cmd/dockle/main.go` calls `pkg.NewApp()` (`pkg/app.go`), which defines all CLI flags using `urfave/cli` v3. The action is `pkg.Run` (`pkg/run.go`), which wires everything together. `config.CreateFromCli` (`config/config.go`) populates the global `config.Conf` (ignore rules from flags/`DOCKLE_IGNORES`/`.dockleignore`, exit code, etc.).
 
 2. **Image extraction**: `pkg/scanner/scan.go` uses `pkg/deckoder` (formerly the separate `github.com/goodwithtech/deckoder` library, now integrated into this repository — see `pkg/deckoder/README.md`) to fetch the image from a Docker daemon, remote registry, or tar archive. Only files that assessors declare they need — via `RequiredFiles()` / `RequiredExtensions()` / `RequiredPermissions()` — are extracted, using a tar filter function. Acceptance flags (`--accept-file`, `--accept-file-extension`) remove files from that filter.
 

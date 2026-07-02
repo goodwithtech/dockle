@@ -8,7 +8,7 @@ import (
 	"github.com/goodwithtech/dockle/pkg/types"
 
 	"github.com/goodwithtech/dockle/pkg/log"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v3"
 )
 
 const (
@@ -32,12 +32,12 @@ type Config struct {
 
 var Conf Config
 
-func CreateFromCli(c *cli.Context) {
-	ignoreRules := c.StringSlice("ignore")
+func CreateFromCli(cmd *cli.Command) {
+	ignoreRules := cmd.StringSlice("ignore")
 	Conf = Config{
 		IgnoreMap: getIgnoreCheckpointMap(ignoreRules),
-		ExitCode:  c.Int("exit-code"),
-		ExitLevel: getExitLevel(c.String("exit-level")),
+		ExitCode:  cmd.Int("exit-code"),
+		ExitLevel: getExitLevel(cmd.String("exit-level")),
 	}
 }
 

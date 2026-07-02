@@ -1,15 +1,17 @@
 package main
 
 import (
-	"github.com/goodwithtech/dockle/pkg"
-	"github.com/goodwithtech/dockle/pkg/log"
+	"context"
 	l "log"
 	"os"
+
+	"github.com/goodwithtech/dockle/pkg"
+	"github.com/goodwithtech/dockle/pkg/log"
 )
 
 func main() {
 	app := pkg.NewApp()
-	err := app.Run(os.Args)
+	err := app.Run(context.Background(), os.Args)
 
 	if err != nil {
 		if log.Logger != nil {
