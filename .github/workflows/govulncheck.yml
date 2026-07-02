@@ -36,6 +36,11 @@ jobs:
         # no fixed version exists on the old module path. Remove these entries
         # once containers/image and this repository migrate to the moby v29
         # module split.
+        env:
+          # Match the test workflow: with cgo enabled, loading the
+          # containers/storage btrfs driver fails on runners without the
+          # btrfs headers installed.
+          CGO_ENABLED: "0"
         run: |
           printf '%s\n' \
             GO-2026-4883 \
