@@ -20,7 +20,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/owenrumney/go-sarif/v2 v2.3.3
 	github.com/stretchr/testify v1.11.1
-	github.com/urfave/cli v1.22.17
+	github.com/urfave/cli/v3 v3.10.1
 	go.uber.org/zap v1.28.0
 )
 
@@ -52,7 +52,6 @@ require (
 	github.com/containers/libtrust v0.0.0-20230121012942-c1716e8a8d01 // indirect
 	github.com/containers/ocicrypt v1.2.1 // indirect
 	github.com/containers/storage v1.59.1 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/cyphar/filepath-securejoin v0.5.1 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/docker/cli v29.6.1+incompatible // indirect
@@ -87,7 +86,6 @@ require (
 	github.com/opencontainers/selinux v1.15.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/sylabs/sif/v2 v2.21.1 // indirect
