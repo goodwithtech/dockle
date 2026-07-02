@@ -1,0 +1,39 @@
+name: govulncheck
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    # Weekly on Monday morning (UTC) so new vulnerabilities are caught
+    # even when there is no PR/push activity.
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  govulncheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version-file: go.mod
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+      - name: Run govulncheck
+        # Known accepted findings (as of 2026-07): govulncheck reports 5
+        # vulnerabilities from github.com/docker/docker@v28.5.2+incompatible
+        # (GO-2026-5746, GO-2026-5668, GO-2026-5617, GO-2026-4887,
+        # GO-2026-4883). All are daemon-side issues with "Fixed in: N/A"
+        # because the moby v29 module split means no fixed version exists on
+        # the old module path. Since plain govulncheck cannot suppress
+        # individual findings, this step uses continue-on-error so CI stays
+        # green while the full report (including any NEW vulnerabilities)
+        # remains visible in the job log and as a step warning.
+        # Once the docker/docker dependency migrates to the new module path,
+        # remove continue-on-error to make this step blocking again.
+        continue-on-error: true
+        run: govulncheck ./...
