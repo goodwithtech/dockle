@@ -30,7 +30,14 @@ func (a GroupAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error
 
 		for scanner.Scan() {
 			line := scanner.Text()
+			if len(line) == 0 || line[0] == '#' {
+				continue
+			}
 			data := strings.Split(line, ":")
+			if len(data) < 3 {
+				log.Logger.Debug("The group format may be invalid.", line)
+				continue
+			}
 			gname := data[0]
 			gid := data[2]
 

@@ -28,7 +28,14 @@ func (a UserAssessor) Assess(fileMap types.FileMap) ([]*types.Assessment, error)
 		uidMap := map[string]struct{}{}
 		for scanner.Scan() {
 			line := scanner.Text()
+			if len(line) == 0 || line[0] == '#' {
+				continue
+			}
 			data := strings.Split(line, ":")
+			if len(data) < 3 {
+				log.Logger.Debug("The passwd format may be invalid.", line)
+				continue
+			}
 			uname := data[0]
 			uid := data[2]
 
