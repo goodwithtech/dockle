@@ -27,7 +27,7 @@ USER dockle
 ### CIS-DI-0002
 **Use trusted base images for containers**
 
-Dockle checks [Content Trust](https://docs.docker.com/engine/security/trust/content_trust/).
+Not supported.
 
 ### CIS-DI-0003
 **Do not install unnecessary packages in the container**
@@ -39,24 +39,6 @@ Not supported.
 
 Not supported.
 Please check with [Trivy](https://github.com/knqyf263/trivy).
-
-### CIS-DI-0005
-**Enable Content trust for Docker**
-
-> Content trust is disabled by default. You should enable it.
-
-```bash
-$ export DOCKER_CONTENT_TRUST=1
-```
-
-- https://docs.docker.com/engine/security/trust/content_trust/#about-docker-content-trust-dct
-
-    > Docker Content Trust (DCT) provides the ability to use digital signatures for data sent to and received from remote Docker registries.<br/>
-    > Engine Signature Verification prevents the following:
-    >
-    >   - `$ docker container run` of an unsigned image.
-    >   - `$ docker pull` of an unsigned image.
-    >   - `$ docker build` where the FROM image is not signed or is not scratch.
 
 ### CIS-DI-0006
 **Add `HEALTHCHECK` instruction to the container image**
