@@ -225,6 +225,14 @@ func TestReducableApkAdd(t *testing.T) {
 			},
 			expected: false,
 		},
+		"UnReducableNoNetwork": {
+			cmdSlices: map[int][]string{
+				0: {
+					"apk", "add", "--no-network", "git",
+				},
+			},
+			expected: false,
+		},
 	}
 	for testname, v := range tests {
 		actual := reducableApkAdd(v.cmdSlices)
