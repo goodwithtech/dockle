@@ -44,7 +44,7 @@ func NewApp() *cli.Command {
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "input",
-				Usage: "input file path instead of image name",
+				Usage: "input path instead of image name. A file is read as a docker-archive tarball, a directory as an OCI image layout.",
 			},
 			&cli.StringSliceFlag{
 				Name:    "ignore",

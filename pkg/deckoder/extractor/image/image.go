@@ -157,10 +157,36 @@ func (img RealImage) GetLayer(ctx context.Context, dig digest.Digest) (io.ReadCl
 
 	stream, _, err := compression.AutoDecompress(rc)
 	if err != nil {
+		rc.Close()
 		return nil, fmt.Errorf("failed to download the layer(%s): %w", dig, err)
 	}
 
-	return stream, nil
+	// AutoDecompress returns an io.NopCloser when the layer is not compressed,
+	// so closing the returned stream alone would leak the underlying blob.
+	// Uncompressed layers are permitted by the OCI image spec and do occur in
+	// OCI image layouts, so always close the blob as well.
+	return newLayerReadCloser(stream, rc), nil
+}
+
+// layerReadCloser reads the decompressed layer and closes both the
+// decompression stream and the blob it was built on.
+type layerReadCloser struct {
+	io.Reader
+	stream io.Closer
+	blob   io.Closer
+}
+
+func newLayerReadCloser(stream io.ReadCloser, blob io.ReadCloser) io.ReadCloser {
+	return &layerReadCloser{Reader: stream, stream: stream, blob: blob}
+}
+
+func (l *layerReadCloser) Close() error {
+	streamErr := l.stream.Close()
+	blobErr := l.blob.Close()
+	if streamErr != nil {
+		return streamErr
+	}
+	return blobErr
 }
 
 func (img RealImage) Close() error {
