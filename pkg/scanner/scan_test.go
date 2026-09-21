@@ -10,7 +10,6 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"github.com/goodwithtech/dockle/pkg/assessor/contentTrust"
 	"github.com/goodwithtech/dockle/pkg/assessor/manifest"
 	"github.com/goodwithtech/dockle/pkg/log"
 	"github.com/goodwithtech/dockle/pkg/types"
@@ -44,7 +43,6 @@ func TestScanImage(t *testing.T) {
 				{Code: types.AddHealthcheck, Filename: manifest.ConfigFileName},
 				{Code: types.MinimizeAptGet, Filename: manifest.ConfigFileName},
 				{Code: types.AvoidCredential, Filename: manifest.ConfigFileName},
-				{Code: types.UseContentTrust, Filename: contentTrust.HostEnvironmentFileName},
 			},
 		},
 		"Dockerfile.scratch": {
@@ -52,7 +50,6 @@ func TestScanImage(t *testing.T) {
 			expected: []*types.Assessment{
 				{Code: types.AvoidCredential, Filename: "credentials.json"},
 				{Code: types.AddHealthcheck, Filename: manifest.ConfigFileName},
-				{Code: types.UseContentTrust, Filename: contentTrust.HostEnvironmentFileName},
 				{Code: types.AvoidEmptyPassword, Level: types.SkipLevel},
 				{Code: types.AvoidDuplicateUserGroup, Level: types.SkipLevel},
 				{Code: types.AvoidDuplicateUserGroup, Level: types.SkipLevel},
