@@ -154,7 +154,7 @@ func NewApp() *cli.Command {
 			},
 			&cli.StringFlag{
 				Name:    "host",
-				Sources: cli.EnvVars("DOCKLE_HOST"),
+				Sources: cli.EnvVars("DOCKLE_HOST", "DOCKER_HOST"),
 				Usage:   "docker daemon host",
 			},
 			&cli.StringFlag{
