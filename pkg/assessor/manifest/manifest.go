@@ -249,12 +249,25 @@ func assessHistory(index int, cmd types.History) []*AssessmentWithColumns {
 
 func useSudo(cmdSlices map[int][]string) bool {
 	for _, cmdSlice := range cmdSlices {
-		if containsAll(cmdSlice, []string{"sudo"}) {
-			return true
+		for index, token := range cmdSlice {
+			if strings.Trim(token, "\"'();|") != "sudo" {
+				continue
+			}
+			if index == 0 {
+				return true
+			}
+
+			previous := cmdSlice[index-1]
+			switch previous {
+			case "RUN", "-c", "then", "do", "else", "command", "exec":
+				return true
+			}
+			if strings.HasSuffix(previous, ";") || strings.HasSuffix(previous, "|") {
+				return true
+			}
 		}
 	}
 	return false
-
 }
 
 func useDistUpgrade(cmdSlices map[int][]string) bool {
