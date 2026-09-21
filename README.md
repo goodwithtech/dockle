@@ -246,8 +246,6 @@ FATAL   - DKL-LI-0001: Avoid empty password
         * No password user found! username : nopasswd
 WARN    - CIS-DI-0001: Create a user for the container
         * Last user should not be root
-INFO    - CIS-DI-0005: Enable Content trust for Docker
-        * export DOCKER_CONTENT_TRUST=1 before docker pull/build
 INFO    - CIS-DI-0008: Confirm safety of setuid/setgid files
         * setuid file: app/suid.txt urw-r--r--
         * setgid file: app/gid.txt grw-r--r--
@@ -303,7 +301,6 @@ $ docker run --rm goodwithtech/dockle:v${DOCKLE_LATEST} [YOUR_IMAGE_NAME]
 | [CIS-DI-0002](CHECKPOINT.md#cis-di-0002) | Use trusted base images for containers | FATAL
 | [CIS-DI-0003](CHECKPOINT.md#cis-di-0003) | Do not install unnecessary packages in the container | FATAL
 | [CIS-DI-0004](CHECKPOINT.md#cis-di-0004) | Scan and rebuild the images to include security patches | FATAL
-| [CIS-DI-0005](CHECKPOINT.md#cis-di-0005) | Enable Content trust for Docker | INFO
 | [CIS-DI-0006](CHECKPOINT.md#cis-di-0006) | Add `HEALTHCHECK` instruction to the container image | INFO
 | [CIS-DI-0007](CHECKPOINT.md#cis-di-0007) | Do not use `update` instructions alone in the Dockerfile | FATAL
 | [CIS-DI-0008](CHECKPOINT.md#cis-di-0008) | Confirm safety of `setuid` and `setgid` files | INFO
@@ -350,8 +347,6 @@ $ dockle goodwithtech/test-image:v1
 ```
 FATAL   - CIS-DI-0001: Create a user for the container
         * Last user should not be root
-WARN    - CIS-DI-0005: Enable Content trust for Docker
-        * export DOCKER_CONTENT_TRUST=1 before docker pull/build
 FATAL   - CIS-DI-0006: Add HEALTHCHECK instruction to the container image
         * not found HEALTHCHECK statement
 FATAL   - CIS-DI-0007: Do not use update instructions alone in the Dockerfile
@@ -405,7 +400,7 @@ $ dockle -f json -o results.json goodwithtech/test-image:v1
   "summary": {
     "fatal": 6,
     "warn": 2,
-    "info": 2,
+    "info": 1,
     "pass": 7
   },
   "details": [
@@ -415,14 +410,6 @@ $ dockle -f json -o results.json goodwithtech/test-image:v1
       "level": "WARN",
       "alerts": [
         "Last user should not be root"
-      ]
-    },
-    {
-      "code": "CIS-DI-0005",
-      "title": "Enable Content trust for Docker",
-      "level": "INFO",
-      "alerts": [
-        "export DOCKER_CONTENT_TRUST=1 before docker pull/build"
       ]
     },
     {
@@ -553,15 +540,6 @@ $ dockle -f sarif -o results.json goodwithtech/test-image:v1
               }
             },
             {
-              "id": "CIS-DI-0005",
-              "shortDescription": {
-                "text": "Enable Content trust for Docker"
-              },
-              "help": {
-                "text": "https://github.com/goodwithtech/dockle/blob/master/CHECKPOINT.md#CIS-DI-0005"
-              }
-            },
-            {
               "id": "CIS-DI-0008",
               "shortDescription": {
                 "text": "Confirm safety of setuid/setgid files"
@@ -618,13 +596,6 @@ $ dockle -f sarif -o results.json goodwithtech/test-image:v1
           "level": "error",
           "message": {
             "text": "No password user found! username : nopasswd"
-          }
-        },
-        {
-          "ruleId": "CIS-DI-0005",
-          "level": "note",
-          "message": {
-            "text": "export DOCKER_CONTENT_TRUST=1 before docker pull/build"
           }
         },
         {
