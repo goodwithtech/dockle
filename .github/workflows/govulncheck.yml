@@ -22,16 +22,27 @@ jobs:
         with:
           go-version-file: go.mod
       - name: Install govulncheck
-        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+        # Pinned to a commit hash rather than @latest, which can break the
+        # job (or change behavior) without any change in this repository.
+        # The vulnerability database is fetched at run time, so pinning the
+        # tool does not make the findings stale.
+        run: go install golang.org/x/vuln/cmd/govulncheck@e672cbe8fbc8c76e28fcb6db0efd9ce354e0dac5 # v1.9.0
       - name: Run govulncheck and fail on non-allowlisted findings
         # govulncheck has no built-in per-finding suppression, so this step
         # runs it in -json mode and compares the OSV IDs that actually affect
-        # this module (findings with a non-empty call/import trace) against an
-        # explicit allowlist. Any finding outside the allowlist fails the job,
-        # so newly published vulnerabilities are caught immediately.
+        # this module against an explicit allowlist. Any finding outside the
+        # allowlist fails the job, so newly published vulnerabilities are
+        # caught immediately.
         #
-        # Allowlisted findings (as of 2026-07): 5 vulnerabilities from
-        # github.com/docker/docker@v28.5.2+incompatible. All are daemon-side
+        # "Affect" follows govulncheck's own criterion: only symbol-level
+        # findings count, i.e. the code reaches a vulnerable function. This
+        # is what makes plain `govulncheck ./...` exit non-zero. Findings
+        # where a vulnerable module is merely required, or a package is
+        # imported without calling the vulnerable symbol, are listed in the
+        # log for reference but do not fail the job.
+        #
+        # Allowlisted findings (as of 2026-11): 2 vulnerabilities from
+        # github.com/docker/docker@v28.5.2+incompatible. Both are daemon-side
         # issues with "Fixed in: N/A" because the moby v29 module split means
         # no fixed version exists on the old module path. Remove these entries
         # once containers/image and this repository migrate to the moby v29
@@ -45,20 +56,25 @@ jobs:
           printf '%s\n' \
             GO-2026-4883 \
             GO-2026-4887 \
-            GO-2026-5617 \
-            GO-2026-5668 \
-            GO-2026-5746 \
             | sort > allowlist.txt
 
           # -json mode exits 0 even when findings exist, so a non-zero exit
           # here means govulncheck itself failed.
           govulncheck -json ./... > govulncheck.json
 
-          jq -r 'select(.finding != null and (.finding.trace | length) > 0) | .finding.osv' govulncheck.json \
+          # Symbol-level findings: the first trace frame names the vulnerable
+          # function that is reachable from this module.
+          jq -r 'select(.finding != null and .finding.trace[0].function != null) | .finding.osv' govulncheck.json \
             | sort -u > found.txt
 
-          echo "Vulnerabilities affecting this module:"
+          # Module- or package-level only: informational.
+          jq -r 'select(.finding != null) | .finding.osv' govulncheck.json \
+            | sort -u | comm -23 - found.txt > unreached.txt
+
+          echo "Vulnerabilities affecting this module (vulnerable symbol is reachable):"
           cat found.txt
+          echo "Vulnerabilities in dependencies whose vulnerable symbol is not reached (informational):"
+          cat unreached.txt
 
           stale=$(comm -13 found.txt allowlist.txt)
           if [ -n "$stale" ]; then
