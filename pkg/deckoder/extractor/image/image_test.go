@@ -10,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	imageTypes "github.com/containers/image/v5/types"
 	"github.com/goodwithtech/dockle/pkg/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -170,6 +171,41 @@ func TestNewImage(t *testing.T) {
 			assert.Equal(t, tt.wantImage.name, got.name, tt.name)
 		})
 	}
+}
+
+func TestNewSourceFallsBackAfterInitializationFailure(t *testing.T) {
+	invalid := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/vnd.docker.distribution.manifest.v2+json")
+		_, _ = w.Write([]byte(`{invalid}`))
+	}))
+	defer invalid.Close()
+
+	manifest, err := ioutil.ReadFile("testdata/manifest.json")
+	require.NoError(t, err)
+	valid := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/vnd.docker.distribution.manifest.v2+json")
+		_, _ = w.Write(manifest)
+	}))
+	defer valid.Close()
+
+	transports := []string{
+		fmt.Sprintf("docker://%s/", strings.TrimPrefix(invalid.URL, "http://")),
+		fmt.Sprintf("docker://%s/", strings.TrimPrefix(valid.URL, "http://")),
+	}
+	sys := &imageTypes.SystemContext{
+		DockerDisableV1Ping:         true,
+		DockerInsecureSkipTLSVerify: imageTypes.OptionalBoolTrue,
+	}
+
+	rawSource, source, err := newSource(
+		context.Background(),
+		"foobar:latest",
+		transports,
+		sys,
+	)
+	require.NoError(t, err)
+	require.NoError(t, source.Close())
+	require.NoError(t, rawSource.Close())
 }
 
 func TestRealImage_LayerIDs(t *testing.T) {

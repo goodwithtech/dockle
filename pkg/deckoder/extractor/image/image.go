@@ -116,7 +116,12 @@ func newSource(ctx context.Context, imageName string, transports []string, sys *
 		var src imageTypes.ImageCloser
 		src, err = image.FromSource(ctx, sys, rawSource)
 		if err != nil {
-			return nil, nil, fmt.Errorf("failed to initialize: %w", err)
+			err = fmt.Errorf("failed to initialize: %w", err)
+			if closeErr := rawSource.Close(); closeErr != nil {
+				err = fmt.Errorf("%w; failed to close source: %v", err, closeErr)
+			}
+			// try next transport
+			continue
 		}
 
 		return rawSource, src, nil
