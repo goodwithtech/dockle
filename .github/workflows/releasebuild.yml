@@ -6,13 +6,33 @@ on:
       - 'v*'
   pull_request:
 
+# Read-only by default. Write permissions are granted to the release job only.
 permissions:
-  contents: write
-  packages: write
+  contents: read
 
 jobs:
-  build-and-release:
+  test:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
+        with:
+          go-version-file: 'go.mod'
+      - run: |
+          go test ./...
+        env:
+          CGO_ENABLED: 0
+
+  release:
+    # Runs only for v* tags. Secrets live in the "release" environment, whose
+    # deployment rules make them unavailable to any ref other than master / v*.
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      packages: write
     env:
       DOCKER_CLI_EXPERIMENTAL: "enabled"
     steps:
@@ -22,10 +42,6 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
           go-version-file: 'go.mod'
-      - run: |
-          go test ./...
-        env:
-          CGO_ENABLED: 0
       - name: Login to docker.io registry
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
@@ -35,20 +51,21 @@ jobs:
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ghcr.io
-          username: goodwithtech
-          password: ${{ secrets.GH_PAT }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       -
         name: Run GoReleaser
-        if: success() && startsWith(github.ref, 'refs/tags/v')
         uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a # v6.4.0
         with:
           distribution: goreleaser
           version: "~> v2"
           args: release --clean
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Used only to push to homebrew-r (fine-grained PAT scoped to that repository)
+          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
       -
         name: Clear
-        if: always() && startsWith(github.ref, 'refs/tags/v')
+        if: always()
         run: |
           rm -f ${HOME}/.docker/config.json
