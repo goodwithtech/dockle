@@ -548,6 +548,51 @@ func TestUseDistUpgrade(t *testing.T) {
 	}
 }
 
+func TestUseSudo(t *testing.T) {
+	tests := map[string]struct {
+		cmdSlices map[int][]string
+		expected  bool
+	}{
+		"DirectCommand": {
+			cmdSlices: map[int][]string{
+				0: {"sudo", "apt-get", "update"},
+			},
+			expected: true,
+		},
+		"ShellCommand": {
+			cmdSlices: map[int][]string{
+				0: {"/bin/sh", "-c", "sudo", "apt-get", "update"},
+			},
+			expected: true,
+		},
+		"CommandAfterSemicolon": {
+			cmdSlices: map[int][]string{
+				0: {"/bin/sh", "-c", "set", "-eux;", "sudo", "apt-get", "update"},
+			},
+			expected: true,
+		},
+		"FindNameArgument": {
+			cmdSlices: splitByCommands(
+				`/bin/sh -o pipefail -c find /bin /etc /lib /sbin /usr -xdev \( -iname hexdump -o -iname su -o -iname sudo \) -delete`,
+			),
+			expected: false,
+		},
+		"EchoArgument": {
+			cmdSlices: map[int][]string{
+				0: {"echo", "sudo"},
+			},
+			expected: false,
+		},
+	}
+
+	for testname, v := range tests {
+		actual := useSudo(v.cmdSlices)
+		if actual != v.expected {
+			t.Errorf("%s want: %t, got %t", testname, v.expected, actual)
+		}
+	}
+}
+
 func TestContainsThreshold(t *testing.T) {
 	var tests = map[string]struct {
 		heystack  []string
