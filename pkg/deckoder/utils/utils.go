@@ -51,7 +51,7 @@ func IsGzip(f *bufio.Reader) bool {
 // CreateFilterPathFunc :
 func CreateFilterPathFunc(filenames []string) types.FilterFunc {
 	return func(h *tar.Header) (bool, error) {
-		filePath := filepath.Clean(h.Name)
+		filePath := filepath.ToSlash(filepath.Clean(h.Name))
 		fileName := filepath.Base(filePath)
 		return StringInSlice(filePath, filenames) || StringInSlice(fileName, filenames), nil
 	}

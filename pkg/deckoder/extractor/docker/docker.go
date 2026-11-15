@@ -170,7 +170,7 @@ func (d Extractor) extractFiles(layer io.Reader, filterFunc types.FilterFunc) (t
 		}
 
 		filePath := hdr.Name
-		filePath = filepath.Clean(filePath)
+		filePath = filepath.ToSlash(filepath.Clean(filePath))
 		fi := hdr.FileInfo()
 		fileMode := fi.Mode()
 
