@@ -74,6 +74,7 @@ brews:
     repository:
       owner: goodwithtech
       name: homebrew-r
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     homepage: "https://github.com/goodwithtech/dockle"
     description: "Simple security auditing, helping build the Best Docker Images"
     test: |
