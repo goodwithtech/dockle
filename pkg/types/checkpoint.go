@@ -3,7 +3,6 @@ package types
 const (
 	// CIS-DI
 	AvoidRootDefault       = "CIS-DI-0001"
-	UseContentTrust        = "CIS-DI-0005"
 	AddHealthcheck         = "CIS-DI-0006"
 	UseAptGetUpdateNoCache = "CIS-DI-0007"
 	CheckSuidGuid          = "CIS-DI-0008"
@@ -36,7 +35,6 @@ const (
 // DefaultLevelMap save risk level each checkpoints
 var DefaultLevelMap = map[string]int{
 	AvoidRootDefault:       WarnLevel,
-	UseContentTrust:        InfoLevel,
 	AddHealthcheck:         InfoLevel,
 	UseAptGetUpdateNoCache: FatalLevel,
 	CheckSuidGuid:          InfoLevel,
@@ -58,7 +56,6 @@ var DefaultLevelMap = map[string]int{
 // TitleMap save title each checkpoints
 var TitleMap = map[string]string{
 	AvoidRootDefault:                "Create a user for the container",
-	UseContentTrust:                 "Enable Content trust for Docker",
 	AddHealthcheck:                  "Add HEALTHCHECK instruction to the container image",
 	UseAptGetUpdateNoCache:          "Do not use update instructions alone in the Dockerfile",
 	CheckSuidGuid:                   "Confirm safety of setuid/setgid files",

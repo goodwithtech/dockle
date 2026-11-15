@@ -6,7 +6,6 @@ import (
 	"github.com/goodwithtech/dockle/pkg/assessor/cache"
 	"github.com/goodwithtech/dockle/pkg/assessor/privilege"
 
-	"github.com/goodwithtech/dockle/pkg/assessor/contentTrust"
 	"github.com/goodwithtech/dockle/pkg/assessor/credential"
 	"github.com/goodwithtech/dockle/pkg/assessor/hosts"
 
@@ -36,7 +35,6 @@ func init() {
 	RegisterAssessor(hosts.HostsAssessor{})
 	RegisterAssessor(credential.CredentialAssessor{})
 	RegisterAssessor(manifest.ManifestAssessor{})
-	RegisterAssessor(contentTrust.ContentTrustAssessor{})
 	RegisterAssessor(cache.CacheAssessor{})
 }
 
