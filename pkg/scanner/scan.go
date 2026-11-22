@@ -42,7 +42,14 @@ func ScanImage(ctx context.Context, imageName, filePath string, dockerOption typ
 			return nil, err
 		}
 	} else if filePath != "" {
-		ext, cleanup, err = docker.NewDockerArchiveExtractor(ctx, filePath, dockerOption)
+		// A directory is treated as an OCI image layout ("oci-path"),
+		// e.g. output of Bazel's rules_oci or `skopeo copy ... oci:...`.
+		// A regular file is treated as a docker-archive tarball.
+		if fi, statErr := os.Stat(filePath); statErr == nil && fi.IsDir() {
+			ext, cleanup, err = docker.NewOCIDirExtractor(ctx, filePath, dockerOption)
+		} else {
+			ext, cleanup, err = docker.NewDockerArchiveExtractor(ctx, filePath, dockerOption)
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -68,7 +75,7 @@ func createPathPermissionFilterFunc(filenames, extensions []string, permissions 
 	for _, filename := range filenames {
 		if filename[len(filename)-1] == '/' {
 			// if filename end "/", it is directory and requiredDirNames removes last "/"
-			requiredDirNames[filepath.Clean(filename)] = struct{}{}
+			requiredDirNames[filepath.ToSlash(filepath.Clean(filename))] = struct{}{}
 		} else {
 			requiredFileNames[filename] = struct{}{}
 		}
@@ -78,7 +85,7 @@ func createPathPermissionFilterFunc(filenames, extensions []string, permissions 
 	}
 
 	return func(h *tar.Header) (bool, error) {
-		filePath := filepath.Clean(h.Name)
+		filePath := filepath.ToSlash(filepath.Clean(h.Name))
 		fileName := filepath.Base(filePath)
 		// Skip check if acceptance files
 		if _, ok := acceptanceExtensions[filepath.Ext(fileName)]; ok {

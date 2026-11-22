@@ -50,6 +50,7 @@ See [Installation](#installation) and [Common Examples](#common-examples)
 - [Common Examples](#common-examples)
   - [Scan an image](#scan-an-image)
   - [Scan an image file](#scan-an-image-file)
+  - [Scan an OCI image layout](#scan-an-oci-image-layout)
   - [Get or Save the results as JSON](#get-or-save-the-results-as-json)
   - [Get or Save the results as SARIF](#get-or-save-the-results-as-sarif)
   - [Specify exit code](#specify-exit-code)
@@ -385,10 +386,26 @@ PASS    - DKL-LI-0002: Be unique GROUP
 
 ### Scan an image file
 
+`--input` takes a `docker save` tarball (the `docker-archive` format):
+
 ```bash
 $ docker save alpine:latest -o alpine.tar
 $ dockle --input alpine.tar
 ```
+
+### Scan an OCI image layout
+
+`--input` also takes a directory holding an [OCI Image Layout](https://github.com/opencontainers/image-spec/blob/main/image-layout.md) (the `oci-path` format).
+This is handy for images built without a Docker daemon, e.g. by [Bazel `rules_oci`](https://github.com/bazel-contrib/rules_oci):
+
+```bash
+$ skopeo copy docker://alpine:latest oci:alpine-oci:latest
+$ dockle --input alpine-oci
+```
+
+Dockle picks the format from the path itself — a directory is read as an OCI image layout, a regular file as a `docker-archive` tarball.
+
+The layout's `index.json` must hold exactly one entry. That entry may itself be a multi-platform image index, in which case the `linux` image matching the host architecture is selected. If `index.json` lists more than one entry, Dockle cannot tell which image you meant and reports `more than one image in oci, choose an image`; re-export the layout with a single image.
 
 ### Get or Save the results as JSON
 
